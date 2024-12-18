@@ -32,8 +32,6 @@
       };
     };
 
-    programs.waybar.enable = true;
-    
     home.packages = with pkgs; [
       pyprland
       hyprpicker

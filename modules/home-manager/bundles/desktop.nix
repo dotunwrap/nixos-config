@@ -3,11 +3,20 @@
 {
   config = {
     myUser = {
+      # basic desktop modules
       hyprland.enable = true;
       rofi.enable = true;
+      feh.enable = true;
+
+      # browser modules
       brave.enable = lib.mkDefault true;
-      alacritty.enable = lib.mkDefault false;
+
+      # terminal modules
       wezterm.enable = lib.mkDefault true;
+      alacritty.enable = lib.mkDefault false;
+
+      # misc modules
+      vesktop.enable = lib.mkDefault true;
     };
 
     home.file = {
@@ -20,9 +29,8 @@
       "video/jpg" = ["mpv.desktop"];
       "video/*" = ["mpv.desktop"];
     };
-  
+
     home.packages = with pkgs; [
-      feh
       polkit
       polkit_gnome
       lxsession
@@ -30,13 +38,8 @@
       pavucontrol
       pcmanfm
       libnotify
-
-      btop
-
       mpv
-
       lm_sensors
-
       onlyoffice-bin
       easyeffects
       gegl
