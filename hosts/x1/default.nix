@@ -19,9 +19,6 @@
 
   mySystem = {
     bundles.system.enable = true;
-    hyprland.enable = true;
-    # power-management.enable = true;
-
     bundles.users.enable = true;
     users = {
     	"garrett" = import ../../users/garrett;
@@ -36,9 +33,6 @@
     libinput.enable = true;
     printing.enable = true;
   };
-
-  programs.zsh.enable = true;
-  programs.hyprland.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

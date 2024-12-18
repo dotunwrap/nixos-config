@@ -25,9 +25,8 @@ in {
   };
 
   config = {
-    programs.zsh.enable = true;
-
-    programs.hyprland.enable = cfg.hyprland.enable;
+    programs.zsh.enable = cfg.zsh.enable;
+    #programs.hyprland.enable = cfg.hyprland.enable;
 
     services = lib.mkIf cfg.hyprland.enable {
       xserver.enable = true;
@@ -42,26 +41,26 @@ in {
 
       extraSpecialArgs = {
         inherit inputs;
-	inherit myUtils;
-	outputs = inputs.self.outputs;
+        inherit myUtils;
+        outputs = inputs.self.outputs;
       };
       users = {
         ${cfg.userName} = { ... }: {
-	  imports = [
-	    (import cfg.userConfig)
-	    outputs.homeManagerModules.default
-	  ];
-	};
+          imports = [
+            (import cfg.userConfig)
+            outputs.homeManagerModules.default
+          ];
+        };
       };
     };
 
     users.users.${cfg.userName} =
       {
         isNormalUser = true;
-	initialPassword = "password";
-	description = cfg.userName;
-	shell = pkgs.zsh;
-	extraGroups = ["networkmanager" "wheel"];
+        initialPassword = "password";
+        description = cfg.userName;
+        shell = pkgs.zsh;
+        extraGroups = ["networkmanager" "wheel"];
       } // cfg.userNixosSettings;
   };
 }

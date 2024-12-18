@@ -11,7 +11,6 @@
     userEmail = "garrett@dotunwrap.dev";
   };
 
-  programs.zsh.enable = true;
   programs.nixvim = {
     enable = true;
     imports = [ inputs.neve.nixvimModule ];

@@ -1,4 +1,4 @@
-{ pkgs, config, lib, inputs, outputs, myUtils, ... }: let
+{ config, lib, inputs, myUtils, ... }: let
   cfg = config.mySystem;
 
   features =
@@ -30,10 +30,6 @@ in {
     ++ features
     ++ bundles;
   
-  options.mySystem = {
-    hyprland.enable = lib.mkEnableOption "enable hyprland";
-  };
-
   config = {
     nix.settings.experimental-features = ["nix-command" "flakes"];
     nixpkgs.config.allowUnfree = true;
