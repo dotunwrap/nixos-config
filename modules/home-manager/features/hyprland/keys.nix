@@ -19,7 +19,7 @@
         woworkspaces = map (n: "$mainMod, ${toString n}, workspace, ${toWSNumber n}") [1 2 3 4 5 6 7 8 9 0];
       in
         [
-        "$mainMod, return, exec, alacritty" # TODO: Make this modular
+        "$mainMod, return, exec, wezterm" # TODO: Make this modular
         "$mainMod, Q, killactive"
         "$mainMod SHIFT, M, exit"
         "$mainMod SHIFT, F, togglefloating"
@@ -28,7 +28,7 @@
         "$mainMod, G, togglegroup"
         "$mainMod, bracketleft, changegroupactive, b"
         "$mainMod, bracketright, changegroupactive, f"
-        "$mainMod, SPACE, exec, rofi -shor drun -show-icons" # TODO: make this modular
+        "$mainMod, SPACE, exec, rofi -show drun" # TODO: make this modular
         "$mainMod, P, pin, active"
   
         ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"

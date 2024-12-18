@@ -12,7 +12,7 @@
 ## Todo List
 - [ ] Create own custom Nixvim config (remove Neve)
 - [ ] Configure Hyprland
-- [ ] Configure Rofi
+- [X] Configure Rofi
 - [ ] Modularize user settings (e.g. terminal choice)
 - [ ] Create host for desktop
 - [ ] Declare general dots

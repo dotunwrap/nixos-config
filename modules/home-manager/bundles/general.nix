@@ -12,6 +12,7 @@
   };
 
   myUser = {
+    #stylix.enable = lib.mkDefault true;
   };
 
   programs.home-manager.enable = true;

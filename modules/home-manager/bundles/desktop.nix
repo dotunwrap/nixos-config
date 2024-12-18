@@ -4,20 +4,14 @@
   config = {
     myUser = {
       hyprland.enable = true;
+      rofi.enable = true;
       brave.enable = lib.mkDefault true;
       alacritty.enable = lib.mkDefault false;
+      wezterm.enable = lib.mkDefault true;
     };
 
     home.file = {
       ".local/share/rofi/rofi-bluetooth".source = "${pkgs.rofi-bluetooth}";
-    };
-  
-    qt.enable = true;
-    qt.platformTheme = "gtk";
-    qt.style.name = "adwaita-dark";
-  
-    home.sessionVariables = {
-      QT_STYLE_OVERRIDE = "adwaita-dark";
     };
   
     xdg.mimeApps.defaultApplications = {
@@ -34,15 +28,14 @@
       lxsession
       pulsemixer
       pavucontrol
-      adwaita-qt
       pcmanfm
       libnotify
+
+      btop
 
       mpv
 
       lm_sensors
-
-      wezterm
 
       onlyoffice-bin
       easyeffects
