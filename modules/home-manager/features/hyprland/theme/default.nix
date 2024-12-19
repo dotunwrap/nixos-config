@@ -16,6 +16,7 @@
       preload = ~/.wallpapers/wallpaper.png
       wallpaper = , ~/.wallpapers/wallpaper.png
     '';
+    wayland.windowManager.hyprland.settings.exec-once = "hyprpaper";
 
     qt = {
       enable = true;

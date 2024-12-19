@@ -1,4 +1,6 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+
+{
   mySystem = {
     hyprland.enable = lib.mkDefault true;
     zsh.enable = lib.mkDefault true;
@@ -36,9 +38,6 @@
   };
 
   programs.dconf.enable = true;
-
-  #xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
-  #xdg.portal.enable = true;
 
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {
