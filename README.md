@@ -1,10 +1,10 @@
 <h1 align="center">NixOS Modular Configuration</h1>
 
-<dev align="center">
+<div align="center">
 
 ![nixos](https://img.shields.io/badge/NixOS-24273A.svg?style=flat&logo=nixos&logoColor=CAD3F5)
 
-</dev>
+</div>
 
 ## Table of Contents
 - [Todo List](#-todo-list)
@@ -17,4 +17,5 @@
 - [ ] Create host for desktop
 - [ ] Declare general dots
 - [ ] Configure secrets store?
+- [ ] Modularize Catppuccin and themes
 - TBD...

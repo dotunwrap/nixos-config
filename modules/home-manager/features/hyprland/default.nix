@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./waybar.nix
     ./keys.nix
     ./theme
   ];
