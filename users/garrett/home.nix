@@ -20,6 +20,9 @@
     bundles.general.enable = true;
     bundles.desktop.enable = true;
 
+    # wezterm is broken for some reason when hyprland has the monitor configured
+    # potentially related to scaling somehow?
+    wezterm.enable = false;
     alacritty.enable = true;
   };
 

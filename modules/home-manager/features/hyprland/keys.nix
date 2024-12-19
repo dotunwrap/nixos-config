@@ -19,7 +19,7 @@
         woworkspaces = map (n: "$mainMod, ${toString n}, workspace, ${toWSNumber n}") [1 2 3 4 5 6 7 8 9 0];
       in
         [
-        "$mainMod, return, exec, wezterm" # TODO: Make this modular
+        "$mainMod, return, exec, alacritty" # TODO: Make this modular
         "$mainMod, Q, killactive"
         "$mainMod SHIFT, M, exit"
         "$mainMod SHIFT, F, togglefloating"
