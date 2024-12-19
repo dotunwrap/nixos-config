@@ -37,8 +37,8 @@
 
   programs.dconf.enable = true;
 
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
-  xdg.portal.enable = true;
+  #xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
+  #xdg.portal.enable = true;
 
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {

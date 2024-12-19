@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -10,21 +10,30 @@
       libsForQt5.qt5ct
       libsForQt5.qtstyleplugin-kvantum
     ];
+
+    home.file.".wallpapers/wallpaper.png".source = ../../../../../assets/wallpapers/nixos-wallpaper-catppuccin-mocha.png;
+    xdg.configFile."hypr/hyprpaper.conf".text = ''
+      preload = ~/.wallpapers/wallpaper.png
+      wallpaper = , ~/.wallpapers/wallpaper.png
+    '';
+
     qt = {
       enable = true;
       platformTheme.name = "kvantum";
       style.name = "kvantum";
     };
+
     catppuccin = {
       enable = true;
-      flavor = "frappe";
+      flavor = "mocha";
       pointerCursor = {
         enable = true;
-        flavor = "frappe";
+        flavor = "mocha";
         accent = "teal";
       };
     };
-    xdg.configFile."rofi/catppuccin-frappe.rasi".source = ./rofi/catppuccin-frappe.rasi;
+
+    xdg.configFile."rofi/catppuccin-mocha.rasi".source = ./rofi/catppuccin-mocha.rasi;
     xdg.configFile."rofi/config.rasi".source = ./rofi/config.rasi;
   };
 }

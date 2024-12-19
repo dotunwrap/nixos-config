@@ -25,16 +25,6 @@ in {
   };
 
   config = {
-    programs.zsh.enable = cfg.zsh.enable;
-    #programs.hyprland.enable = cfg.hyprland.enable;
-
-    services = lib.mkIf cfg.hyprland.enable {
-      xserver.enable = true;
-      displayManager = {
-        defaultSession = "hyprland";
-      };
-    };
-
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;

@@ -19,6 +19,8 @@
   myUser = {
     bundles.general.enable = true;
     bundles.desktop.enable = true;
+
+    alacritty.enable = true;
   };
 
   home = {

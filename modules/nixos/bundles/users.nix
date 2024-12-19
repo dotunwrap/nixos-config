@@ -21,7 +21,7 @@ in {
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      backupFileExtension = ".bkp";
+      backupFileExtension = "bkp";
 
       extraSpecialArgs = {
         inherit inputs;

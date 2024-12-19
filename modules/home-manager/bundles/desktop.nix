@@ -6,7 +6,7 @@
       # basic desktop modules
       hyprland.enable = true;
       rofi.enable = true;
-      feh.enable = true;
+      feh.enable = lib.mkDefault false;
 
       # browser modules
       brave.enable = lib.mkDefault true;
@@ -17,6 +17,7 @@
 
       # misc modules
       vesktop.enable = lib.mkDefault true;
+      typst.enable = lib.mkDefault true;
     };
 
     home.file = {
