@@ -7,6 +7,10 @@ in {
     autocd = lib.mkDefault true;
     defaultKeymap = lib.mkDefault "vicmd";
 
+    shellAliases = {
+      vi = "nvim";
+    };
+
     autosuggestion.enable = lib.mkDefault true;
     syntaxHighlighting.enable = lib.mkDefault true;
   };
