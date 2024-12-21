@@ -8,6 +8,7 @@ in {
     defaultKeymap = lib.mkDefault "vicmd";
 
     shellAliases = {
+      ll = "ls -al";
       vi = "nvim";
     };
 

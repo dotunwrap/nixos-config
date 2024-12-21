@@ -10,6 +10,7 @@
   myUser = {
     zsh.enable = lib.mkDefault true;
     starship.enable = lib.mkDefault true;
+    eza.enable = lib.mkDefault true;
     git.enable = true;
     btop.enable = true;
     macchina.enable = true;

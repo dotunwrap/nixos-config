@@ -7,7 +7,8 @@
 </div>
 
 ## Table of Contents
-- [Todo List](#-todo-list)
+- [Todo List](#todo-list)
+- [Configuration Architecture](#configuration-architecture)
 
 ## Todo List
 - [ ] Create own custom Nixvim config (remove Neve)
@@ -19,3 +20,9 @@
 - [ ] Configure secrets store?
 - [ ] Modularize Catppuccin and themes
 - TBD...
+
+## Configuration Architecture
+
+<div align="center">
+    <img src="assets/design.png" style="width: 450; margin: 1rem 0 0 0" />
+</div>

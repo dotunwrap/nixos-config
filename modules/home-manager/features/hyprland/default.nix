@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./waybar.nix
     ./keys.nix
+    ./waybar
     ./theme
   ];
 
@@ -32,6 +32,11 @@
           gaps_out = 10;
           border_size = 2;
         };
+
+        exec-once = [
+          "hyprpaper"
+          "waybar"
+        ];
 
         monitor = ", preferred, auto, 1";
 

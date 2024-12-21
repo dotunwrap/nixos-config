@@ -11,7 +11,7 @@ in rec {
       };
       modules = [
         config
-	outputs.nixosModules.default
+        outputs.nixosModules.default
       ];
     };
 
@@ -23,7 +23,7 @@ in rec {
       };
       modules = [
         config
-	outputs.homeManagerModules.default
+        outputs.homeManagerModules.default
       ];
     };
 
@@ -47,9 +47,9 @@ in rec {
       if (builtins.hasAttr "extraOptions" args) || (builtins.hasAttr "extraConfig" args)
       then [
         ({ ... }: {
-	  options = args.extraOptions or {};
-	  config = args.extraConfig or {};
-	})
+            options = args.extraOptions or {};
+            config = args.extraConfig or {};
+          })
       ]
       else [];
   in {
