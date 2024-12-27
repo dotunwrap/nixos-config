@@ -1,16 +1,16 @@
 { lib, config, ... }: let
   cfg = config.myUser;
 in {
+  imports = [
+    ./aliases.nix
+    ./functions.nix
+  ];
+
   programs.zsh = {
     enable = true;
 
     autocd = lib.mkDefault true;
     defaultKeymap = lib.mkDefault "vicmd";
-
-    shellAliases = {
-      ll = "ls -al";
-      vi = "nvim";
-    };
 
     autosuggestion.enable = lib.mkDefault true;
     syntaxHighlighting.enable = lib.mkDefault true;
