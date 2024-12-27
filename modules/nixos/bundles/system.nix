@@ -8,8 +8,8 @@
     autologin.enable = lib.mkDefault false;
   };
 
-  time.timeZone = "America/New_York";
-  i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = lib.mkDefault "America/New_York";
+  i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
   services.pipewire = {
     enable = true;
@@ -21,9 +21,16 @@
 
   fonts.packages = with pkgs; [
     corefonts
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.nerd-fonts.iosevka
-    pkgs.nerd-fonts.fira-code
+
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-emoji
+
+    garamond-libre
+
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.iosevka
+    nerd-fonts.fira-code
   ];
 
   services.upower.enable = true;
