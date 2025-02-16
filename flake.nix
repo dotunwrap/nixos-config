@@ -19,8 +19,12 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     neve.url = "github:redyf/Neve";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     catppuccin.url = "github:catppuccin/nix";
   };

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, outputs, system, myUtils, ... }:
+{ pkgs, ... }:
 
 {
   imports =
@@ -20,6 +20,7 @@
   mySystem = {
     bundles.system.enable = true;
     bundles.users.enable = true;
+    bundles.dev.enable = true;
     users = {
     	"garrett" = import ../../users/garrett;
     };

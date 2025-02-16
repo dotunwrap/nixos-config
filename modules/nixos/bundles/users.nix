@@ -1,6 +1,6 @@
-{ lib, config, inputs, outputs, myUtils, pkgs, ... }: let
-  cfg = config.mySystem;
-in {
+{ lib, config, inputs, outputs, myUtils, pkgs, ... }:
+
+{
   options.mySystem.users = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
