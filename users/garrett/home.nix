@@ -1,19 +1,13 @@
-{ inputs, outputs, lib, ... }:
+{ outputs, lib, ... }:
 
 {
   imports = [
     outputs.homeManagerModules.default
-    inputs.nixvim.homeManagerModules.nixvim
   ];
 
   programs.git = {
     userName = "Garrett Simpson";
     userEmail = "garrett@dotunwrap.dev";
-  };
-
-  programs.nixvim = {
-    enable = true;
-    imports = [ inputs.neve.nixvimModule ];
   };
 
   myUser = {

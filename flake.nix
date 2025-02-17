@@ -15,11 +15,10 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    nixvim = {
-      url = "github:nix-community/nixvim";
+    nvf = {
+      url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    neve.url = "github:redyf/Neve";
 
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
