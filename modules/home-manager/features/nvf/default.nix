@@ -4,6 +4,7 @@
   imports = [
     inputs.nvf.homeManagerModules.default
     ./options.nix
+    ./globals.nix
     ./binds.nix
     ./languages.nix
     ./plugins.nix

@@ -10,6 +10,11 @@
     shiftwidth = 2;
     breakindent = true;
 
+    number = true;
+    relativenumber = true;
+
+    mouse = "a";
+
     wrap = false;
 
     hlsearch = true;
@@ -23,7 +28,9 @@
     grepprg = "rg --vimgrep";
     grepformat = "%f:%l:%c:%m";
 
-    updatetime = 50;
+    updatetime = 250;
+
+    timeoutlen = 300;
 
     swapfile = false;
     backup = false;
@@ -33,7 +40,7 @@
 
     signcolumn = "yes";
 
-    cursorline = false;
+    cursorline = true;
 
     foldcolumn = "0";
     foldlevel = 99;
@@ -46,13 +53,13 @@
     
     colorcolumn  ="80";
 
-    timeoutlen = 1000;
-
     encoding = "utf-8";
     fileencoding = "utf-8";
 
     showmode = false;
 
     pumheight = 0;
+
+    clipboard = "unnamedplus";
   };
 }
