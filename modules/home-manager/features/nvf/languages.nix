@@ -36,6 +36,10 @@
       css.enable = true;
       tailwind.enable = true;
       svelte.enable = true;
+      bash.enable = true;
+      assembly.enable = true;
+      csharp.enable = true;
+      typst.enable = true;
     };
 
     lsp = {
