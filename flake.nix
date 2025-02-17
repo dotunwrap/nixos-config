@@ -28,10 +28,13 @@
     catppuccin.url = "github:catppuccin/nix";
   };
 
-  outputs = { ... } @ inputs: let
-    myUtils = import ./my-utils { inherit inputs; };
-  in
-    with myUtils; {
+  outputs =
+    { ... }@inputs:
+    let
+      myUtils = import ./my-utils { inherit inputs; };
+    in
+    with myUtils;
+    {
       nixosConfigurations = {
         x1 = mkSystem ./hosts/x1;
       };

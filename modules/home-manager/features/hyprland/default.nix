@@ -17,9 +17,9 @@
       hypridle
       hyprcursor
       hyprpaper
-  
+
       wl-clipboard
-  
+
       networkmanagerapplet
     ];
 
@@ -31,6 +31,7 @@
           gaps_in = 5;
           gaps_out = 10;
           border_size = 2;
+          "col.active_border" = "rgba(89b4faee) rgba(94e2d5ee) 45deg";
         };
 
         exec-once = [

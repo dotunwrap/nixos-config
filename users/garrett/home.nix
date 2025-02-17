@@ -11,9 +11,11 @@
   };
 
   myUser = {
-    bundles.general.enable = true;
-    bundles.desktop.enable = true;
-    bundles.dev.enable = true;
+    bundles = {
+      general.enable = true;
+      desktop.enable = true;
+      dev.enable = true;
+    };
 
     # wezterm is broken for some reason when hyprland has the monitor configured
     # potentially related to scaling somehow?
