@@ -7,9 +7,18 @@
     ./globals.nix
     ./binds.nix
     ./languages.nix
-    ./plugins.nix
-    ./themes/catppuccin-mocha.nix  # need to make this modular sooner or later
+    ./plugins
+    ./themes/catppuccin-mocha.nix # need to make this modular sooner or later
   ];
 
-  programs.nvf.enable = true;
+  programs.nvf = {
+    enable = true;
+    settings = {
+      vim = {
+        viAlias = true;
+        vimAlias = true;
+        enableLuaLoader = true;
+      };
+    };
+  };
 }

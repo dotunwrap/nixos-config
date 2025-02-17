@@ -1,65 +1,64 @@
-{ ... }:
-
 {
-  programs.nvf.settings.vim.options = {
-    tabstop = 2;
-    softtabstop = 2;
-    showtabline = 2;
-    expandtab = true;
+  programs.nvf.settings.vim = {
+    useSystemClipboard = true;
 
-    shiftwidth = 2;
-    breakindent = true;
+    options = {
+      tabstop = 2;
+      softtabstop = 2;
+      showtabline = 2;
+      expandtab = true;
 
-    number = true;
-    relativenumber = true;
+      shiftwidth = 2;
+      breakindent = true;
 
-    mouse = "a";
+      mouse = "a";
 
-    wrap = false;
+      wrap = false;
 
-    hlsearch = true;
-    incsearch = true;
+      hlsearch = true;
+      incsearch = true;
 
-    splitbelow = true;
-    splitright = true;
+      splitbelow = true;
+      splitright = true;
 
-    ignorecase = true;
-    smartcase = true;
-    grepprg = "rg --vimgrep";
-    grepformat = "%f:%l:%c:%m";
+      ignorecase = true;
+      smartcase = true;
+      grepprg = "rg --vimgrep";
+      grepformat = "%f:%l:%c:%m";
 
-    updatetime = 250;
+      updatetime = 250;
 
-    timeoutlen = 300;
+      timeoutlen = 300;
 
-    swapfile = false;
-    backup = false;
-    undofile = true;
+      swapfile = false;
+      backup = false;
+      undofile = true;
 
-    termguicolors = true;
+      termguicolors = true;
 
-    signcolumn = "yes";
+      signcolumn = "yes";
 
-    cursorline = true;
+      cursorline = true;
 
-    foldcolumn = "0";
-    foldlevel = 99;
-    foldlevelstart = 99;
-    foldenable = true;
-    foldmethod = "expr";
-    foldexpr = "v:lua.vim.treesitter.foldexpr()";
+      foldcolumn = "0";
+      foldlevel = 99;
+      foldlevelstart = 99;
+      foldenable = true;
+      foldmethod = "expr";
+      foldexpr = "v:lua.vim.treesitter.foldexpr()";
 
-    scrolloff = 8;
-    
-    colorcolumn  ="80";
+      scrolloff = 8;
 
-    encoding = "utf-8";
-    fileencoding = "utf-8";
+      colorcolumn = "80";
 
-    showmode = false;
+      encoding = "utf-8";
+      fileencoding = "utf-8";
 
-    pumheight = 0;
+      showmode = false;
 
-    clipboard = "unnamedplus";
+      pumheight = 0;
+
+      clipboard = "unnamedplus";
+    };
   };
 }
