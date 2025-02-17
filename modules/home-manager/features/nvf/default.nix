@@ -7,18 +7,8 @@
     ./binds.nix
     ./languages.nix
     ./plugins.nix
+    ./themes/catppuccin-mocha.nix  # need to make this modular sooner or later
   ];
 
-  programs.nvf = {
-    enable = true;
-    settings = {
-      vim = {
-        theme = {
-          enable = true;
-          name = "catppuccin";
-          style = "mocha";
-        };
-      };
-    };
-  };
+  programs.nvf.enable = true;
 }
