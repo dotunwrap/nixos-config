@@ -14,7 +14,7 @@
     usb.enable = lib.mkDefault true;
     hyprland.enable = lib.mkDefault true;
     zsh.enable = lib.mkDefault true;
-    greetd.enable = lib.mkDefault true;
+    greetd.enable = lib.mkDefault false;
     dbus.enable = lib.mkDefault true;
     lmsensors.enable = lib.mkDefault true;
     sddm.enable = lib.mkDefault false;

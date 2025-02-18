@@ -39,7 +39,11 @@
           "waybar"
         ];
 
-        monitor = ", preferred, auto, 1";
+        monitor = [
+          "eDP-1, preferred, 0x0, 1"
+          "DP-2, 1920x1080@60, -1920x0, 1"
+          "HDMI-A-1, 1920x1080@60, -3000x0, 1, transform, 1"
+        ];
 
         decoration = {
           rounding = 8;
