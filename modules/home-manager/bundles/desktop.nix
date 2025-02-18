@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ lib, ... }:
 
 {
   config = {
@@ -19,32 +19,13 @@
       vesktop.enable = lib.mkDefault true;
       typst.enable = lib.mkDefault true;
       spicetify.enable = lib.mkDefault true;
+      polkit.enable = lib.mkDefault true;
+      audio.enable = lib.mkDefault true;
+      lxsession.enable = lib.mkDefault true;
+      libnotify.enable = lib.mkDefault true;
+      mpv.enable = lib.mkDefault true;
+      imv.enable = lib.mkDefault true;
+      onlyoffice.enable = lib.mkDefault true;
     };
-
-    home.file = {
-      ".local/share/rofi/rofi-bluetooth".source = "${pkgs.rofi-bluetooth}";
-    };
-
-    xdg.mimeApps.defaultApplications = {
-      "image/*" = [ "imv.desktop" ];
-      "video/png" = [ "mpv.desktop" ];
-      "video/jpg" = [ "mpv.desktop" ];
-      "video/*" = [ "mpv.desktop" ];
-    };
-
-    home.packages = with pkgs; [
-      polkit
-      polkit_gnome
-      lxsession
-      pulsemixer
-      pavucontrol
-      pcmanfm
-      libnotify
-      mpv
-      lm_sensors
-      onlyoffice-bin
-      easyeffects
-      gegl
-    ];
   };
 }

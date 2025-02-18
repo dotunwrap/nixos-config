@@ -16,6 +16,7 @@
     zsh.enable = lib.mkDefault true;
     greetd.enable = lib.mkDefault true;
     dbus.enable = lib.mkDefault true;
+    lmsensors.enable = lib.mkDefault true;
     sddm.enable = lib.mkDefault false;
     autologin.enable = lib.mkDefault false;
     openssh.enable = lib.mkDefault false;
