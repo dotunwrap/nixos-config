@@ -1,20 +1,30 @@
-{ lib, config, inputs, outputs, myUtils, pkgs, ... }:
-
+{
+  lib,
+  config,
+  inputs,
+  outputs,
+  myUtils,
+  pkgs,
+  ...
+}:
+# TODO: This whole file needs to be cleaned up at some point
 {
   options.mySystem.users = lib.mkOption {
-    type = lib.types.attrsOf (lib.types.submodule {
-      options = {
-        userConfig = lib.mkOption {
-          default = {};
-          example = "DP-1";
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        options = {
+          userConfig = lib.mkOption {
+            default = { };
+            example = "DP-1";
+          };
+          userSettings = lib.mkOption {
+            default = { };
+            example = "{}";
+          };
         };
-        userSettings = lib.mkOption {
-          default = {};
-          example = "{}";
-        };
-      };
-    });
-    default = {};
+      }
+    );
+    default = { };
   };
 
   config = {
@@ -29,24 +39,31 @@
         outputs = inputs.self.outputs;
       };
 
-      users =
-        builtins.mapAttrs (name: user: { ... }: {
+      users = builtins.mapAttrs (
+        name: user:
+        { ... }:
+        {
           imports = [
             (import user.userConfig)
             outputs.homeManagerModules.default
           ];
-        })
-        (config.mySystem.users);
+        }
+      ) (config.mySystem.users);
     };
 
-    users.users =
-      builtins.mapAttrs (name: user: {
+    users.users = builtins.mapAttrs (
+      name: user:
+      {
         isNormalUser = true;
         initialPassword = "password";
         description = "";
         shell = pkgs.zsh;
-        extraGroups = ["networkmanager" "wheel"];
-      } // user.userSettings) 
-      (config.mySystem.users);
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+        ];
+      }
+      // user.userSettings
+    ) (config.mySystem.users);
   };
 }

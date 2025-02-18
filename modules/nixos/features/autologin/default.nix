@@ -1,6 +1,8 @@
-{ lib, config, ... }: let
+{ lib, config, ... }:
+let
   cfg = config.mySystem.autologin;
-in {
+in
+{
   options.mySystem.autologin = {
     user = lib.mkOption {
       default = null;

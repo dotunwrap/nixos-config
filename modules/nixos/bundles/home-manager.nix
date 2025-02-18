@@ -1,6 +1,16 @@
-{ lib, config, inputs, outputs, myUtils, pkgs, ... }: let
+{
+  lib,
+  config,
+  inputs,
+  outputs,
+  myUtils,
+  pkgs,
+  ...
+}:
+let
   cfg = config.mySystem;
-in {
+in
+{
   options.mySystem = {
     userName = lib.mkOption {
       default = "garrett";
@@ -17,7 +27,7 @@ in {
     };
 
     userNixosSettings = lib.mkOption {
-      default = {};
+      default = { };
       description = ''
         NixOS user settings
       '';
@@ -35,22 +45,26 @@ in {
         outputs = inputs.self.outputs;
       };
       users = {
-        ${cfg.userName} = { ... }: {
-          imports = [
-            (import cfg.userConfig)
-            outputs.homeManagerModules.default
-          ];
-        };
+        ${cfg.userName} =
+          { ... }:
+          {
+            imports = [
+              (import cfg.userConfig)
+              outputs.homeManagerModules.default
+            ];
+          };
       };
     };
 
-    users.users.${cfg.userName} =
-      {
-        isNormalUser = true;
-        initialPassword = "password";
-        description = cfg.userName;
-        shell = pkgs.zsh;
-        extraGroups = ["networkmanager" "wheel"];
-      } // cfg.userNixosSettings;
+    users.users.${cfg.userName} = {
+      isNormalUser = true;
+      initialPassword = "password";
+      description = cfg.userName;
+      shell = pkgs.zsh;
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+      ];
+    } // cfg.userNixosSettings;
   };
 }
