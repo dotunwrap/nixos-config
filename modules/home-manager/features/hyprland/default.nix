@@ -31,7 +31,7 @@
           gaps_in = 5;
           gaps_out = 10;
           border_size = 2;
-          "col.active_border" = "rgba(89b4faee) rgba(94e2d5ee) 45deg";
+          "col.active_border" = "rgba(94e2d5ee) rgba(94e2d5ee) 45deg";
         };
 
         exec-once = [
@@ -51,6 +51,7 @@
 
         env = [
           "NIXOS_OZONE_WL,1"
+          "MOZ_ENABLE_WAYLAND,1"
         ];
       };
     };

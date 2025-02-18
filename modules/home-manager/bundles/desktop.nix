@@ -18,17 +18,18 @@
       # misc modules
       vesktop.enable = lib.mkDefault true;
       typst.enable = lib.mkDefault true;
+      spicetify.enable = lib.mkDefault true;
     };
 
     home.file = {
       ".local/share/rofi/rofi-bluetooth".source = "${pkgs.rofi-bluetooth}";
     };
-  
+
     xdg.mimeApps.defaultApplications = {
-      "image/*" = ["imv.desktop"];
-      "video/png" = ["mpv.desktop"];
-      "video/jpg" = ["mpv.desktop"];
-      "video/*" = ["mpv.desktop"];
+      "image/*" = [ "imv.desktop" ];
+      "video/png" = [ "mpv.desktop" ];
+      "video/jpg" = [ "mpv.desktop" ];
+      "video/*" = [ "mpv.desktop" ];
     };
 
     home.packages = with pkgs; [

@@ -1,15 +1,24 @@
-{ ... }:
+_:
 
 {
   programs.waybar.settings = {
     "top_bar" = {
-      layer = "top"; 
-      position = "top"; 
+      layer = "top";
+      position = "top";
       height = 36;
       spacing = 4;
-      "modules-left" = [ "hyprland/workspaces" "hyprland/submap" ];
+      "modules-left" = [
+        "hyprland/workspaces"
+        "hyprland/submap"
+      ];
       "modules-center" = [
-        "clock#time" "custom/separator" "clock#week" "custom/separator_dot" "clock#month" "custom/separator" "clock#calendar"
+        "clock#time"
+        "custom/separator"
+        "clock#week"
+        "custom/separator_dot"
+        "clock#month"
+        "custom/separator"
+        "clock#calendar"
       ];
 
       "hyprland/workspaces" = {
@@ -108,4 +117,3 @@
     };
   };
 }
-

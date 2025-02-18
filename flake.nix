@@ -26,10 +26,12 @@
     };
 
     catppuccin.url = "github:catppuccin/nix";
+
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
 
   outputs =
-    { ... }@inputs:
+    inputs:
     let
       myUtils = import ./my-utils { inherit inputs; };
     in

@@ -11,11 +11,8 @@
       libsForQt5.qtstyleplugin-kvantum
     ];
 
-    home.file.".wallpapers/wallpaper.png".source = ../../../../../assets/wallpapers/nixos-wallpaper-catppuccin-mocha.png;
-    xdg.configFile."hypr/hyprpaper.conf".text = ''
-      preload = ~/.wallpapers/wallpaper.png
-      wallpaper = , ~/.wallpapers/wallpaper.png
-    '';
+    home.file.".wallpapers/wallpaper.png".source =
+      ../../../../../assets/wallpapers/nixos-wallpaper-catppuccin-mocha.png;
 
     qt = {
       enable = true;
@@ -33,7 +30,13 @@
       };
     };
 
-    xdg.configFile."rofi/catppuccin-mocha.rasi".source = ./rofi/catppuccin-mocha.rasi;
-    xdg.configFile."rofi/config.rasi".source = ./rofi/config.rasi;
+    xdg.configFile = {
+      "hypr/hyprpaper.conf".text = ''
+        preload = ~/.wallpapers/wallpaper.png
+        wallpaper = , ~/.wallpapers/wallpaper.png
+      '';
+      "rofi/catppuccin-mocha.rasi".source = ./rofi/catppuccin-mocha.rasi;
+      "rofi/config.rasi".source = ./rofi/config.rasi;
+    };
   };
 }
