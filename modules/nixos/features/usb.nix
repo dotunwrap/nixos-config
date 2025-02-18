@@ -1,9 +1,9 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    poweralertd
-  ];
+  services.gvfs.enable = true;
 
-  services.upower.enable = true;
+  environment.systemPackages = with pkgs; [
+    usbutils
+  ];
 }

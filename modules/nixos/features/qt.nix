@@ -2,8 +2,6 @@
 
 {
   environment.systemPackages = with pkgs; [
-    poweralertd
+    qt6.qtwayland
   ];
-
-  services.upower.enable = true;
 }

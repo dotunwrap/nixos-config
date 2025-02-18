@@ -1,28 +1,29 @@
 { pkgs, ... }:
 
 {
-  imports =
-    [
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
 
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-
-    kernelParams = ["quiet"];
-    kernelModules = ["coretemp" "cpuid"];
+    kernelParams = [ "quiet" ];
+    kernelModules = [
+      "coretemp"
+      "cpuid"
+    ];
   };
 
   mySystem = {
-    bundles.system.enable = true;
-    bundles.users.enable = true;
-    bundles.dev.enable = true;
+    bundles = {
+      system.enable = true;
+      users.enable = true;
+      dev.enable = true;
+    };
     users = {
-    	"garrett" = import ../../users/garrett;
+      "garrett" = import ../../users/garrett;
     };
   };
 
@@ -53,6 +54,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }
-

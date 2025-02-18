@@ -4,7 +4,7 @@
   services.xserver = {
     enable = true;
     displayManager = {
-      sddm.enable = lib.mkDefault true;
+      sddm.enable = true;
     };
   };
 

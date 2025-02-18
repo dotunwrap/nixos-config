@@ -10,10 +10,15 @@
     polkit.enable = lib.mkDefault true;
     fonts.enable = lib.mkDefault true;
     upower.enable = lib.mkDefault true;
+    xdg-utils.enable = lib.mkDefault true;
+    usb.enable = lib.mkDefault true;
     hyprland.enable = lib.mkDefault true;
     zsh.enable = lib.mkDefault true;
+    greetd.enable = lib.mkDefault true;
+    dbus.enable = lib.mkDefault true;
     sddm.enable = lib.mkDefault false;
     autologin.enable = lib.mkDefault false;
+    openssh.enable = lib.mkDefault false;
   };
 
   time.timeZone = lib.mkDefault "America/New_York";

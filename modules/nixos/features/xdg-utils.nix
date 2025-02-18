@@ -2,8 +2,6 @@
 
 {
   environment.systemPackages = with pkgs; [
-    poweralertd
+    xdg-utils
   ];
-
-  services.upower.enable = true;
 }
