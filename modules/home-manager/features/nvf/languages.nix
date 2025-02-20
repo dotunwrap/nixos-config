@@ -1,6 +1,11 @@
 { pkgs, ... }:
 
 {
+  # https://github.com/NotAShelf/nvf/issues/137#issuecomment-2664735644
+  home.packages = with pkgs; [
+    vue-language-server
+  ];
+
   programs.nvf.settings.vim = {
     languages = {
       enableLSP = true;
@@ -61,5 +66,10 @@
       autotagHtml = true;
       grammars = pkgs.vimPlugins.nvim-treesitter.allGrammars;
     };
+
+    # TODO
+    # luaConfigRC = ''
+    #
+    # '';
   };
 }
