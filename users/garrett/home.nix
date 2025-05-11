@@ -21,6 +21,7 @@
     # potentially related to scaling somehow?
     wezterm.enable = false;
     alacritty.enable = true;
+    prism.enable = true;
   };
 
   home = {

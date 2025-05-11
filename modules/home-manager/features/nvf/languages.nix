@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   # https://github.com/NotAShelf/nvf/issues/137#issuecomment-2664735644
@@ -67,8 +67,7 @@
       grammars = pkgs.vimPlugins.nvim-treesitter.allGrammars;
     };
 
-    # TODO
-    # luaConfigRC = ''
+    # luaConfigRC = lib.nvim.dag.entryAnywhere ''
     #
     # '';
   };
