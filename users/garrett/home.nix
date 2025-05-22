@@ -27,7 +27,6 @@
   home = {
     username = "garrett";
     homeDirectory = lib.mkDefault "/home/garrett";
-    sessionVariables.EDITOR = "neovim";
     stateVersion = "24.11";
   };
 }
