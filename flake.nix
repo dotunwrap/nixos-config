@@ -39,10 +39,12 @@
     {
       nixosConfigurations = {
         x1 = mkSystem ./hosts/x1;
+        sekai = mkSystem ./hosts/sekai;
       };
 
       homeConfigurations = {
         "garrett@x1" = mkHome "x86_64-linux" ./users/garrett/home.nix;
+        "garrett@sekai" = mkHome "x86_64-linux" ./users/garrett/home.nix;
       };
 
       homeManagerModules.default = ./modules/home-manager;
