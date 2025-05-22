@@ -22,6 +22,11 @@
       users.enable = true;
       dev.enable = true;
     };
+
+    # TODO: Something about the NVidia drivers are causing a freeze when
+    # the user logs in and Hyprland starts.
+    # nvidia.enable = true;
+
     users = {
       "garrett" = import ../../users/garrett;
     };

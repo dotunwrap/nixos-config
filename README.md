@@ -13,14 +13,15 @@
 
 ## Todo List
 
-- [ ] Create own custom Nixvim config (remove Neve)
-- [ ] Configure Hyprland
+- [ ] Create own custom Nixvim config (remove Neve) - IN PROGRESS
+- [ ] Configure Hyprland - IN PROGRESS
 - [x] Configure Rofi
 - [ ] Modularize user settings (e.g. terminal choice)
 - [x] Create host for desktop
 - [ ] Declare general dots
 - [ ] Configure secrets store?
 - [ ] Modularize Catppuccin and themes
+- [ ] Resolve issues with NVidia drivers
 - TBD...
 
 ## Configuration Architecture
