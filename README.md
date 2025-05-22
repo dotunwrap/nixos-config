@@ -22,6 +22,7 @@
 - [ ] Configure secrets store?
 - [ ] Modularize Catppuccin and themes
 - [ ] Resolve issues with NVidia drivers
+- [ ] Find way to configure bundles for a user differently per host
 - TBD...
 
 ## Configuration Architecture

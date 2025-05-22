@@ -15,6 +15,7 @@
       general.enable = true;
       desktop.enable = true;
       dev.enable = true;
+      work.enable = true;
     };
 
     # wezterm is broken for some reason when hyprland has the monitor configured
