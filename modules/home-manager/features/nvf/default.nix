@@ -1,5 +1,12 @@
-{ inputs, ... }:
-
+{
+  inputs,
+  lib,
+  config,
+  ...
+}:
+let
+  cfg = config.myUser;
+in
 {
   imports = [
     inputs.nvf.homeManagerModules.default
@@ -21,5 +28,9 @@
         enableLuaLoader = true;
       };
     };
+  };
+
+  programs.zsh.shellAliases = lib.mkIf cfg.zsh.enable {
+    neovim = "nvim";
   };
 }

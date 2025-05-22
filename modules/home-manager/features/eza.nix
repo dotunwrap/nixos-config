@@ -1,11 +1,13 @@
-{ lib, config, ... }: let
+{ lib, config, ... }:
+let
   cfg = config.myUser;
-in {
+in
+{
   programs.eza = {
     enable = true;
   };
 
   programs.zsh.shellAliases = lib.mkIf cfg.zsh.enable {
-    ls = "eza --icons --group-directories-first"; 
+    ls = "eza --icons --group-directories-first";
   };
 }

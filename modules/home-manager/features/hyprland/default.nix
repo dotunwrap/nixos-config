@@ -1,15 +1,13 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
-    ./keys.nix
+    ./keymap.nix
     ./waybar
     ./theme
   ];
 
   config = {
-    myUser.keymap.enable = lib.mkDefault true;
-
     home.packages = with pkgs; [
       pyprland
       hyprpicker
