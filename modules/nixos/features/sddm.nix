@@ -1,11 +1,8 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
-  services.xserver = {
-    enable = true;
-    displayManager = {
-      sddm.enable = true;
-    };
+  services.displayManager = {
+    sddm.enable = true;
   };
 
   environment.systemPackages = with pkgs; [

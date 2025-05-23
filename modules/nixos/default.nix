@@ -1,37 +1,43 @@
-{ config, lib, inputs, myUtils, ... }: let
+{
+  pkgs,
+  config,
+  lib,
+  inputs,
+  myUtils,
+  ...
+}:
+let
   cfg = config.mySystem;
 
-  features =
-    myUtils.extendModules
-    (name: {
-      extraOptions = {
-        mySystem.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
-      };
+  features = myUtils.extendModules (name: {
+    extraOptions = {
+      mySystem.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+    };
 
-      configExtension = config: (lib.mkIf cfg.${name}.enable config);
-    })
-    (myUtils.filesIn ./features);
+    configExtension = config: (lib.mkIf cfg.${name}.enable config);
+  }) (myUtils.filesIn ./features) { inherit pkgs; };
 
-  bundles =
-    myUtils.extendModules
-    (name: {
-      extraOptions = {
-        mySystem.bundles.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
-      };
+  bundles = myUtils.extendModules (name: {
+    extraOptions = {
+      mySystem.bundles.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
+    };
 
-      configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
-    })
-    (myUtils.filesIn ./bundles);
-in {
+    configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
+  }) (myUtils.filesIn ./bundles) { inherit pkgs; };
+in
+{
   imports =
     [
       inputs.home-manager.nixosModules.home-manager
     ]
     ++ features
     ++ bundles;
-  
+
   config = {
-    nix.settings.experimental-features = ["nix-command" "flakes"];
+    nix.settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     nixpkgs.config.allowUnfree = true;
     programs.nix-ld.enable = true;
   };

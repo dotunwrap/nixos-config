@@ -1,4 +1,8 @@
-{ outputs, lib, ... }:
+{
+  outputs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -17,12 +21,6 @@
       dev.enable = true;
       work.enable = true;
     };
-
-    # wezterm is broken for some reason when hyprland has the monitor configured
-    # potentially related to scaling somehow?
-    wezterm.enable = false;
-    alacritty.enable = true;
-    prism.enable = true;
   };
 
   home = {

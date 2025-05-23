@@ -1,7 +1,12 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  config,
+  ...
+}:
 
 {
   environment.systemPackages = with pkgs; [
-    qt6.qtwayland
+    (if config.mySystem.hyprland.enable then qt6.qtwayland else null)
+    (if config.mySystem.bspwm.enable then qt6 else null)
   ];
 }

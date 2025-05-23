@@ -1,11 +1,23 @@
-{ lib, ... }:
+{
+  lib,
+  #displayServer,
+  myUtils,
+  ...
+}:
 
 {
   config = {
     myUser = {
       # basic desktop modules
-      hyprland.enable = true;
-      rofi.enable = true;
+      #      ${
+      #        myUtils.forDisplayServer displayServer {
+      #          x11 = "bspwm";
+      #          wayland = "hyprland";
+      #        }
+      #      }.enable =
+      #        true;
+      hyprland.enable = lib.mkDefault true;
+      rofi.enable = lib.mkDefault true;
       feh.enable = lib.mkDefault false;
 
       # browser modules

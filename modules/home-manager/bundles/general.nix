@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ lib, ... }:
 
 {
   nixpkgs = {
@@ -23,6 +23,7 @@
     wget.enable = lib.mkDefault true;
     yt-dlp.enable = lib.mkDefault true;
     tree-sitter.enable = lib.mkDefault true;
+    direnv.enable = lib.mkDefault true;
   };
 
   programs.home-manager.enable = true;

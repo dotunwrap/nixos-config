@@ -43,8 +43,8 @@
       };
 
       homeConfigurations = {
-        "garrett@x1" = mkHome "x86_64-linux" ./users/garrett/home.nix;
-        "garrett@sekai" = mkHome "x86_64-linux" ./users/garrett/home.nix;
+        "garrett@x1" = mkHome "x86_64-linux" ./users/garrett/home.nix "wayland";
+        "garrett@sekai" = mkHome "x86_64-linux" ./users/garrett/home.nix "x11";
       };
 
       homeManagerModules.default = ./modules/home-manager;

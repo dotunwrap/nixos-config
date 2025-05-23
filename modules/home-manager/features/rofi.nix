@@ -1,8 +1,15 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  ...
+}:
 
 {
   home.packages = with pkgs; [
-    rofi-wayland
+    #(myUtils.forDisplayServer displayServer {
+    #  x11 = rofi;
+    #  wayland = rofi-wayland;
+    #})
+    rofi
   ];
 
   home.file = {
