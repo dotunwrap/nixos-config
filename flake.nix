@@ -1,11 +1,32 @@
 {
-  description = "dotunwrap's NixOS config flake";
-
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+
+    parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    nix = {
+      url = "github:nixos/nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "parts";
+      };
+    };
+
+    nix-gl = {
+      url = "github:nix-community/nixgl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    programs-db = {
+      url = "github:wamserma/flake-programs-sqlite";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -31,23 +52,23 @@
   };
 
   outputs =
-    inputs:
-    let
-      myUtils = import ./my-utils { inherit inputs; };
-    in
-    with myUtils;
-    {
-      nixosConfigurations = {
-        x1 = mkSystem ./hosts/x1;
-        sekai = mkSystem ./hosts/sekai;
-      };
+    { parts, ... }@inputs:
+    parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "x86_64-linux"
+      ];
 
-      homeConfigurations = {
-        "garrett@x1" = mkHome "x86_64-linux" "wayland" ./users/garrett/home.nix;
-        "garrett@sekai" = mkHome "x86_64-linux" "x11" ./users/garrett/home.nix;
-      };
+      imports = [
+        ./parts/home-configs.nix
+        ./parts/home-modules.nix
+        ./parts/nixos-modules.nix
+        ./parts/system-configs.nix
 
-      homeManagerModules.default = ./modules/home-manager;
-      nixosModules.default = ./modules/nixos;
+        ./nixos/configurations
+        ./home/configurations
+
+        ./home/modules
+        ./nixos/modules
+      ];
     };
 }
