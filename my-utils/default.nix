@@ -19,15 +19,15 @@ rec {
     };
 
   mkHome =
-    sys: config: displayServer:
+    sys: displayServer: config:
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = pkgsFor sys;
       extraSpecialArgs = {
         inherit
           inputs
           myUtils
-          displayServer
           outputs
+          displayServer
           ;
       };
       modules = [
@@ -36,14 +36,7 @@ rec {
       ];
     };
 
-  forDisplayServer =
-    displayServer: map:
-    (
-      if !builtins.hasAttr displayServer map then
-        abort "There is no configuration for ${displayServer} in the map."
-      else
-        map.${displayServer}
-    );
+  forDisplayServer = displayServer: map: map.${displayServer};
 
   filesIn = dir: (map (fname: dir + "/${fname}") (builtins.attrNames (builtins.readDir dir)));
 
@@ -53,14 +46,10 @@ rec {
   fileNameOf = path: (builtins.head (builtins.split "\\." (baseNameOf path)));
 
   extendModule =
-    { path, extraArgs, ... }@args:
+    { path, ... }@args:
     { pkgs, ... }@margs:
     let
-      eval =
-        if (builtins.isString path) || (builtins.isPath path) then
-          import path (margs // extraArgs)
-        else
-          path (margs // extraArgs);
+      eval = if (builtins.isString path) || (builtins.isPath path) then import path margs else path margs;
       evalNoImports = builtins.removeAttrs eval [
         "imports"
         "options"
@@ -94,7 +83,7 @@ rec {
     };
 
   extendModules =
-    extension: modules: extraArgs:
+    extension: modules:
     map (
       f:
       let
@@ -104,7 +93,6 @@ rec {
         (extension name)
         // {
           path = f;
-          inherit extraArgs;
         }
       )
     ) modules;

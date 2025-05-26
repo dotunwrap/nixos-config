@@ -1,22 +1,26 @@
 {
   lib,
-  #displayServer,
   myUtils,
   ...
 }:
-
+let
+  displayServer = "x11";
+in
 {
   config = {
     myUser = {
       # basic desktop modules
-      #      ${
-      #        myUtils.forDisplayServer displayServer {
-      #          x11 = "bspwm";
-      #          wayland = "hyprland";
-      #        }
-      #      }.enable =
-      #        true;
-      hyprland.enable = lib.mkDefault true;
+      bundles.${
+        let
+          map = {
+            x11 = "desktop_x11";
+            wayland = "desktop_wayland";
+          };
+        in
+        myUtils.forDisplayServer displayServer map
+      }.enable =
+        true;
+
       rofi.enable = lib.mkDefault true;
       feh.enable = lib.mkDefault false;
 

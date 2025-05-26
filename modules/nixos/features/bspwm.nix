@@ -1,6 +1,10 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
+  environment.systemPackages = with pkgs; [
+    xclip
+  ];
+
   services.xserver = {
     enable = true;
     windowManager = {
@@ -8,6 +12,10 @@
         enable = true;
       };
     };
-    displayManager.defaultSession = "bspwm";
+    displayManager = {
+      startx.enable = true;
+    };
   };
+
+  services.displayManager.defaultSession = "bspwm";
 }

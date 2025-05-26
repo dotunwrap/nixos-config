@@ -22,6 +22,7 @@
       work.enable = true;
     };
 
+    # TODO:
     alacritty.enable = true;
   };
 
