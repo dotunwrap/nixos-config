@@ -40,9 +40,12 @@ in
       useUserPackages = true;
 
       extraSpecialArgs = {
-        inherit inputs;
-        inherit myUtils;
-        outputs = inputs.self.outputs;
+        inherit
+          inputs
+          myUtils
+          ;
+        inherit (inputs.self) outputs;
+        inherit (cfg) displayServer;
       };
       users = {
         ${cfg.userName} =

@@ -42,10 +42,7 @@
         sekai = mkSystem ./hosts/sekai;
       };
 
-      homeConfigurations = {
-        "garrett@x1" = mkHome "x86_64-linux" "wayland" ./users/garrett/home.nix;
-        "garrett@sekai" = mkHome "x86_64-linux" "x11" ./users/garrett/home.nix;
-      };
+      homeConfigurations = { };
 
       homeManagerModules.default = ./modules/home-manager;
       nixosModules.default = ./modules/nixos;
