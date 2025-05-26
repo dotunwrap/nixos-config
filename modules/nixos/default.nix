@@ -1,5 +1,4 @@
 {
-  pkgs,
   config,
   lib,
   inputs,
@@ -15,7 +14,7 @@ let
     };
 
     configExtension = config: (lib.mkIf cfg.${name}.enable config);
-  }) (myUtils.filesIn ./features) { inherit pkgs; };
+  }) (myUtils.filesIn ./features);
 
   bundles = myUtils.extendModules (name: {
     extraOptions = {
@@ -23,7 +22,7 @@ let
     };
 
     configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
-  }) (myUtils.filesIn ./bundles) { inherit pkgs; };
+  }) (myUtils.filesIn ./bundles);
 in
 {
   imports =

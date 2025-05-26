@@ -21,6 +21,9 @@
       dev.enable = true;
       work.enable = true;
     };
+
+    # TODO:
+    alacritty.enable = true;
   };
 
   home = {
