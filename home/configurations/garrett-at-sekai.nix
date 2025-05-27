@@ -1,34 +1,16 @@
-{
-  outputs,
-  lib,
-  ...
-}:
+_: _:
 
 {
   imports = [
-    outputs.homeManagerModules.default
+    ./garrett.nix
   ];
 
-  programs.git = {
-    userName = "Garrett Simpson";
-    userEmail = "garrett@dotunwrap.dev";
-  };
+  nixpkgs.allowedUnfree = [ ];
 
-  myUser = {
-    bundles = {
-      general.enable = true;
-      desktop.enable = true;
-      dev.enable = true;
-      work.enable = true;
-    };
-
-    # TODO:
-    alacritty.enable = true;
-  };
-
-  home = {
-    username = "garrett";
-    homeDirectory = lib.mkDefault "/home/garrett";
-    stateVersion = "24.11";
-  };
+  activeBundles = [
+    "awesome"
+    "development"
+    "gaming"
+    "work"
+  ];
 }
