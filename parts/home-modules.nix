@@ -13,7 +13,7 @@ let
 in
 {
   options = {
-    dotunwrap.homeManagerModules = lib.mkOptions {
+    dotunwrap.homeManagerModules = lib.mkOption {
       type = lib.types.attrsOf submodule;
     };
   };

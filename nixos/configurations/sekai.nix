@@ -7,6 +7,8 @@
 }:
 
 {
+  activeBundles = [ ];
+
   networking = {
     hostName = "sekai";
     networkmanager.enable = true;

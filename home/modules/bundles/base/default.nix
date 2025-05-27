@@ -1,0 +1,36 @@
+_:
+{ config, lib, ... }:
+
+let
+  cfg = config.bundles.base;
+in
+
+{
+  options.bundles.base = {
+    enable = lib.mkEnableOption "The base bundle. Should always be enabled.";
+  };
+
+  config = lib.mkIf cfg.enable {
+    programs = {
+      bat.enable = true;
+      btop.enable = true;
+      direnv.enable = true;
+      eza.enable = true;
+      fzf.enable = true;
+      git.enable = true;
+      home-manager.enable = true;
+      jq.enable = true;
+      killall.enable = true;
+      nvf.enable = true;
+      p7zip.enable = true;
+      pulsemixer.enable = true;
+      starship.enable = true;
+      tree-sitter.enable = true;
+      wget.enable = true;
+      yazi.enable = true;
+      zip.enable = true;
+    };
+
+    shells.zsh.enable = true;
+  };
+}

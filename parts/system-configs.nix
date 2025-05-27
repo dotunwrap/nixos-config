@@ -104,7 +104,7 @@ in
                 ++ builtins.attrValues self.nixosModules;
 
               packageName = "nixos/config/${name}";
-              finalePackage = config.finalSystem.config.system.build.toplevel;
+              finalPackage = config.finalSystem.config.system.build.toplevel;
 
               packageModule = {
                 ${config.system}.${config.packageName} = config.finalPackage;
