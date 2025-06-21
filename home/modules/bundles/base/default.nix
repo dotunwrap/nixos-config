@@ -18,6 +18,7 @@ in
       eza.enable = true;
       fzf.enable = true;
       git.enable = true;
+      gpg.enable = true;
       home-manager.enable = true;
       jq.enable = true;
       killall.enable = true;
