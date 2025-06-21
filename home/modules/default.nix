@@ -21,6 +21,7 @@
     "programs/feh" = ./programs/feh.nix;
     "programs/gimp" = ./programs/gimp.nix;
     "programs/git" = ./programs/git.nix;
+    "programs/gpg" = ./programs/gpg.nix;
     "programs/hyprland" = ./programs/hyprland;
     "programs/killall" = ./programs/killall.nix;
     "programs/lxsession" = ./programs/lxsession.nix;
