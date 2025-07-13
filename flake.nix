@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
-    parts = {
+    flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
@@ -11,7 +11,7 @@
       url = "github:nixos/nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "parts";
+        flake-parts.follows = "flake-parts";
       };
     };
 
@@ -36,9 +36,12 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    nvf = {
-      url = "github:notashelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nvim = {
+      url = "github:dotunwrap/nvf-config";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
     };
 
     rust-overlay = {

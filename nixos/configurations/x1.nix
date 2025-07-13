@@ -1,40 +1,32 @@
-{ pkgs, ... }:
+_:
+{
+  pkgs,
+  ...
+}:
 
 {
-  imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
+  activeBundles = [
+    "base"
+    "hyprland"
   ];
 
-  boot = {
-    kernelPackages = pkgs.linuxPackages_zen;
-
-    kernelParams = [ "quiet" ];
-    kernelModules = [
-      "coretemp"
-      "cpuid"
-    ];
-  };
-
-  mySystem = {
-    bundles = {
-      system.enable = true;
-      users.enable = true;
-      dev.enable = true;
-    };
-    users = {
-      "garrett" = import ../../users/garrett;
+  networking = {
+    hostName = "x1";
+    networkmanager.enable = true;
+    useDHCP = false;
+    interfaces = {
+      enp0s31f6.useDHCP = true;
+      wlp2s0.useDHCP = true;
     };
   };
 
-  networking.hostName = "x1"; # Define your hostname.
-  networking.networkmanager.enable = true;
+  time.timeZone = "America/New_York";
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  services = {
-    libinput.enable = true;
-    printing.enable = true;
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
   };
+
+  users.users = import ./users/garrett.nix pkgs;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

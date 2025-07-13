@@ -13,11 +13,12 @@
 let
   base = "/etc/nixpkgs/channels";
   nixpkgsPath = "${base}/nixpkgs";
+  cfg = config.core.flake;
 in
 {
   options.nix.flakes.enable = lib.mkEnableOption "nix flakes";
 
-  config = lib.mkIf config.nix.flakes.enable {
+  config = lib.mkIf cfg.enable {
     programs.command-not-found.dbPath = programs-db.packages.${pkgs.system}.programs-sqlite;
 
     nix = {

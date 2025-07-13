@@ -5,11 +5,12 @@
     "bundles/bspwm" = ./bundles/bspwm;
     "bundles/hyprland" = ./bundles/hyprland;
 
+    "core/cachix" = ./core/cachix.nix;
     "core/flake" = ./core/flake.nix;
     "core/kernel" = ./core/kernal.nix;
     "core/nix" = ./core/nix.nix;
 
-    "services/audio/pipewire" = ./services/audio/pipewire.nix;
-    "services/display-manager/ly" = ./services/display-manager/ly.nix;
+    "programs/usbutils" = ./programs/usbutils.nix;
+    "programs/xdg-utils" = ./programs/xdg-utils.nix;
   };
 }

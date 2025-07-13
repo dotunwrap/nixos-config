@@ -1,8 +1,6 @@
-{ self, ... }@inputs:
+_:
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 
