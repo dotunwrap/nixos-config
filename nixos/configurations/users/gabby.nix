@@ -1,6 +1,6 @@
 { pkgs }:
 {
-  garrett = {
+  gabby = {
     isNormalUser = true;
     shell = pkgs.zsh;
     extraGroups = [
