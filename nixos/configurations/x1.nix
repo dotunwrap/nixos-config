@@ -26,7 +26,7 @@ _:
     defaultLocale = "en_US.UTF-8";
   };
 
-  users.users = import ./users/garrett.nix pkgs;
+  users.users = import ./users/gabby.nix pkgs;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

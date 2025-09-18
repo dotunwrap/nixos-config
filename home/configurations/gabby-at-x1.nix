@@ -8,7 +8,7 @@ _: _:
   ];
 
   programs.git = {
-    userName = "Garrett Simpson";
-    userEmail = "garrett@dotunwrap.dev";
+    userName = "Gabby Simpson";
+    userEmail = "gabby@dotunwrap.dev";
   };
 }
