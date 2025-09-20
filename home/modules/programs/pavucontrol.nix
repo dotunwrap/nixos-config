@@ -6,12 +6,12 @@ _:
   ...
 }:
 let
-  cfg = config.programs.p7zip;
+  cfg = config.programs.pavucontrol;
 in
 {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      p7zip
+      pavucontrol
     ];
   };
 }
