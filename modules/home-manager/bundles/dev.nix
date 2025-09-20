@@ -6,5 +6,7 @@
     rust.enable = lib.mkDefault true;
     c.enable = lib.mkDefault true;
     javascript.enable = lib.mkDefault true;
+
+    unity-hub.enable = lib.mkDefault true;
   };
 }

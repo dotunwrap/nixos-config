@@ -21,6 +21,8 @@
       dev.enable = true;
       work.enable = true;
     };
+
+    alacritty.enable = true;
   };
 
   home = {
