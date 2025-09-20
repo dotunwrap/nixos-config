@@ -1,5 +1,5 @@
 _:
-{ pkgs }:
+{ pkgs, ... }:
 
 {
   nix.settings.substituters = [ "https://cache.nixos.org" ];

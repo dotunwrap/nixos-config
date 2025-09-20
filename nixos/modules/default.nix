@@ -7,7 +7,7 @@
 
     "core/cachix" = ./core/cachix.nix;
     "core/flake" = ./core/flake.nix;
-    "core/kernel" = ./core/kernal.nix;
+    "core/kernel" = ./core/kernel.nix;
     "core/nix" = ./core/nix.nix;
 
     "programs/usbutils" = ./programs/usbutils.nix;
