@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -13,6 +13,11 @@
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
       };
+    };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-gl = {
@@ -54,9 +59,8 @@
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
 
-  outputs =
-    { flake-parts, ... }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = {flake-parts, ...} @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} {
       systems = [
         "x86_64-linux"
       ];

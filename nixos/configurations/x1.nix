@@ -1,10 +1,5 @@
-_:
-{
-  pkgs,
-  ...
-}:
-
-{
+# TODO: This machine needs to be configured
+_: {pkgs, ...}: {
   activeBundles = [
     "base"
     "hyprland"
