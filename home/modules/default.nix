@@ -9,36 +9,38 @@
     "bundles/hyprland" = ./bundles/hyprland;
     "bundles/work" = ./bundles/work;
 
-    "misc/home" = ./misc/home.nix;
+    misc = ./misc;
+    "misc/home" = ./misc/home;
 
-    "programs/alacritty" = ./programs/alacritty.nix;
+    programs = ./programs;
+    "programs/alacritty" = ./programs/alacritty;
     "programs/awesome" = ./programs/awesome;
-    "programs/brave" = ./programs/brave.nix;
+    "programs/brave" = ./programs/brave;
     "programs/bspwm" = ./programs/bspwm;
-    "programs/direnv" = ./programs/direnv.nix;
-    "programs/feh" = ./programs/feh.nix;
-    "programs/gimp" = ./programs/gimp.nix;
-    "programs/git" = ./programs/git.nix;
-    "programs/gpg" = ./programs/gpg.nix;
+    "programs/direnv" = ./programs/direnv;
+    "programs/feh" = ./programs/feh;
+    "programs/gimp" = ./programs/gimp;
+    "programs/git" = ./programs/git;
+    "programs/gpg" = ./programs/gpg;
     "programs/hyprland" = ./programs/hyprland;
     "programs/hyprland/waybar" = ./programs/hyprland/waybar;
-    "programs/killall" = ./programs/killall.nix;
-    "programs/lxsession" = ./programs/lxsession.nix;
-    "programs/obs" = ./programs/obs.nix;
-    "programs/onlyoffice" = ./programs/onlyoffice.nix;
-    "programs/p7zip" = ./programs/p7zip.nix;
-    "programs/pavucontrol" = ./programs/pavucontrol.nix;
-    "programs/pulsemixer" = ./programs/pulsemixer.nix;
-    "programs/rofi" = ./programs/rofi.nix;
-    "programs/slack" = ./programs/slack.nix;
-    "programs/spicetify" = ./programs/spicetify.nix;
-    "programs/starship" = ./programs/starship.nix;
-    "programs/tree-sitter" = ./programs/tree-sitter.nix;
-    "programs/vesktop" = ./programs/vesktop.nix;
-    "programs/wezterm" = ./programs/wezterm.nix;
-    "programs/wget" = ./programs/wget.nix;
-    "programs/yazi" = ./programs/yazi.nix;
-    "programs/zip" = ./programs/zip.nix;
+    "programs/killall" = ./programs/killall;
+    "programs/lxsession" = ./programs/lxsession;
+    "programs/obs" = ./programs/obs;
+    "programs/onlyoffice" = ./programs/onlyoffice;
+    "programs/p7zip" = ./programs/p7zip;
+    "programs/pavucontrol" = ./programs/pavucontrol;
+    "programs/pulsemixer" = ./programs/pulsemixer;
+    "programs/rofi" = ./programs/rofi;
+    "programs/slack" = ./programs/slack;
+    "programs/spicetify" = ./programs/spicetify;
+    "programs/starship" = ./programs/starship;
+    "programs/tree-sitter" = ./programs/tree-sitter;
+    "programs/vesktop" = ./programs/vesktop;
+    "programs/wezterm" = ./programs/wezterm;
+    "programs/wget" = ./programs/wget;
+    "programs/yazi" = ./programs/yazi;
+    "programs/zip" = ./programs/zip;
 
     "programs/programming/c" = ./programs/programming/c;
     "programs/programming/go" = ./programs/programming/go;
@@ -47,6 +49,6 @@
     "programs/programming/typst" = ./programs/programming/typst;
     "programs/programming/zig" = ./programs/programming/zig;
 
-    "shells/zsh" = ./shells/zsh;
+    "programs/shells/zsh" = ./shells/zsh;
   };
 }

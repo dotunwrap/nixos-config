@@ -5,6 +5,7 @@ _:
   ...
 }:
 let
+  cfg = config.nix;
   allowed = config.nix.allowedUnfree;
 in
 {
@@ -18,7 +19,7 @@ in
     };
   };
 
-  config = lib.mkMerge [
+  config = lib.mkIf cfg.enable lib.mkMerge [
     (lib.mkIf (allowed != [ ]) {
       nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) allowed;
     })
