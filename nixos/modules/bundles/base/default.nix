@@ -11,8 +11,10 @@ let
 in
 
 {
-  options.bundles.base = {
-    enable = lib.mkEnableOption "The base bundle. Should always be enabled.";
+  options = {
+    bundles.base = {
+      enable = lib.mkEnableOption "The base bundle. Should always be enabled.";
+    };
   };
 
   config = lib.mkIf cfg.enable {

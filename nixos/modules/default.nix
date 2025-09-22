@@ -5,12 +5,14 @@
     "bundles/bspwm" = ./bundles/bspwm;
     "bundles/hyprland" = ./bundles/hyprland;
 
-    "core/cachix" = ./core/cachix.nix;
-    "core/flake" = ./core/flake.nix;
-    "core/kernel" = ./core/kernel.nix;
-    "core/nix" = ./core/nix.nix;
+    core = ./core;
+    "core/cachix" = ./core/cachix;
+    "core/flake" = ./core/flake;
+    "core/kernel" = ./core/kernel;
+    "core/nix" = ./core/nix;
 
-    "programs/usbutils" = ./programs/usbutils.nix;
-    "programs/xdg-utils" = ./programs/xdg-utils.nix;
+    programs = ./programs;
+    "programs/usbutils" = ./programs/usbutils;
+    "programs/xdg-utils" = ./programs/xdg-utils;
   };
 }
