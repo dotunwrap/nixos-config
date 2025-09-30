@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, ... }:
 {
   gabby = {
     isNormalUser = true;

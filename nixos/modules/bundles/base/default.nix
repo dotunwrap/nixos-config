@@ -64,7 +64,6 @@ in
         pulse.enable = true;
         jack.enable = true;
       };
-      polkit.enable = true;
       printing.enable = true;
       upower.enable = true;
     };

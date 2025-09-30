@@ -1,5 +1,10 @@
 _:
-{ pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.core.cachix;
 in
