@@ -40,6 +40,7 @@
       onlyoffice.enable = lib.mkDefault true;
       appimage.enable = lib.mkDefault true;
       gimp.enable = lib.mkDefault true;
+      signal.enable = lib.mkDefault true;
     };
   };
 }
