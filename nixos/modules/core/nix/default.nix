@@ -19,21 +19,23 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable lib.mkMerge [
-    (lib.mkIf (allowed != [ ]) {
-      nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) allowed;
-    })
-    { nix.settings.auto-optimise-store = lib.mkDefault true; }
-    {
-      nix.settings = {
-        trusted-users = lib.mkDefault [
-          "root"
-          "@wheel"
-        ];
-        min-free = lib.mkDefault (5 * (1024 * 1024 * 1024));
-        max-free = lib.mkDefault (25 * (1024 * 1024 * 1024));
-        allow-import-from-derivation = lib.mkDefault false;
-      };
-    }
-  ];
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      (lib.mkIf (allowed != [ ]) {
+        nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) allowed;
+      })
+      { nix.settings.auto-optimise-store = lib.mkDefault true; }
+      {
+        nix.settings = {
+          trusted-users = lib.mkDefault [
+            "root"
+            "@wheel"
+          ];
+          min-free = lib.mkDefault (5 * (1024 * 1024 * 1024));
+          max-free = lib.mkDefault (25 * (1024 * 1024 * 1024));
+          allow-import-from-derivation = lib.mkDefault false;
+        };
+      }
+    ]
+  );
 }

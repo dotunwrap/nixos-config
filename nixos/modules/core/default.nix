@@ -1,5 +1,5 @@
-_: {
-  config,
+_:
+{
   lib,
   ...
 }:
@@ -7,10 +7,11 @@ _: {
 with lib;
 
 {
-  config.core = {
+  options.core = {
     cachix.enable = mkEnableOption "Enable cachix";
     flake.enable = mkEnableOption "Enable flake";
     kernel.enable = mkEnableOption "Enable kernel";
     nix.enable = mkEnableOption "Enable nix";
   };
 }
+

@@ -1,5 +1,5 @@
-_: {
-  config,
+_:
+{
   lib,
   ...
 }:
@@ -7,8 +7,9 @@ _: {
 with lib;
 
 {
-  config.programs = {
+  options.programs = {
     usbutils.enable = mkEnableOption "Enable usbutils";
     xdg-utils.enable = mkEnableOption "Enable xdg-utils";
   };
 }
+
