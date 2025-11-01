@@ -26,5 +26,7 @@ in
       xserver.displayManager.defaultSession = "dwm";
       flatpak.enable = true;
     };
+
+    xdg.portal.enable = true;
   };
 }
