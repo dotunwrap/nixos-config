@@ -1,8 +1,10 @@
 # TODO: This machine needs to be configured
-_: {pkgs, ...}: {
+_:
+{ pkgs, ... }:
+{
   activeBundles = [
     "base"
-    "hyprland"
+    "dwm"
   ];
 
   networking = {

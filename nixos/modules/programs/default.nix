@@ -12,4 +12,3 @@ with lib;
     xdg-utils.enable = mkEnableOption "Enable xdg-utils";
   };
 }
-

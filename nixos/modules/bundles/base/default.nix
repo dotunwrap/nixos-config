@@ -52,7 +52,6 @@ in
         enable = true;
         implementation = "broker";
       };
-      flatpak.enable = true;
       gvfs.enable = true;
       openssh.enable = true;
       pipewire = {

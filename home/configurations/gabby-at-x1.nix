@@ -3,7 +3,7 @@ _: _:
 {
   activeBundles = [
     "development"
-    "hyprland"
+    "dwm"
     "work"
   ];
 

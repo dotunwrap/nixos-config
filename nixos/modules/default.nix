@@ -2,8 +2,7 @@
   dotunwrap.nixosModules = {
     bundles = ./bundles;
     "bundles/base" = ./bundles/base;
-    "bundles/bspwm" = ./bundles/bspwm;
-    "bundles/hyprland" = ./bundles/hyprland;
+    "bundles/dwm" = ./bundles/dwm;
 
     core = ./core;
     "core/cachix" = ./core/cachix;
@@ -14,5 +13,11 @@
     programs = ./programs;
     "programs/usbutils" = ./programs/usbutils;
     "programs/xdg-utils" = ./programs/xdg-utils;
+
+    "programs/display-managers" = ./programs/display-managers;
+    "programs/display-managers/ly" = ./programs/display-managers/ly;
+
+    "programs/window-managers" = ./programs/window-managers;
+    "programs/window-managers/dwm" = ./programs/window-managers/dwm;
   };
 }
