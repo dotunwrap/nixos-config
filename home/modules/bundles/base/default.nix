@@ -1,4 +1,4 @@
-_:
+{ nvim, ... }:
 { config, lib, ... }:
 
 let
@@ -11,6 +11,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    home.packages = [
+      nvim.packages.x86_64-linux.default
+    ];
+
     programs = {
       bat.enable = true;
       btop.enable = true;
@@ -21,6 +25,7 @@ in
       gpg.enable = true;
       home-manager.enable = true;
       jq.enable = true;
+      just_.enable = true;
       killall.enable = true;
       p7zip.enable = true;
       pulsemixer.enable = true;

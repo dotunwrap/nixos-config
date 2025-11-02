@@ -1,4 +1,4 @@
-_:
+{ home-manager, ... }:
 {
   config,
   lib,
@@ -18,8 +18,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      at-spi2-atk
+    environment.systemPackages = [
+      pkgs.at-spi2-atk
+      home-manager.packages.x86_64-linux.home-manager
     ];
 
     hardware = {

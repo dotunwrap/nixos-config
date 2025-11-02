@@ -10,6 +10,8 @@ with lib;
   options.programs = {
     dmenu.enable = mkEnableOption "Enable dmenu";
     gimp.enable = mkEnableOption "Enable gimp";
+    # NOTE: This cannot be `just` as hm deprecated their own `just.enable` option
+    just_.enable = mkEnableOption "Enable just";
     killall.enable = mkEnableOption "Enable killall";
     lxsession.enable = mkEnableOption "Enable lxsession";
     obs.enable = mkEnableOption "Enable obs";

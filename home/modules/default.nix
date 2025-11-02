@@ -18,6 +18,7 @@
     "programs/gimp" = ./programs/gimp;
     "programs/git" = ./programs/git;
     "programs/gpg" = ./programs/gpg;
+    "programs/just" = ./programs/just;
     "programs/killall" = ./programs/killall;
     "programs/lxsession" = ./programs/lxsession;
     "programs/obs" = ./programs/obs;
