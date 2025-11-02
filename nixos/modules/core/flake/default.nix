@@ -16,8 +16,6 @@ let
   cfg = config.core.flake;
 in
 {
-  options.nix.flakes.enable = lib.mkEnableOption "nix flakes";
-
   config = lib.mkIf cfg.enable {
     programs.command-not-found.dbPath = programs-db.packages.${pkgs.system}.programs-sqlite;
 

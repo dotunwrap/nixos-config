@@ -1,5 +1,27 @@
-_: _:
+_:
+{ config, lib, ... }:
+
+let
+  cfg = config.bundles.dwm;
+in
 
 {
-  # TODO
+  options.bundles.dwm = {
+    enable = lib.mkEnableOption "The dwm bundle. suckless.";
+  };
+
+  config = lib.mkIf cfg.enable {
+    programs = {
+      alacritty.enable = true;
+      brave.enable = true;
+      dmenu.enable = true;
+      feh.enable = true;
+      lxsession.enable = true;
+      nushell.enable = true;
+      onlyoffice.enable = true;
+      pavucontrol.enable = true;
+      vesktop.enable = true;
+      wezterm.enable = true;
+    };
+  };
 }

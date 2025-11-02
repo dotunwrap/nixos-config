@@ -22,16 +22,13 @@ in
       home-manager.enable = true;
       jq.enable = true;
       killall.enable = true;
-      nvf.enable = true;
       p7zip.enable = true;
       pulsemixer.enable = true;
       starship.enable = true;
-      tree-sitter.enable = true;
       wget.enable = true;
       yazi.enable = true;
       zip.enable = true;
+      zsh.enable = true;
     };
-
-    shells.zsh.enable = true;
   };
 }

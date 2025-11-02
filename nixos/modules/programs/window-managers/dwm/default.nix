@@ -15,9 +15,9 @@ in
       windowManager = {
         dwm = {
           enable = true;
-          package = pkgs.dwm.override {
-            patches = [ ];
-          };
+          # package = pkgs.dwm.override {
+          #   patches = [ ];
+          # };
         };
       };
     };

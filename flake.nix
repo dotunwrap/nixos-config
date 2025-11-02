@@ -56,7 +56,10 @@
         "x86_64-linux"
       ];
 
+      debug = true;
+
       imports = [
+        ./parts/auxillary.nix
         ./parts/home-configs.nix
         ./parts/home-modules.nix
         ./parts/nixos-modules.nix
@@ -68,5 +71,11 @@
         ./home/modules
         ./nixos/modules
       ];
+
+      perSystem = _: {
+        flake = {
+          checks.x86_64-linux = import ./checks inputs;
+        };
+      };
     };
 }

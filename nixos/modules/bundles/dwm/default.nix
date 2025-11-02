@@ -2,6 +2,7 @@ _:
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -17,16 +18,37 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    fonts = {
+      packages = with pkgs; [
+        corefonts
+
+        noto-fonts
+        noto-fonts-cjk
+        noot-fonts-emoji
+
+        font-awesome
+
+        garamond-libre
+
+        nerd-fonts.jetbrains-mono
+        nerd-fonts.fira-code
+      ];
+    };
+
     programs = {
       window-managers.dwm.enable = true;
       display-managers.ly.enable = true;
     };
 
     services = {
-      xserver.displayManager.defaultSession = "dwm";
+      displayManager.defaultSession = "dwm";
       flatpak.enable = true;
     };
 
-    xdg.portal.enable = true;
+    xdg.portal = {
+      enable = true;
+      config.common.default = "*";
+      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+    };
   };
 }

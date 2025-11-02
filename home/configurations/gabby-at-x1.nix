@@ -4,7 +4,6 @@ _: _:
   activeBundles = [
     "development"
     "dwm"
-    "work"
   ];
 
   programs.git = {

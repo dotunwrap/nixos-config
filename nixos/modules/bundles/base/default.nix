@@ -34,6 +34,7 @@ in
         enable = true;
         powerOnBoot = true;
       };
+      enableAllFirmware = true;
     };
 
     programs = {
@@ -51,9 +52,21 @@ in
       dbus = {
         enable = true;
         implementation = "broker";
+        packages = with pkgs; [
+          xfce.xfconf
+          gnome2.GConf
+        ];
       };
       gvfs.enable = true;
-      openssh.enable = true;
+      openssh = {
+        enable = true;
+        settings = {
+          PasswordAuthentication = false;
+          KbdInteractiveAuthentication = false;
+          PermitRootLogin = "no";
+          AllowUsers = lib.mkDefault [ ];
+        };
+      };
       pipewire = {
         enable = true;
         alsa = {
@@ -65,6 +78,22 @@ in
       };
       printing.enable = true;
       upower.enable = true;
+    };
+
+    systemd = {
+      user.services.polkit-gnome-authentication-agent-1 = {
+        description = "polkit-gnome-authentication-agent-1";
+        wantedBy = [ "graphical-session.target" ];
+        wants = [ "graphical-session.target" ];
+        after = [ "graphical-session.target" ];
+        serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+        };
+      };
     };
   };
 }
