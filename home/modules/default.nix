@@ -25,6 +25,7 @@
     "programs/lxsession" = ./programs/lxsession;
     "programs/obs" = ./programs/obs;
     "programs/onlyoffice" = ./programs/onlyoffice;
+    "programs/opencode" = ./programs/opencode;
     "programs/p7zip" = ./programs/p7zip;
     "programs/pavucontrol" = ./programs/pavucontrol;
     "programs/pulsemixer" = ./programs/pulsemixer;
