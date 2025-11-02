@@ -31,6 +31,7 @@
     "programs/pulsemixer" = ./programs/pulsemixer;
     "programs/qutebrowser" = ./programs/qutebrowser;
     "programs/rofi" = ./programs/rofi;
+    "programs/signal" = ./programs/signal;
     "programs/slack" = ./programs/slack;
     "programs/st" = ./programs/st;
     "programs/starship" = ./programs/starship;

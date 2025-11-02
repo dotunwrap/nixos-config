@@ -14,6 +14,7 @@ with lib;
     p7zip.enable = mkEnableOption "Enable p7zip";
     pavucontrol.enable = mkEnableOption "Enable pavucontrol";
     pulsemixer.enable = mkEnableOption "Enable pulsemixer";
+    signal.enable = mkEnableOption "Enable signal";
     slack.enable = mkEnableOption "Enable slack";
     st.enable = mkEnableOption "Enable st";
     wget.enable = mkEnableOption "Enable wget";
