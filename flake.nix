@@ -1,53 +1,79 @@
 {
-  description = "dotunwrap's NixOS config flake";
-
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    nix = {
+      url = "github:nixos/nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-gl = {
+      url = "github:nix-community/nixgl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
+    programs-db = {
+      url = "github:wamserma/flake-programs-sqlite";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvf = {
-      url = "github:notashelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nvim = {
+      url = "github:dotunwrap/determinvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
     };
 
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    catppuccin.url = "github:catppuccin/nix";
-
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
 
   outputs =
-    inputs:
-    let
-      myUtils = import ./my-utils { inherit inputs; };
-    in
-    with myUtils;
-    {
-      nixosConfigurations = {
-        x1 = mkSystem ./hosts/x1;
-        sekai = mkSystem ./hosts/sekai;
-      };
+    { flake-parts, ... }@inputs:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "x86_64-linux"
+      ];
 
-      homeConfigurations = {
-        "garrett@x1" = mkHome "x86_64-linux" ./users/garrett/home.nix "wayland";
-        "garrett@sekai" = mkHome "x86_64-linux" ./users/garrett/home.nix "x11";
-      };
+      debug = true;
 
-      homeManagerModules.default = ./modules/home-manager;
-      nixosModules.default = ./modules/nixos;
+      imports = [
+        ./parts/auxillary.nix
+        ./parts/home-configs.nix
+        ./parts/home-modules.nix
+        ./parts/nixos-modules.nix
+        ./parts/system-configs.nix
+
+        ./nixos/configurations
+        ./home/configurations
+
+        ./home/modules
+        ./nixos/modules
+      ];
+
+      flake = {
+        checks.x86_64-linux = import ./checks inputs;
+      };
     };
 }
