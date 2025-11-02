@@ -1,6 +1,4 @@
-_:
-{ pkgs, ... }:
-{
+_: {pkgs, ...}: {
   activeBundles = [
     "base"
     "dwm"
@@ -13,6 +11,14 @@ _:
     interfaces = {
       enp0s31f6.useDHCP = true;
       wlp2s0.useDHCP = true;
+    };
+  };
+
+  services.libinput = {
+    enable = true;
+    touchpad = {
+      tapping = false;
+      naturalScrolling = true;
     };
   };
 
