@@ -1,5 +1,9 @@
 _:
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.zsh;
 in
@@ -10,9 +14,7 @@ in
       defaultKeymap = lib.mkDefault "vicmd";
       autosuggestion.enable = lib.mkDefault true;
       syntaxHighlighting.enable = lib.mkDefault true;
-      shellAliases = {
-        ll = "ls -la";
-      };
+      shellAliases = { } // import ../shellAliases.nix;
     };
   };
 }

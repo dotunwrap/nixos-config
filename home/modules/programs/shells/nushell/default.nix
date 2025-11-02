@@ -1,10 +1,19 @@
 _:
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.programs.nushell;
 in
 {
   config = lib.mkIf cfg.enable {
-    # programs.nushell = {};
+    programs.nushell = {
+      shellAliases = {
+        ols = "ls";
+        oll = "ls -la";
+      };
+    };
   };
 }
