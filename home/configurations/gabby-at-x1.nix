@@ -16,5 +16,5 @@ _: _:
     email = "gabby@dotunwrap.dev";
   };
 
-  home.stateVersion = "25.11";
+  home.stateVersion = "24.11";
 }
