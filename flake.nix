@@ -72,10 +72,8 @@
         ./nixos/modules
       ];
 
-      perSystem = _: {
-        flake = {
-          checks.x86_64-linux = import ./checks inputs;
-        };
+      flake = {
+        checks.x86_64-linux = import ./checks inputs;
       };
     };
 }
