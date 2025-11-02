@@ -9,6 +9,10 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    # programs.git = {};
+    programs.git.settings = {
+      init = {
+        defaultBranch = "main";
+      };
+    };
   };
 }
