@@ -35,5 +35,9 @@ in
       zip.enable = true;
       zsh.enable = true;
     };
+
+    home.sessionVariables = {
+      EDITOR = "nvim";
+    };
   };
 }
