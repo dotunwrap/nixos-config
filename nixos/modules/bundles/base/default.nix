@@ -22,13 +22,6 @@ in
       at-spi2-atk
     ];
 
-    core = {
-      cachix.enable = true;
-      flake.enable = true;
-      kernel.enable = true;
-      nix.enable = true;
-    };
-
     hardware = {
       bluetooth = {
         enable = true;
@@ -36,6 +29,8 @@ in
       };
       enableAllFirmware = true;
     };
+
+    nixpkgs.config.allowUnfree = true;
 
     programs = {
       dconf.enable = true;
@@ -60,12 +55,6 @@ in
       gvfs.enable = true;
       openssh = {
         enable = true;
-        settings = {
-          PasswordAuthentication = false;
-          KbdInteractiveAuthentication = false;
-          PermitRootLogin = "no";
-          AllowUsers = lib.mkDefault [ ];
-        };
       };
       pipewire = {
         enable = true;

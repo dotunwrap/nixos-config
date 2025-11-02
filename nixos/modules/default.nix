@@ -4,7 +4,6 @@
     "bundles/base" = ./bundles/base;
     "bundles/dwm" = ./bundles/dwm;
 
-    core = ./core;
     "core/cachix" = ./core/cachix;
     "core/flake" = ./core/flake;
     "core/kernel" = ./core/kernel;
