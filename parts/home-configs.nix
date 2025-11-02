@@ -102,15 +102,14 @@ in
               base = "home";
               homeDirectory = "/${config.base}/${config.username}";
 
-              finalModules =
-                [
-                  config.entryPoint
-                  { home = { inherit (config) username homeDirectory; }; }
-                  { systemd.user.startServices = "sd-switch"; }
-                  { news.display = "silent"; }
-                ]
-                ++ config.modules
-                ++ builtins.attrValues self.homeManagerModules;
+              finalModules = [
+                config.entryPoint
+                { home = { inherit (config) username homeDirectory; }; }
+                { systemd.user.startServices = "sd-switch"; }
+                { news.display = "silent"; }
+              ]
+              ++ config.modules
+              ++ builtins.attrValues self.homeManagerModules;
 
               packageName = "home/config/${name}";
               finalPackage = config.finalHome.activationPackage;

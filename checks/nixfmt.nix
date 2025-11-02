@@ -3,8 +3,6 @@
   nixfmt,
   self,
 }:
-# runCommand "nixfmt-run-${self.rev or "00000000"}" { } ''
-#   ${nixfmt}/bin/nixfmt
-# ''
-{
-}
+runCommand "check-nixfmt-${self.rev or "dirty"}" { } ''
+  ${nixfmt}/bin/nixfmt --check ${self} < /dev/null | tee $out
+''

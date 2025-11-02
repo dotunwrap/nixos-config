@@ -13,3 +13,6 @@ hmsw:
 switch:
   just ossw
   just hmsw
+
+check:
+  nix flake check --keep-going --allow-import-from-derivation

@@ -72,12 +72,6 @@
         ./nixos/modules
       ];
 
-      perSystem =
-        { pkgs, ... }:
-        {
-          formatter = pkgs.nixfmt;
-        };
-
       flake = {
         checks.x86_64-linux = import ./checks inputs;
       };
