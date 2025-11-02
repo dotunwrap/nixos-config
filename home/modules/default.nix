@@ -11,6 +11,7 @@
 
     programs = ./programs;
     "programs/alacritty" = ./programs/alacritty;
+    "programs/bitwarden" = ./programs/bitwarden;
     "programs/brave" = ./programs/brave;
     "programs/direnv" = ./programs/direnv;
     "programs/dmenu" = ./programs/dmenu;

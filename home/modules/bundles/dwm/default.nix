@@ -12,7 +12,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs = {
-      alacritty.enable = true;
+      bitwarden.enable = true;
       brave.enable = true;
       dmenu.enable = true;
       feh.enable = true;

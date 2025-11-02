@@ -1,13 +1,9 @@
 _:
-{
-  lib,
-  ...
-}:
-
+{ lib, ... }:
 with lib;
-
 {
   options.programs = {
+    bitwarden.enable = mkEnableOption "Enable bitwarden";
     dmenu.enable = mkEnableOption "Enable dmenu";
     gimp.enable = mkEnableOption "Enable gimp";
     # NOTE: This cannot be `just` as hm deprecated their own `just.enable` option
