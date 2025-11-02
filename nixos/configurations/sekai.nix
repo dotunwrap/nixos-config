@@ -19,34 +19,6 @@ _:
 
   time.timeZone = "America/New_York";
 
-  services = {
-    displayManager.ly.enable = true;
-    xserver.windowManager.bspwm.enable = true;
-    flatpak.enable = true;
-    printing.enable = true;
-    dbug.packages = with pkgs; [ dconf ];
-  };
-
-  hardware = {
-    bluetooth.enable = true;
-  };
-
-  nix = {
-
-  };
-
-  i18n = {
-
-  };
-
-  environment.systemPackages = with pkgs; [
-
-  ];
-
-  users.users = {
-
-  };
-
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #

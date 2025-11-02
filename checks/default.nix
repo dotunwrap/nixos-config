@@ -5,5 +5,5 @@ let
   callPackage = pkgs.lib.callPackageWith (pkgs // { inherit (inputs) self; });
 in
 {
-  nixfmt = callPackage ./nixfmt.nix { };
+  # nixfmt = callPackage ./nixfmt.nix { };
 }

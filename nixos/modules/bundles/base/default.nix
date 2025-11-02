@@ -48,6 +48,7 @@ in
         enable = true;
         implementation = "broker";
         packages = with pkgs; [
+          dconf
           xfce.xfconf
           gnome2.GConf
         ];

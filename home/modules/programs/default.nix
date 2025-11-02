@@ -8,7 +8,6 @@ with lib;
 
 {
   options.programs = {
-    brave.enable = mkEnableOption "Enable brave";
     dmenu.enable = mkEnableOption "Enable dmenu";
     gimp.enable = mkEnableOption "Enable gimp";
     killall.enable = mkEnableOption "Enable killall";
