@@ -15,6 +15,7 @@
     "programs/brave" = ./programs/brave;
     "programs/direnv" = ./programs/direnv;
     "programs/dmenu" = ./programs/dmenu;
+    "programs/eza" = ./programs/eza;
     "programs/feh" = ./programs/feh;
     "programs/gimp" = ./programs/gimp;
     "programs/git" = ./programs/git;
