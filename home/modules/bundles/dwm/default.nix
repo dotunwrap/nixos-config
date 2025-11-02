@@ -21,6 +21,7 @@ in
       onlyoffice.enable = true;
       pavucontrol.enable = true;
       qutebrowser.enable = true;
+      st.enable = true;
       vesktop.enable = true;
       wezterm.enable = true;
     };

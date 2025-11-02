@@ -29,6 +29,7 @@
     "programs/qutebrowser" = ./programs/qutebrowser;
     "programs/rofi" = ./programs/rofi;
     "programs/slack" = ./programs/slack;
+    "programs/st" = ./programs/st;
     "programs/starship" = ./programs/starship;
     "programs/vesktop" = ./programs/vesktop;
     "programs/wezterm" = ./programs/wezterm;

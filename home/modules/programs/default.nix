@@ -19,6 +19,7 @@ with lib;
     pavucontrol.enable = mkEnableOption "Enable pavucontrol";
     pulsemixer.enable = mkEnableOption "Enable pulsemixer";
     slack.enable = mkEnableOption "Enable slack";
+    st.enable = mkEnableOption "Enable st";
     wget.enable = mkEnableOption "Enable wget";
     zip.enable = mkEnableOption "Enable zip";
   };
