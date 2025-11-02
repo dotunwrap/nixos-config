@@ -58,20 +58,20 @@ These are the users I have configured for my machines. This list shows the users
 
 - [gignsky](https://github.com/gignsky)
 
-For being the first person who tried to enlighten me with NixOS despite my previous tight grasp on Arch.
+    For being the first person who tried to enlighten me with NixOS despite my previous tight grasp on Arch.
 
 - [jlevere](https://github.com/jlevere)
 
-For being the person who actually convinced me to give NixOS a shot. I may have caved solely due to our relationship & interest in learning things you enjoyed, but you were the push I needed nonetheless.
+    For being the person who actually convinced me to give NixOS a shot. I may have caved solely due to our relationship & interest in learning things you enjoyed, but you were the push I needed nonetheless.
 
 - [NobbZ](https://github.com/NobbZ)
 
-For being the person who opened my eyes to the importance of a well-structured, modular configuration & heavy reference material.
+    For being the person who opened my eyes to the importance of a well-structured, modular configuration & heavy reference material.
 
 <!---->
 
 [CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml
 
 [Badge CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml/badge.svg
-[Badge Nix]: htps://img.shields.io/badge/-nix_btw-75afd7?logo=nixos&logoColor=CAD3F5&labelColor=24273A
+[Badge Nix]: https://img.shields.io/badge/-nix_btw-75afd7?logo=nixos&logoColor=CAD3F5&labelColor=24273A
 [Badge X]: https://img.shields.io/twitter/follow/dotunwrap
