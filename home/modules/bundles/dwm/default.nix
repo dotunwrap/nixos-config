@@ -20,6 +20,7 @@ in
       nushell.enable = true;
       onlyoffice.enable = true;
       pavucontrol.enable = true;
+      qutebrowser.enable = true;
       vesktop.enable = true;
       wezterm.enable = true;
     };
