@@ -8,8 +8,6 @@
 
 </div>
 
----
-
 ## Table of Contents
 
 - [Overview](#overview)
@@ -38,11 +36,11 @@ These are a list of hosts that this config services. Some are NixOS machines; ot
 
 - [x1](/nixos/configurations/x1.nix)
 
-A 6th gen ThinkPad X1 Carbon. My current main machine for fun.
+    A 6th gen ThinkPad X1 Carbon. My current main machine for fun.
 
 - [sekai](/nixos/configurations/sekai.nix)
 
-My desktop (Ryzen 9 9950X + NVIDIA RTX 4070 Ti Super). This configuration is in a broken state and will be completed in the future.
+    My desktop (Ryzen 9 9950X + NVIDIA RTX 4070 Ti Super). This configuration is in a broken state and will be completed in the future.
 
 ### Home Manager
 
@@ -75,5 +73,5 @@ For being the person who opened my eyes to the importance of a well-structured, 
 [CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml
 
 [Badge CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml/badge.svg
-[Bage Nix]: htps://img.shields.io/badge/-nix_btw-75afd7?logo=nixos&logoColor=CAD3F5&labelColor=24273A
+[Badge Nix]: htps://img.shields.io/badge/-nix_btw-75afd7?logo=nixos&logoColor=CAD3F5&labelColor=24273A
 [Badge X]: https://img.shields.io/twitter/follow/dotunwrap
