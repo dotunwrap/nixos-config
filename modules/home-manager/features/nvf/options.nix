@@ -1,6 +1,6 @@
 {
   programs.nvf.settings.vim = {
-    useSystemClipboard = true;
+    # useSystemClipboard = true;
 
     options = {
       tabstop = 2;
