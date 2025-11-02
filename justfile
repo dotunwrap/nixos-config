@@ -8,7 +8,7 @@ hmev USER SYSTEM *ARGS:
   nix eval .#homeConfigurations."{{USER}}@{{SYSTEM}}" {{ARGS}}
 
 hmsw:
-  home-manager switch
+  home-manager switch --flake .
 
 switch:
   just ossw
