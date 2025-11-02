@@ -14,10 +14,13 @@ _: _: {
     email = "gabby@dotunwrap.dev";
   };
 
-  programs.ssh.matchBlocks = {
-    github = {
-      hostname = "github.com";
-      identityFile = "~/.ssh/github_ed25519";
+  programs.ssh = {
+    enable = true;
+    matchBlocks = {
+      github = {
+        hostname = "github.com";
+        identityFile = "~/.ssh/github_ed25519";
+      };
     };
   };
 
