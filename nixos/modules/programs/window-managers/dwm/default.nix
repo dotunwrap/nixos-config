@@ -1,8 +1,7 @@
-_:
+{ dwm, ... }:
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -15,8 +14,7 @@ in
       windowManager = {
         dwm = {
           enable = true;
-          package = pkgs.dwm.override {
-          };
+          package = dwm.packages.x86_64-linux.default;
         };
       };
     };

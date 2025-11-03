@@ -43,6 +43,14 @@
       };
     };
 
+    dwm = {
+      url = "github:dotunwrap/dwm-config";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
