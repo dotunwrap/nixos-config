@@ -49,6 +49,7 @@ in
       jq.enable = true;
       just_.enable = true;
       killall.enable = true;
+      macchina.enable = true;
       p7zip.enable = true;
       pulsemixer.enable = true;
       starship.enable = true;

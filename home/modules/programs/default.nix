@@ -10,6 +10,7 @@ with lib;
     just_.enable = mkEnableOption "Enable just";
     killall.enable = mkEnableOption "Enable killall";
     lxsession.enable = mkEnableOption "Enable lxsession";
+    macchina.enable = mkEnableOption "Enable macchina";
     obs.enable = mkEnableOption "Enable obs";
     p7zip.enable = mkEnableOption "Enable p7zip";
     pavucontrol.enable = mkEnableOption "Enable pavucontrol";

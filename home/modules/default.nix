@@ -23,6 +23,7 @@
     "programs/just" = ./programs/just;
     "programs/killall" = ./programs/killall;
     "programs/lxsession" = ./programs/lxsession;
+    "programs/macchina" = ./programs/macchina;
     "programs/obs" = ./programs/obs;
     "programs/onlyoffice" = ./programs/onlyoffice;
     "programs/opencode" = ./programs/opencode;
