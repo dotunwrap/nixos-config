@@ -14,23 +14,32 @@ in
 
     # TODO: further confgure wezterm
     xdg.configFile."wezterm/wezterm.lua".text = ''
-      local wezterm = require 'wezterm'
+      local wezterm = require("wezterm")
 
-      local config = {}
+      local config = wezterm.config_builder()
 
-      if wezterm.config_builder then
-        config = wezterm.config_builder()
-      end
+      config.color_scheme = "Gruvbox Dark (Gogh)"
+      config.font = wezterm.font("MonoLisa Variable")
+      config.font_size = 14.0
 
-      config.audible_bell = "Disabled"
-      config.visual_bell = {
-        fade_in_function = "EaseIn",
-        fade_in_duration_ms = 150,
-        fade_out_function = "EaseOut",
-        fade_out_duration_ms = 150,
+      config.hide_tab_bar_if_only_one_tab = true
+
+      config.window_padding = {
+      	left = 0,
+      	right = 0,
+      	top = 0,
+      	bottom = 1,
       }
 
-      config.enable_scroll_bar = true
+      config.window_decorations = "RESIZE"
+
+      config.keys = {
+      	{
+      		key = "Enter",
+      		mods = "ALT",
+      		action = wezterm.action.DisableDefaultAssignment,
+      	},
+      }
 
       return config
     '';

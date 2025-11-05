@@ -179,6 +179,29 @@
         "type": "github"
       }
     },
+    "monolisa": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1762307899,
+        "narHash": "sha256-4H7g2DsOdGNwYETzNe/dFHy1/8VMZxd1xyHl/z+2GSA=",
+        "ref": "refs/heads/main",
+        "rev": "bad2f5171c17d711341861eb7ff88a147a556fbb",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/dotunwrap/monolisa-font-nix"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/dotunwrap/monolisa-font-nix"
+      }
+    },
     "nil": {
       "inputs": {
         "nixpkgs": [
@@ -401,6 +424,7 @@
         "dwm": "dwm",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
+        "monolisa": "monolisa",
         "nix": "nix",
         "nix-gl": "nix-gl",
         "nixpkgs": "nixpkgs",

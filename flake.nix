@@ -51,6 +51,14 @@
       };
     };
 
+    monolisa = {
+      url = "git+ssh://git@github.com/dotunwrap/monolisa-font-nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";

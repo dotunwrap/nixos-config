@@ -1,4 +1,8 @@
-{ nvim, ... }:
+{
+  monolisa,
+  nvim,
+  ...
+}:
 { config, lib, ... }:
 
 let
@@ -13,7 +17,15 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [
       nvim.packages.x86_64-linux.default
+      monolisa.packages.x86_64-linux.default
     ];
+
+    fonts.fontconfig = {
+      enable = true;
+      defaultFonts = {
+        monospace = [ "MonoLisa Variable" ];
+      };
+    };
 
     programs = {
       bat.enable = true;
