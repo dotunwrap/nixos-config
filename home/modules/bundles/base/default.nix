@@ -20,6 +20,16 @@ in
       monolisa.packages.x86_64-linux.default
     ];
 
+    xdg.userDirs = {
+      enable = true;
+      createDirectories = true;
+      desktop = null;
+      templates = null;
+      publicShare = null;
+      music = null;
+      videos = null;
+    };
+
     fonts.fontconfig = {
       enable = true;
       defaultFonts = {

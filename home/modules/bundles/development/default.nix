@@ -13,6 +13,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    xdg.userDirs.extraConfig.XDG_CODE_DIR = "${config.home.homeDirectory}/Code";
+
     programs = {
       opencode.enable = true;
       programming = {
