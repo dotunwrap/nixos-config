@@ -29,6 +29,14 @@ jobs:
             substituters = https://cache.nixos.org/ https://nix-community.cachix.org/
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
           install_url: https://releases.nixos.org/nix/nix-2.28.0/install
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - name: Configure git for SSH
+        run: git config --global url."git@gitub.com:".insteadOf "https://github.com/"
       - name: Generate flake.json
         run: |
           nix flake show --json > flake.json
@@ -60,6 +68,14 @@ jobs:
             substituters = https://cache.nixos.org/ https://nix-community.cachix.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
           install_url: https://releases.nixos.org/nix/nix-2.28.0/install
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - name: Configure git for SSH
+        run: git config --global url."git@gitub.com:".insteadOf "https://github.com/"
       - name: Build everything
         run: nix build .#checks.x86_64-linux.${{ matrix.check }} --no-link
 
@@ -81,6 +97,14 @@ jobs:
             substituters = https://cache.nixos.org/ https://nix-community.cachix.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
           install_url: https://releases.nixos.org/nix/nix-2.28.0/install
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - name: Configure git for SSH
+        run: git config --global url."git@gitub.com:".insteadOf "https://github.com/"
       - name: Run checks
         run: |
           nix flake check --keep-going
