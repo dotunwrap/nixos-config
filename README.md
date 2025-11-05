@@ -34,9 +34,13 @@ These are a list of hosts that this config services. Some are NixOS machines; ot
 
 ### NixOS
 
+- [suigin](/nixos/configurations/suigin.nix)
+
+    My Framework 13 (Ryzen 9 AI HX 370). My main machine.
+
 - [x1](/nixos/configurations/x1.nix)
 
-    A 6th gen ThinkPad X1 Carbon. My current main machine for fun.
+    A 6th gen ThinkPad X1 Carbon. Previously my go-to machine.
 
 - [sekai](/nixos/configurations/sekai.nix)
 
@@ -52,6 +56,7 @@ These are the users I have configured for my machines. This list shows the users
 
 - [gabby](/nixos/configurations/users/gabby.nix)
     - [x1](/home/configurations/gabby-at-x1.nix)
+    - [suigin](/home/configurations/gabby-at-suigin.nix)
     - [sekai](/home/configurations/gabby-at-sekai.nix)
 
 ## Credits
