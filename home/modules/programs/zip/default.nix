@@ -10,6 +10,11 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [ zip ];
+    # NOTE: Implicitly adding unzip here too...
+    # Who wants zip without unzip??
+    home.packages = with pkgs; [
+      zip
+      unzip
+    ];
   };
 }
