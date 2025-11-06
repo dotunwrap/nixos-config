@@ -39,6 +39,7 @@ in
 
     programs = {
       bat.enable = true;
+      brightnessctl.enable = true;
       btop.enable = true;
       direnv.enable = true;
       eza.enable = true;
