@@ -272,6 +272,22 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1762371679,
+        "narHash": "sha256-VjZLHnj9tqFRigpD6SJtTKmQsys77jCX5YcnmMnUqH8=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "e4c6ee69e710805a15a3da905214a25618271609",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1761880412,
@@ -427,6 +443,7 @@
         "monolisa": "monolisa",
         "nix": "nix",
         "nix-gl": "nix-gl",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nvim": "nvim",
         "programs-db": "programs-db",

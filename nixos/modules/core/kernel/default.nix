@@ -6,6 +6,7 @@ _:
   ...
 }:
 let
+  cfg = config.core.kernel;
   supportedFilesystems =
     if builtins.isList config.boot.supportedFilesystems then
       config.boot.supportedFilesystems ++ config.boot.initrd.supportedFilesystems
@@ -18,7 +19,11 @@ let
   zfsUsed = lib.lists.elem "zfs" supportedFilesystems;
 in
 {
-  boot.kernelPackages = lib.mkDefault (
-    if zfsUsed then pkgs.zfs.latestCompatibleLinuxPackages else pkgs.linuxPackages_latest
-  );
+  options.core.kernel.enable = lib.mkEnableOption "Enable basic kernel config";
+
+  config = lib.mkIf cfg.enable {
+    boot.kernelPackages = lib.mkDefault (
+      if zfsUsed then pkgs.zfs.latestCompatibleLinuxPackages else pkgs.linuxPackages_latest
+    );
+  };
 }

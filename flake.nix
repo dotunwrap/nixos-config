@@ -7,6 +7,8 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
     nix = {
       url = "github:nixos/nix";
       inputs = {

@@ -6,6 +6,8 @@ _:
     "dwm"
   ];
 
+  core.kernel.enable = true;
+
   networking = {
     hostName = "x1";
     networkmanager.enable = true;

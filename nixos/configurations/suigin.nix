@@ -1,6 +1,10 @@
-_:
+{ nixos-hardware, ... }:
 { pkgs, ... }:
 {
+  imports = [
+    nixos-hardware.nixosModules.framework-amd-ai-300-series
+  ];
+
   activeBundles = [
     "base"
     "dwm"
