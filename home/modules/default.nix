@@ -1,6 +1,6 @@
 {
   dotunwrap.homeManagerModules = {
-    bundles = ./bundles;
+    "bundles" = ./bundles;
     "bundles/base" = ./bundles/base;
     "bundles/development" = ./bundles/development;
     "bundles/dwm" = ./bundles/dwm;
@@ -9,7 +9,7 @@
     "misc/dwm" = ./misc/dwm;
     "misc/home" = ./misc/home;
 
-    programs = ./programs;
+    "programs" = ./programs;
     "programs/alacritty" = ./programs/alacritty;
     "programs/bitwarden" = ./programs/bitwarden;
     "programs/brave" = ./programs/brave;

@@ -1,6 +1,6 @@
 {
   dotunwrap.nixosModules = {
-    bundles = ./bundles;
+    "bundles" = ./bundles;
     "bundles/base" = ./bundles/base;
     "bundles/dwm" = ./bundles/dwm;
 
@@ -9,7 +9,7 @@
     "core/kernel" = ./core/kernel;
     "core/nix" = ./core/nix;
 
-    programs = ./programs;
+    "programs" = ./programs;
     "programs/usbutils" = ./programs/usbutils;
     "programs/xdg-utils" = ./programs/xdg-utils;
 
