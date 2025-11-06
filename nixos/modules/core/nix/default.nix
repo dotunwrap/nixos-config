@@ -34,5 +34,21 @@ in
         allow-import-from-derivation = lib.mkDefault false;
       };
     }
+    {
+      nix = {
+        gc = {
+          automatic = lib.mkDefault true;
+          dates = lib.mkDefault "daily";
+          persistent = lib.mkDefault true;
+          randomizedDelaySec = lib.mkDefault "45min";
+        };
+        optimise = {
+          automatic = lib.mkDefault true;
+          dates = lib.mkDefault [ "daily" ];
+          persistent = lib.mkDefault true;
+          randomizedDelaySec = lib.mkDefault "45min";
+        };
+      };
+    }
   ];
 }
