@@ -20,6 +20,7 @@ _:
     touchpad = {
       tapping = false;
       naturalScrolling = true;
+      clickMethod = "clickfinger";
     };
   };
 
