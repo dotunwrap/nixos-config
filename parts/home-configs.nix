@@ -107,6 +107,7 @@ in
                 { home = { inherit (config) username homeDirectory; }; }
                 { systemd.user.startServices = "sd-switch"; }
                 { news.display = "silent"; }
+                inputs.stylix.homeModules.stylix
               ]
               ++ config.modules
               ++ builtins.attrValues self.homeManagerModules;

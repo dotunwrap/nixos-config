@@ -55,5 +55,8 @@
 
     "programs/shells/nushell" = ./programs/shells/nushell;
     "programs/shells/zsh" = ./programs/shells/zsh;
+
+    "themes" = ./themes;
+    "themes/gruvbox-dark" = ./themes/gruvbox-dark;
   };
 }

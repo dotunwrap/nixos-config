@@ -4,7 +4,12 @@ _: _: {
     "dwm"
   ];
 
-  home.file.".background-image".source = ../../assets/wallpapers/gruvbox_pixels.png;
+  # home.file.".background-image".source = ../../assets/wallpapers/gruvbox_pixels.png;
+
+  themes = {
+    enable = true;
+    gruvbox-dark.enable = true;
+  };
 
   accounts = {
     calendar.basePath = ".local/share/calendars";

@@ -10,6 +10,8 @@
     "dwm"
   ];
 
+  nix.settings.allow-import-from-derivation = true;
+
   networking = {
     hostName = "suigin";
     networkmanager.enable = true;

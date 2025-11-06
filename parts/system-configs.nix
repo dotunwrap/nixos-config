@@ -95,6 +95,7 @@ in
                 { documentation.man.enable = true; }
                 { documentation.man.generateCaches = true; }
                 { nixpkgs.hostPlatform.system = config.system; }
+                inputs.stylix.nixosModules.stylix
               ]
               ++ config.modules
               ++ builtins.attrValues {
