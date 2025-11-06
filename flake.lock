@@ -10,11 +10,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762401461,
-        "narHash": "sha256-MrJ3Ck/PO1K74PhZwiL+AVYPk3l48qtRLH4Mwu8fEq8=",
+        "lastModified": 1762401920,
+        "narHash": "sha256-PrthjNBI5NpYTleq3xfiRobjZwAplnTYUmdHW5c7RHE=",
         "owner": "dotunwrap",
         "repo": "dwm-config",
-        "rev": "3fabc1351dbe7385539225d2a16f9f63a5d8b56f",
+        "rev": "6fb87bc3185e36a1ac0b57694fca20929341e701",
         "type": "github"
       },
       "original": {
