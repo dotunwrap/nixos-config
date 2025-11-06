@@ -13,6 +13,12 @@ in
     services.displayManager.ly = {
       enable = true;
       package = pkgs.ly;
+      settings = {
+        animation = "gameoflife";
+        bigclock = "en";
+        clear_password = true;
+        default_input = "password";
+      };
     };
   };
 }
