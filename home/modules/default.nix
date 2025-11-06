@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/btop" = ./programs/btop;
     "programs/magic-wormhole" = ./programs/magic-wormhole;
     "programs/alacritty" = ./programs/alacritty;
     "programs/bitwarden" = ./programs/bitwarden;
