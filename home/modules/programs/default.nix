@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    magic-wormhole.enable = mkEnableOption "Enable magic-wormhole";
     bitwarden.enable = mkEnableOption "Enable bitwarden";
     dmenu.enable = mkEnableOption "Enable dmenu";
     gimp.enable = mkEnableOption "Enable gimp";

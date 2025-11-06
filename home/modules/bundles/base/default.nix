@@ -50,6 +50,7 @@ in
       just_.enable = true;
       killall.enable = true;
       macchina.enable = true;
+      magic-wormhole.enable = true;
       p7zip.enable = true;
       pulsemixer.enable = true;
       starship.enable = true;
