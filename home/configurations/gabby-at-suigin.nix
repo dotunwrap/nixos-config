@@ -4,6 +4,8 @@ _: _: {
     "dwm"
   ];
 
+  home.file.".background-image".source = ../../assets/wallpapers/gruvbox_pixels.png;
+
   accounts = {
     calendar.basePath = ".local/share/calendars";
     contact.basePath = ".local/share/contacts";
