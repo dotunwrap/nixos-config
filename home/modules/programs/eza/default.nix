@@ -19,6 +19,7 @@ in
       extraOptions = [
         "--group-directories-first"
       ];
+      theme = builtins.fromJSON (builtins.readFile ./themes/gruvbox-dark.json);
     };
   };
 }
