@@ -30,5 +30,9 @@ _: _: {
     };
   };
 
+  xresources.properties = {
+    "Xft.dpi" = "150";
+  };
+
   home.stateVersion = "24.11";
 }
