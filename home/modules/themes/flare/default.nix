@@ -1,12 +1,15 @@
-_: {
+_:
+{
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.themes.flare;
   # TODO: Actually find a wallpaper for this?
   outputImage = ./../../../../assets/wallpapers/gruvbox_dark.png;
-in {
+in
+{
   config = lib.mkIf cfg.enable {
     stylix = {
       image = outputImage;
@@ -14,7 +17,8 @@ in {
     };
 
     home.file.".background-image".source = lib.mkIf config.bundles.dwm.enable outputImage;
-    xresources.properties = with config.lib.stylix.colors.withHashtag;
+    xresources.properties =
+      with config.lib.stylix.colors.withHashtag;
       lib.mkIf config.bundles.dwm.enable {
         "dwm.normbordercolor" = base00;
         "dwm.normbgcolor" = base00;
