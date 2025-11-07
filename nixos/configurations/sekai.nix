@@ -1,11 +1,30 @@
 _:
 {
+  config,
   pkgs,
   ...
 }:
 
 {
-  activeBundles = [ ];
+  activeBundles = [
+    "base"
+    "dwm"
+    "gaming"
+  ];
+
+  hardware = {
+    graphics = {
+      enable = true;
+    };
+    nvidia = {
+      enable = true;
+      modesetting.enable = true;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
+  };
+
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   networking = {
     hostName = "sekai";
@@ -18,6 +37,12 @@ _:
   };
 
   time.timeZone = "America/New_York";
+
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+  };
+
+  users.users = import ./users/gabby.nix pkgs;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

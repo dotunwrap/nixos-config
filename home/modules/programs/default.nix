@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    steam-tui.enable = mkEnableOption "Enable steam-tui";
     brightnessctl.enable = mkEnableOption "Enable brightnessctl";
     magic-wormhole.enable = mkEnableOption "Enable magic-wormhole";
     bitwarden.enable = mkEnableOption "Enable bitwarden";

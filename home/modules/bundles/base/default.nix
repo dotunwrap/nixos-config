@@ -16,7 +16,6 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      nvim.packages.x86_64-linux.default
       monolisa.packages.x86_64-linux.default
     ];
 
@@ -52,6 +51,10 @@ in
       killall.enable = true;
       macchina.enable = true;
       magic-wormhole.enable = true;
+      neovim = {
+        enable = true;
+        package = nvim.packages.x86_64-linux.default;
+      };
       p7zip.enable = true;
       pulsemixer.enable = true;
       starship.enable = true;
