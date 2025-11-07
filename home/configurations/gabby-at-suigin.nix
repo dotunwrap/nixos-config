@@ -6,7 +6,7 @@ _: _: {
 
   themes = {
     enable = true;
-    gruvbox-dark.enable = true;
+    image = ../../assets/wallpapers/salzburg.png;
   };
 
   accounts = {
