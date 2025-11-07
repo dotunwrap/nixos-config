@@ -7,6 +7,7 @@ _: _: {
   themes = {
     enable = true;
     image = ../../assets/wallpapers/bay.jpeg;
+    opacity = 0.8;
   };
 
   accounts = {

@@ -10,6 +10,7 @@ with lib;
   options.themes = {
     enable = mkEnableOption "Enable stylix themeing";
     image = mkOption { };
+    opacity = mkOption { default = 1.0; };
     gruvbox-dark.enable = mkEnableOption "Enable gruvbox-dark";
     flare.enable = mkEnableOption "Enable flare";
   };
@@ -19,6 +20,10 @@ with lib;
       enable = true;
       image = config.themes.image;
       polarity = "dark";
+      opacity = {
+        terminal = config.themes.opacity;
+        applications = config.themes.opacity;
+      };
       fonts = {
         # serif = { };
         # sansSerif = { };
