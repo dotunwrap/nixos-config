@@ -15,7 +15,6 @@ in
 
     programs = {
       bitwarden.enable = true;
-      brave.enable = true;
       dmenu.enable = true;
       feh.enable = true;
       lxsession.enable = true;
@@ -27,6 +26,14 @@ in
       st.enable = true;
       vesktop.enable = true;
       wezterm.enable = true;
+    };
+
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
+        "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+      };
     };
 
     services = {
