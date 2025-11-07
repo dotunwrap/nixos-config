@@ -6,7 +6,7 @@ _: _: {
 
   themes = {
     enable = true;
-    image = ../../assets/wallpapers/salzburg.png;
+    image = ../../assets/wallpapers/bay.jpeg;
   };
 
   accounts = {
