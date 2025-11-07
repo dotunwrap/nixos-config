@@ -4,8 +4,6 @@ _: _: {
     "dwm"
   ];
 
-  # home.file.".background-image".source = ../../assets/wallpapers/gruvbox_pixels.png;
-
   themes = {
     enable = true;
     gruvbox-dark.enable = true;
