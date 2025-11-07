@@ -40,7 +40,7 @@ jobs:
         run: git config --global url."git@gitub.com:".insteadOf "https://github.com/"
       - name: Generate flake.json
         run: |
-          nix flake show --json > flake.json
+          nix flake show --json --allow-import-from-derivation > flake.json
       - id: gen_checks
         name: Generate checks
         run: |
@@ -110,4 +110,4 @@ jobs:
         run: git config --global url."git@gitub.com:".insteadOf "https://github.com/"
       - name: Run checks
         run: |
-          nix flake check --keep-going
+          nix flake check --keep-going --allow-import-from-derivation
