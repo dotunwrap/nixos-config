@@ -33,7 +33,20 @@ in
       flameshot.enable = true;
       picom = {
         enable = true;
+        backend = "glx";
         shadow = true;
+        inactiveOpacity = 0.8;
+        activeOpacity = 0.9;
+        opacityRules = [
+          "100:class_g = 'qutebrowser'"
+        ];
+        settings = {
+          blur = {
+            method = "dual_kawase";
+            size = 10;
+            deviation = 5.0;
+          };
+        };
       };
     };
   };
