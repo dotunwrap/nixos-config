@@ -42,7 +42,6 @@ in
 
     services = {
       displayManager.defaultSession = "dwm";
-      flatpak.enable = true;
     };
 
     xdg.portal = {
