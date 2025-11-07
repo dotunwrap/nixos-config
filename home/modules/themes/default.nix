@@ -10,6 +10,7 @@ with lib;
   options.themes = {
     enable = mkEnableOption "Enable stylix themeing";
     gruvbox-dark.enable = mkEnableOption "Enable gruvbox-dark";
+    flare.enable = mkEnableOption "Enable flare";
   };
 
   config = mkIf config.themes.enable {

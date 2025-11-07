@@ -58,5 +58,6 @@
 
     "themes" = ./themes;
     "themes/gruvbox-dark" = ./themes/gruvbox-dark;
+    "themes/flare" = ./themes/flare;
   };
 }
