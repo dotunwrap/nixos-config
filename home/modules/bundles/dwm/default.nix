@@ -31,6 +31,10 @@ in
 
     services = {
       flameshot.enable = true;
+      picom = {
+        enable = true;
+        shadow = true;
+      };
     };
   };
 }
