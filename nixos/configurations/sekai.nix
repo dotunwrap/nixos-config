@@ -44,11 +44,11 @@ _:
         y = 1440;
       }
     ];
-    monitorSection = ''
-      Identifier "HDMI-0"
-      Option "PreferredMode" "5120x1440"
-      Option "TargetRefresh" "240"
-    '';
+    # monitorSection = ''
+    #   Identifier "HDMI-0"
+    #   Option "PreferredMode" "5120x1440"
+    #   Option "TargetRefresh" "240"
+    # '';
     videoDrivers = [ "nvidia" ];
   };
   drivers.ffado.enable = true;
