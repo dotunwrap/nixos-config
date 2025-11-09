@@ -12,6 +12,29 @@ _:
     "gaming"
   ];
 
+  fileSystems = {
+    "/games" = {
+      device = "/dev/disk/by-label/games";
+      fsType = "ext4";
+      options = [
+        "defaults"
+        "umask=000"
+        "uid=1000"
+        "gid=1000"
+      ];
+    };
+    "/mnt/external" = {
+      device = "/dev/disk/by-label/external";
+      fsType = "ext4";
+      options = [
+        "defaults"
+        "umask=002"
+        "uid=1000"
+        "gid=1000"
+      ];
+    };
+  };
+
   hardware = {
     graphics = {
       enable = true;
@@ -24,7 +47,20 @@ _:
     };
   };
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver = {
+    resolutions = [
+      {
+        x = 5120;
+        y = 1440;
+      }
+    ];
+    monitorSection = ''
+      Identifier "HDMI-0"
+      Option "PreferredMode" "5120x1440"
+      Option "TargetRefresh" "240"
+    '';
+    videoDrivers = [ "nvidia" ];
+  };
   drivers.ffado.enable = true;
 
   networking = {
@@ -62,5 +98,5 @@ _:
   # and migrated your data accordingly.
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.05"; # Did you read the comment?
 }

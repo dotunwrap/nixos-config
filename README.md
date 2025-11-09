@@ -44,7 +44,7 @@ These are a list of hosts that this config services. Some are NixOS machines; ot
 
 - [sekai](/nixos/configurations/sekai.nix)
 
-    My desktop (Ryzen 9 9950X + NVIDIA RTX 4070 Ti Super). This configuration is in a broken state and will be completed in the future.
+    My desktop (Ryzen 9 9950X + NVIDIA RTX 4070 Ti Super). Used for _Linux gaming_.
 
 ### Home Manager
 
