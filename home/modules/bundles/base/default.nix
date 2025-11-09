@@ -3,10 +3,13 @@
   nvim,
   ...
 }:
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.bundles.base;
+  inherit (pkgs.stdenv.hostPlatform) system;
+  nixvim-package = nvim.packages.${system}.default;
+  styled-nixvim = nixvim-package.extend config.stylix.targets.nixvim.exportedModule;
 in
 
 {
@@ -17,6 +20,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [
       monolisa.packages.x86_64-linux.default
+      styled-nixvim
     ];
 
     xdg.userDirs = {
@@ -51,10 +55,6 @@ in
       killall.enable = true;
       macchina.enable = true;
       magic-wormhole.enable = true;
-      neovim = {
-        enable = true;
-        package = nvim.packages.x86_64-linux.default;
-      };
       p7zip.enable = true;
       pulsemixer.enable = true;
       starship.enable = true;
