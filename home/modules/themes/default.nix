@@ -36,6 +36,11 @@ with lib;
         };
         # emoji = { };
       };
+      cursor = {
+        size = 42;
+        package = pkgs.volantes-cursors;
+        name = "volantes_cursors";
+      };
     };
 
     home.file.".background-image".source = lib.mkIf config.bundles.dwm.enable config.themes.image;
