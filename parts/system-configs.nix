@@ -95,6 +95,7 @@ in
                 { documentation.man.enable = true; }
                 { documentation.man.generateCaches = true; }
                 { nixpkgs.hostPlatform.system = config.system; }
+                { nixpkgs.overlays = [ inputs.rust-overlay.overlays.default ]; }
                 inputs.stylix.nixosModules.stylix
               ]
               ++ config.modules
