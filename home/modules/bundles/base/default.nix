@@ -14,7 +14,11 @@ let
   cfg = config.bundles.base;
   inherit (pkgs.stdenv.hostPlatform) system;
   nixvim-package = nvim.packages.${system}.default;
-  styled-nixvim = nixvim-package.extend config.stylix.targets.nixvim.exportedModule;
+  styled-nixvim =
+    if config.stylix.enable then
+      nixvim-package.extend config.stylix.targets.nixvim.exportedModule
+    else
+      nixvim-package;
 in
 
 {
@@ -23,6 +27,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    nixpkgs.config.allowUnfree = true;
+
     home.packages = [
       monolisa.packages.${system}.default
       styled-nixvim
