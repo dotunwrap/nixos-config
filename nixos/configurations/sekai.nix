@@ -44,11 +44,12 @@ _:
         y = 1440;
       }
     ];
-    # monitorSection = ''
-    #   Identifier "HDMI-0"
-    #   Option "PreferredMode" "5120x1440"
-    #   Option "TargetRefresh" "240"
-    # '';
+    # WARNING: This will BREAK the display server entirely if the Odyssey G9 is out of game mode for some reason.
+    monitorSection = ''
+      Identifier "HDMI-0"
+      Option "PreferredMode" "5120x1440"
+      Option "TargetRefresh" "240"
+    '';
     videoDrivers = [ "nvidia" ];
   };
   drivers.ffado.enable = true;
