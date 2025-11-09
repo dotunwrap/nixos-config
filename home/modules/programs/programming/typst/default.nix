@@ -1,1 +1,15 @@
-_: _: { }
+_:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.programming.typst;
+in
+{
+  config = lib.mkIf cfg.enable {
+    home.packages = with pkgs; [ typst ];
+  };
+}

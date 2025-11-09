@@ -107,6 +107,7 @@ in
                 { home = { inherit (config) username homeDirectory; }; }
                 { systemd.user.startServices = "sd-switch"; }
                 { news.display = "silent"; }
+                { nixpkgs.overlays = [ inputs.rust-overlay.overlays.default ]; }
                 inputs.stylix.homeModules.stylix
               ]
               ++ config.modules
