@@ -16,22 +16,10 @@ _:
     "/games" = {
       device = "/dev/disk/by-label/games";
       fsType = "ext4";
-      options = [
-        "defaults"
-        "umask=000"
-        "uid=1000"
-        "gid=1000"
-      ];
     };
     "/mnt/external" = {
       device = "/dev/disk/by-label/external";
       fsType = "ext4";
-      options = [
-        "defaults"
-        "umask=002"
-        "uid=1000"
-        "gid=1000"
-      ];
     };
   };
 
