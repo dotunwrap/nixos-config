@@ -14,10 +14,11 @@ in
       enable = true;
       package = pkgs.ly;
       settings = {
-        animation = "gameoflife";
         bigclock = "en";
         clear_password = true;
         default_input = "password";
+        vi_mode = true;
+        box_title = "${config.networking.hostName}";
       };
     };
   };
