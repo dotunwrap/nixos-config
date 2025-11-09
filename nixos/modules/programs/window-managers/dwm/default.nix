@@ -2,10 +2,12 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   cfg = config.programs.window-managers.dwm;
+  inherit (pkgs.stdenv.hostPlatform) system;
 in
 {
   config = lib.mkIf cfg.enable {
@@ -14,7 +16,7 @@ in
       windowManager = {
         dwm = {
           enable = true;
-          package = dwm.packages.x86_64-linux.default;
+          package = dwm.packages.${system}.default;
         };
       };
     };

@@ -8,6 +8,7 @@
 
 let
   cfg = config.bundles.base;
+  inherit (pkgs.stdenv.hostPlatform) system;
 in
 
 {
@@ -20,7 +21,7 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
       pkgs.at-spi2-atk
-      home-manager.packages.x86_64-linux.home-manager
+      home-manager.packages.${system}.home-manager
     ];
 
     hardware = {

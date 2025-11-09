@@ -5,6 +5,9 @@
   pkgs,
   ...
 }:
+let
+  inherit (pkgs.stdenv.hostPlatform) system;
+in
 with lib;
 {
   options.themes = {
@@ -28,7 +31,7 @@ with lib;
         # serif = { };
         # sansSerif = { };
         monospace = {
-          package = mkDefault monolisa.packages.x86_64-linux.default;
+          package = mkDefault monolisa.packages.${system}.default;
           name = mkDefault "MonoLisa Variable";
         };
         # emoji = { };

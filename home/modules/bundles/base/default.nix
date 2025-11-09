@@ -3,7 +3,12 @@
   nvim,
   ...
 }:
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.bundles.base;
@@ -19,7 +24,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      monolisa.packages.x86_64-linux.default
+      monolisa.packages.${system}.default
       styled-nixvim
     ];
 
