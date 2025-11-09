@@ -44,7 +44,7 @@
     };
 
     nvim = {
-      url = "github:dotunwrap/determinvim/refactor/nixvim";
+      url = "github:dotunwrap/determinvim";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";

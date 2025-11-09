@@ -556,16 +556,15 @@
         "systems": "systems_4"
       },
       "locked": {
-        "lastModified": 1762660837,
-        "narHash": "sha256-emR5PrUdL2ZMnrUIwgY1DLhxfAhn01yviu8y3ng5/0g=",
+        "lastModified": 1762663472,
+        "narHash": "sha256-6f6KWo4p3CnKv1x7tPN2z5vESWRANLffVkCa25CeCGk=",
         "owner": "dotunwrap",
         "repo": "determinvim",
-        "rev": "54f8f4335cabe5c93f6a0beffc7f3ab120594756",
+        "rev": "ce9ba8b08502fc43d0c0116090efc997201c83ac",
         "type": "github"
       },
       "original": {
         "owner": "dotunwrap",
-        "ref": "refactor/nixvim",
         "repo": "determinvim",
         "type": "github"
       }
