@@ -54,5 +54,8 @@ with lib;
         "dwm.selbgcolor" = base0D;
         "dwm.selfgcolor" = base00;
       };
+    xdg.configFile."lxsession/LXDE/autostart".text = lib.mkIf config.bundles.dwm.enable ''
+      @xsetroot -cursor_name left_ptr
+    '';
   };
 }
