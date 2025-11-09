@@ -23,6 +23,7 @@ in
       pavucontrol.enable = true;
       qutebrowser.enable = true;
       signal.enable = true;
+      spotify-player.enable = true;
       st.enable = true;
       vesktop.enable = true;
       wezterm.enable = true;
