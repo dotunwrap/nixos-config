@@ -9,7 +9,7 @@ _: _:
 
   themes = {
     enable = true;
-    image = ../../assets/wallpapers/bay.jpeg;
+    image = ../../assets/wallpapers/poly.png;
     opacity = 0.8;
   };
 
