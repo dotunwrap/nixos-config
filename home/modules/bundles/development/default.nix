@@ -16,6 +16,7 @@ in
     xdg.userDirs.extraConfig.XDG_CODE_DIR = "${config.home.homeDirectory}/Code";
 
     programs = {
+      httpie.enable = true;
       opencode.enable = true;
       programming = {
         c.enable = true;

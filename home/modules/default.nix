@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/httpie" = ./programs/httpie;
     "programs/steam-tui" = ./programs/steam-tui;
     "programs/brightnessctl" = ./programs/brightnessctl;
     "programs/btop" = ./programs/btop;
