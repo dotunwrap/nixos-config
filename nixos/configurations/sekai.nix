@@ -25,6 +25,7 @@ _:
   };
 
   services.xserver.videoDrivers = [ "nvidia" ];
+  drivers.ffado.enable = true;
 
   networking = {
     hostName = "sekai";

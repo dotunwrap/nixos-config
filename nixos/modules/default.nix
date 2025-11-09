@@ -10,6 +10,9 @@
     "core/kernel" = ./core/kernel;
     "core/nix" = ./core/nix;
 
+    "drivers" = ./drivers;
+    "drivers/ffado" = ./drivers/ffado;
+
     "programs" = ./programs;
     "programs/protonup-ng" = ./programs/protonup-ng;
     "programs/usbutils" = ./programs/usbutils;
