@@ -18,4 +18,6 @@
       };
     };
   };
+
+  programs.starship.prompt = "pure";
 }
