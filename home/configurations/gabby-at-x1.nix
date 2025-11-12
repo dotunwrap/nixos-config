@@ -1,28 +1,10 @@
-_: _: {
+_: _:
+{
   activeBundles = [
     "development"
     "dwm"
   ];
 
-  accounts = {
-    calendar.basePath = ".local/share/calendars";
-    contact.basePath = ".local/share/contacts";
-  };
-
-  programs.git.settings.user = {
-    name = "Gabby Simpson";
-    email = "gabby@dotunwrap.dev";
-  };
-
-  programs.ssh = {
-    enable = true;
-    matchBlocks = {
-      "github.com" = {
-        hostname = "github.com";
-        identityFile = "~/.ssh/github_ed25519";
-      };
-    };
-  };
-
   home.stateVersion = "24.11";
 }
+// import ./shared/gabby.nix
