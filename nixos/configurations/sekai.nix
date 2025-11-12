@@ -34,8 +34,13 @@ _:
       modesetting.enable = true;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
+      powerManagement.enable = true;
     };
   };
+
+  boot.kernelParams = [
+    "pcie_port_pm=off"
+  ];
 
   services.xserver = {
     resolutions = [
