@@ -63,9 +63,12 @@ _:
 
   systemd.services.fix-display-on-resume = {
     description = "Fix Odyssey G9 display after resume";
-    after = [ "sleep.target" "display-manager.service" ];
+    after = [
+      "sleep.target"
+      "display-manager.service"
+    ];
     wantedBy = [ "sleep.target" ];
-    
+
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "fix-odyssey-g9" ''
@@ -77,7 +80,7 @@ _:
         done
 
         export DISPLAY=:0
-        
+
         for uid_dir in /run/user/*; do
           # NOTE: ly uses lyxauth instead of Xauthority apparently
           if [ -f "$uid_dir/lyxauth" ]; then
@@ -87,7 +90,7 @@ _:
             exit 0
           fi
         done
-        
+
         ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --mode 5120x1440 --rate 240
       '';
     };
