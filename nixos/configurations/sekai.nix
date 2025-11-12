@@ -34,14 +34,8 @@ _:
       modesetting.enable = true;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
-      powerManagement.enable = true;
-      forceFullCompositionPipeline = true;
     };
   };
-
-  boot.kernelParams = [
-    "pcie_port_pm=off"
-  ];
 
   services.xserver = {
     resolutions = [
@@ -56,46 +50,7 @@ _:
       Option "TargetRefresh" "240"
     '';
     videoDrivers = [ "nvidia" ];
-    displayManager.setupCommands = ''
-      ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --mode 5120x1440 --rate 240
-    '';
   };
-
-  systemd.services.fix-display-on-resume = {
-    description = "Fix Odyssey G9 display after resume";
-    after = [
-      "sleep.target"
-      "display-manager.service"
-    ];
-    wantedBy = [ "sleep.target" ];
-
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "fix-odyssey-g9" ''
-        for i in {1..10}; do
-          if ${pkgs.xorg.xrandr}/bin/xrandr --query > /dev/null 2>&1; then
-            break
-          fi
-          sleep 1
-        done
-
-        export DISPLAY=:0
-
-        for uid_dir in /run/user/*; do
-          # NOTE: ly uses lyxauth instead of Xauthority apparently
-          if [ -f "$uid_dir/lyxauth" ]; then
-            export XAUTHORITY="$uid_dir/lyxauth"
-            
-            ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --mode 5120x1440 --rate 240
-            exit 0
-          fi
-        done
-
-        ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --mode 5120x1440 --rate 240
-      '';
-    };
-  };
-
   drivers.ffado.enable = true;
 
   networking = {
