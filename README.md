@@ -3,8 +3,8 @@
 # Gabby's Modular NixOS & Home Manager Configuration
 
 [![Badge CI]][CI]
-![Badge Nix]
-![Badge X]
+[![Badge Nix]][Nix]
+[![Badge X]][Follow X]
 
 </div>
 
@@ -76,6 +76,8 @@ These are the users I have configured for my machines. This list shows the users
 <!---->
 
 [CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml
+[Nix]: https://nixos.org
+[Follow X]: https://twitter.com/intent/user?screen_name=dotunwrap
 
 [Badge CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml/badge.svg
 [Badge Nix]: https://img.shields.io/badge/-nix_btw-75afd7?logo=nixos&logoColor=CAD3F5&labelColor=24273A
