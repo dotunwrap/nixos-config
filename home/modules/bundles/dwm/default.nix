@@ -19,6 +19,7 @@ in
       feh.enable = true;
       lxsession.enable = true;
       nushell.enable = true;
+      obs.enable = true;
       onlyoffice.enable = true;
       pavucontrol.enable = true;
       qutebrowser.enable = true;
