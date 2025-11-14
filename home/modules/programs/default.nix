@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    qalculate.enable = mkEnableOption "Enable qalculate";
     httpie.enable = mkEnableOption "Enable httpie";
     steam-tui.enable = mkEnableOption "Enable steam-tui";
     brightnessctl.enable = mkEnableOption "Enable brightnessctl";

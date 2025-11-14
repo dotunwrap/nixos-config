@@ -68,6 +68,7 @@ in
       magic-wormhole.enable = true;
       p7zip.enable = true;
       pulsemixer.enable = true;
+      qalculate.enable = true;
       starship.enable = true;
       wget.enable = true;
       yazi.enable = true;
