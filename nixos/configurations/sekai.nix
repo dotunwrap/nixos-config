@@ -38,9 +38,19 @@ _:
     };
   };
 
-  boot.kernelParams = [
-    "pcie_port_pm=off"
-  ];
+  boot = {
+    kernelModules = [
+      "kvm-amd"
+      "v4l2loopback"
+    ];
+    extraModulePackages = with pkgs.linuxPackages; [ v4l2loopback ];
+    extraModprobeConfig = ''
+      options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1
+    '';
+    kernelParams = [
+      "pcie_port_pm=off"
+    ];
+  };
 
   services.xserver = {
     resolutions = [
