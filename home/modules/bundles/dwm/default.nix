@@ -1,5 +1,10 @@
 _:
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.bundles.dwm;
@@ -19,7 +24,12 @@ in
       feh.enable = true;
       lxsession.enable = true;
       nushell.enable = true;
-      obs.enable = true;
+      obs-studio = {
+        enable = true;
+        plugins = with pkgs.obs-studio-plugins; [
+          droidcam-obs
+        ];
+      };
       onlyoffice.enable = true;
       pavucontrol.enable = true;
       qutebrowser.enable = true;
