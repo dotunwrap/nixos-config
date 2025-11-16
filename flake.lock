@@ -68,29 +68,6 @@
         "type": "github"
       }
     },
-    "dwm": {
-      "inputs": {
-        "flake-parts": [
-          "flake-parts"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1762490557,
-        "narHash": "sha256-EPqWsfbaRdHKqKSlunD24OLQxPB1M+4tNi0yyNeHNtg=",
-        "owner": "dotunwrap",
-        "repo": "dwm-config",
-        "rev": "dfc0508d3f87f900d20e4963d803c5c8cfc01af2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "dotunwrap",
-        "repo": "dwm-config",
-        "type": "github"
-      }
-    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -592,7 +569,6 @@
     },
     "root": {
       "inputs": {
-        "dwm": "dwm",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "monolisa": "monolisa",
@@ -604,7 +580,8 @@
         "programs-db": "programs-db",
         "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",
-        "stylix": "stylix"
+        "stylix": "stylix",
+        "suckless": "suckless"
       }
     },
     "rust-overlay": {
@@ -678,6 +655,29 @@
       "original": {
         "owner": "nix-community",
         "repo": "stylix",
+        "type": "github"
+      }
+    },
+    "suckless": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1763261624,
+        "narHash": "sha256-84dmkWLvy/MJX28PtZu8xq9pEE1z47HGtSa+klXt7nA=",
+        "owner": "dotunwrap",
+        "repo": "suckless-nix",
+        "rev": "4201a9a6f752fbba093ca4ae322581e9381e3613",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dotunwrap",
+        "repo": "suckless-nix",
         "type": "github"
       }
     },

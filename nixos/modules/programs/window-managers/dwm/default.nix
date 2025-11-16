@@ -1,4 +1,4 @@
-{ dwm, ... }:
+{ suckless, ... }:
 {
   config,
   lib,
@@ -16,7 +16,7 @@ in
       windowManager = {
         dwm = {
           enable = true;
-          package = dwm.packages.${system}.default;
+          package = suckless.packages.${system}.dwm;
         };
       };
     };

@@ -51,8 +51,8 @@
       };
     };
 
-    dwm = {
-      url = "github:dotunwrap/dwm-config";
+    suckless = {
+      url = "github:dotunwrap/suckless-nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
