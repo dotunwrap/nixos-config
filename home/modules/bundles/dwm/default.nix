@@ -38,6 +38,7 @@ in
       st.enable = true;
       vesktop.enable = true;
       wezterm.enable = true;
+      zen-browser.enable = true;
     };
 
     xdg.mimeApps = {

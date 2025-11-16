@@ -68,6 +68,28 @@
         "type": "github"
       }
     },
+    "firefox-addons": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "pkgs/firefox-addons",
+        "lastModified": 1763265905,
+        "narHash": "sha256-cgzVZqxSZOnb7W1uapPd672zXyas6IAW2JBNV2QXOpk=",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "rev": "e08658c73825257d0b1950c4bf624ece07733815",
+        "type": "gitlab"
+      },
+      "original": {
+        "dir": "pkgs/firefox-addons",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "type": "gitlab"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -275,6 +297,27 @@
         "owner": "nix-community",
         "repo": "home-manager",
         "rev": "37a3d97f2873e0f68711117c34d04b7c7ead8f4e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "home-manager_2": {
+      "inputs": {
+        "nixpkgs": [
+          "zen-browser",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1762964643,
+        "narHash": "sha256-RYHN8O/Aja59XDji6WSJZPkJpYVUfpSkyH+PEupBJqM=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "827f2a23373a774a8805f84ca5344654c31f354b",
         "type": "github"
       },
       "original": {
@@ -569,6 +612,7 @@
     },
     "root": {
       "inputs": {
+        "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "monolisa": "monolisa",
@@ -581,7 +625,8 @@
         "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
-        "suckless": "suckless"
+        "suckless": "suckless",
+        "zen-browser": "zen-browser"
       }
     },
     "rust-overlay": {
@@ -849,6 +894,27 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "zen-browser": {
+      "inputs": {
+        "home-manager": "home-manager_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1763263112,
+        "narHash": "sha256-BDRSWvXGoKq1oHSjl+HLAq7I8ZL90ZhW3fDB3cl7LJk=",
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
+        "rev": "9c60d42e5029c119f093ea81b14ba96401c628cd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
         "type": "github"
       }
     }

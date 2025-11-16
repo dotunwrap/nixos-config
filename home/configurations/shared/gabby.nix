@@ -1,3 +1,13 @@
+{ firefox-addons, stylix, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (pkgs.stdenv.hostPlatform) system;
+in
 {
   accounts = {
     calendar.basePath = ".local/share/calendars";
@@ -20,4 +30,14 @@
   };
 
   programs.starship.prompt = "pure";
+
+  programs.zen-browser.profiles.gabby = lib.mkIf config.programs.zen-browser.enable {
+    extensions.packages = with firefox-addons.packages.${system}; [
+      bitwarden
+      ublock-origin
+      darkreader
+    ];
+  };
+
+  stylix.targets.zen-browser.profileNames = lib.mkIf config.programs.zen-browser.enable [ "gabby" ];
 }

@@ -109,6 +109,7 @@ in
                 { news.display = "silent"; }
                 { nixpkgs.overlays = [ inputs.rust-overlay.overlays.default ]; }
                 inputs.stylix.homeModules.stylix
+                inputs.zen-browser.homeModules.twilight
               ]
               ++ config.modules
               ++ builtins.attrValues self.homeManagerModules;

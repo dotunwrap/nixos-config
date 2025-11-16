@@ -1,4 +1,5 @@
-_: _:
+inputs:
+{ pkgs, ... }@default:
 {
   activeBundles = [
     "development"
@@ -7,4 +8,4 @@ _: _:
 
   home.stateVersion = "24.11";
 }
-// import ./shared/gabby.nix
+// import ./shared/gabby.nix inputs default
