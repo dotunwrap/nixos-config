@@ -17,6 +17,7 @@ in
       # https://github.com/NixOS/nixpkgs/blob/7241bcbb4f099a66aafca120d37c65e8dda32717/nixos/modules/programs/steam.nix
       steam-tui.enable = true;
       prismlauncher.enable = true;
+      mcrcon.enable = true;
     };
   };
 }

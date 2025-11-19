@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    mcrcon.enable = mkEnableOption "Enable mcrcon";
     prismlauncher.enable = mkEnableOption "Enable prismlauncher";
     qalculate.enable = mkEnableOption "Enable qalculate";
     httpie.enable = mkEnableOption "Enable httpie";
