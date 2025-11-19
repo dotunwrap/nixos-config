@@ -2,6 +2,7 @@ _:
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -16,6 +17,16 @@ in
     xdg.userDirs.extraConfig.XDG_CODE_DIR = "${config.home.homeDirectory}/Code";
 
     programs = {
+      claude-code = {
+        enable = true;
+        package = pkgs.claude-code;
+        mcpServers = {
+          deepwiki = {
+            type = "http";
+            url = "https://mcp.deepwiki.com/mcp";
+          };
+        };
+      };
       httpie.enable = true;
       opencode.enable = true;
       programming = {
