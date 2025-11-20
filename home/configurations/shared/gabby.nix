@@ -25,6 +25,7 @@ in
       "github.com" = {
         hostname = "github.com";
         identityFile = "~/.ssh/github_ed25519";
+        forwardAgent = true;
       };
     };
   };
