@@ -36,6 +36,7 @@ in
 
     programs = {
       dconf.enable = true;
+      gnupg.enable = true;
       usbutils.enable = true;
       xdg-utils.enable = true;
       zsh.enable = true;

@@ -14,6 +14,7 @@
     "drivers/ffado" = ./drivers/ffado;
 
     "programs" = ./programs;
+    "programs/gnupg" = ./programs/gnupg;
     "programs/protonup-ng" = ./programs/protonup-ng;
     "programs/usbutils" = ./programs/usbutils;
     "programs/xdg-utils" = ./programs/xdg-utils;
