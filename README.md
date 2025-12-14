@@ -67,7 +67,7 @@ These are the users I have configured for my machines. This list shows the users
 
 - [jlevere](https://github.com/jlevere)
 
-    For being the person who actually convinced me to give NixOS a shot. I may have caved solely due to our relationship & interest in learning things you enjoyed, but you were the push I needed nonetheless.
+    For being the person who actually convinced me to give NixOS a shot.
 
 - [NobbZ](https://github.com/NobbZ)
 
