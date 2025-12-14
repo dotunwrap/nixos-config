@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/tor-browser" = ./programs/tor-browser;
     "programs/mcrcon" = ./programs/mcrcon;
     "programs/prismlauncher" = ./programs/prismlauncher;
     "programs/qalculate" = ./programs/qalculate;

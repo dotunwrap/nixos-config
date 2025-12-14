@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    tor-browser.enable = mkEnableOption "Enable tor-browser";
     mcrcon.enable = mkEnableOption "Enable mcrcon";
     prismlauncher.enable = mkEnableOption "Enable prismlauncher";
     qalculate.enable = mkEnableOption "Enable qalculate";
