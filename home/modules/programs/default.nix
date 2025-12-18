@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    monero-cli.enable = mkEnableOption "Enable monero-cli";
     tor-browser.enable = mkEnableOption "Enable tor-browser";
     mcrcon.enable = mkEnableOption "Enable mcrcon";
     prismlauncher.enable = mkEnableOption "Enable prismlauncher";

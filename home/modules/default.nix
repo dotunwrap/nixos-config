@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/monero-cli" = ./programs/monero-cli;
     "programs/tor-browser" = ./programs/tor-browser;
     "programs/mcrcon" = ./programs/mcrcon;
     "programs/prismlauncher" = ./programs/prismlauncher;

@@ -28,6 +28,7 @@ in
         };
       };
       httpie.enable = true;
+      monero-cli.enable = true;
       opencode.enable = true;
       programming = {
         c.enable = true;
