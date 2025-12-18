@@ -70,6 +70,7 @@ in
       pulsemixer.enable = true;
       qalculate.enable = true;
       starship.enable = true;
+      pay-respects.enable = true;
       wget.enable = true;
       yazi.enable = true;
       zip.enable = true;
