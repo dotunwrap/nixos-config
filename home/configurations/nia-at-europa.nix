@@ -1,10 +1,17 @@
 inputs:
 { pkgs, ... }@default:
+
 {
   activeBundles = [
     "development"
     "dwm"
   ];
+
+  themes = {
+    enable = true;
+    image = ../../assets/wallpapers/miku.jpg;
+    opacity = 0.8;
+  };
 
   home.stateVersion = "24.11";
 }

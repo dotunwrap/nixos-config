@@ -59,6 +59,7 @@ in
         inactiveOpacity = 0.8;
         activeOpacity = 0.9;
         opacityRules = [
+          "100:class_g = 'firefox'"
           "100:class_g = 'qutebrowser'"
           "100:fullscreen"
         ];

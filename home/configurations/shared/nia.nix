@@ -33,6 +33,7 @@ in
   programs.starship.prompt = "pure";
 
   programs.qutebrowser.enable = false;
+  programs.zen-browser.enable = false;
   programs.firefox = {
     enable = true;
     profiles.nia = {
@@ -56,4 +57,6 @@ in
   programs.fldigi.enable = true;
   programs.sdrpp.enable = true;
   programs.gqrx.enable = true;
+
+  stylix.targets.firefox.profileNames = [ "nia" ];
 }
