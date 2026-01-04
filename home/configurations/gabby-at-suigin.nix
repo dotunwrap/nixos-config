@@ -10,6 +10,7 @@ inputs:
     enable = true;
     image = ../../assets/wallpapers/bay.jpeg;
     opacity = 0.8;
+    cursorSize = 42;
   };
 
   xresources.properties = {
