@@ -52,4 +52,6 @@ in
     cl = "clang";
     clpp = "clang++";
   };
+
+  programs.fldigi.enable = true;
 }

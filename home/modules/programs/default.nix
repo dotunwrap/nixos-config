@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    fldigi.enable = mkEnableOption "Enable fldigi";
     monero-cli.enable = mkEnableOption "Enable monero-cli";
     tor-browser.enable = mkEnableOption "Enable tor-browser";
     mcrcon.enable = mkEnableOption "Enable mcrcon";
