@@ -54,4 +54,5 @@ in
   };
 
   programs.fldigi.enable = true;
+  programs.sdrpp.enable = true;
 }
