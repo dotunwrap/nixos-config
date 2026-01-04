@@ -5,6 +5,7 @@ with lib;
   options.programs = {
     fldigi.enable = mkEnableOption "Enable fldigi";
     sdrpp.enable = mkEnableOption "Enable sdrpp";
+    gqrx.enable = mkEnableOption "Enable gqrx";
     monero-cli.enable = mkEnableOption "Enable monero-cli";
     tor-browser.enable = mkEnableOption "Enable tor-browser";
     mcrcon.enable = mkEnableOption "Enable mcrcon";

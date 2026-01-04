@@ -55,4 +55,5 @@ in
 
   programs.fldigi.enable = true;
   programs.sdrpp.enable = true;
+  programs.gqrx.enable = true;
 }
