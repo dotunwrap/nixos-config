@@ -35,5 +35,21 @@ in
   programs.qutebrowser.enable = false;
   programs.firefox = {
     enable = true;
+    profiles.nia = {
+      extensions = with firefox-addons.packages.${system}; [
+        bitwarden
+        ublock-origin
+      ];
+    };
+  };
+
+  programs.programming = {
+    c.enable = false;
+    cpp.enable = true;
+  };
+
+  programs.zsh.shellAliases = {
+    cl = "clang";
+    clpp = "clang++";
   };
 }
