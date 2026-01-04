@@ -9,7 +9,7 @@ _:
   core.kernel.enable = true;
 
   networking = {
-    hostName = "x1";
+    hostName = "europa";
     networkmanager.enable = true;
     useDHCP = false;
     interfaces = {
@@ -32,7 +32,7 @@ _:
     defaultLocale = "en_US.UTF-8";
   };
 
-  users.users = import ./users/gabby.nix pkgs;
+  users.users = import ./users/nia.nix pkgs;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

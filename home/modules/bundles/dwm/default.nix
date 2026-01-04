@@ -19,27 +19,27 @@ in
     xdg.userDirs.extraConfig.XDG_SCREENSHOTS_DIR = "${config.home.homeDirectory}/Pictures/Screenshots";
 
     programs = {
-      bitwarden.enable = true;
-      dmenu.enable = true;
-      feh.enable = true;
-      lxsession.enable = true;
-      nushell.enable = true;
+      bitwarden.enable = lib.mkDefault true;
+      dmenu.enable = lib.mkDefault true;
+      feh.enable = lib.mkDefault true;
+      lxsession.enable = lib.mkDefault true;
+      nushell.enable = lib.mkDefault true;
       obs-studio = {
-        enable = true;
+        enable = lib.mkDefault true;
         plugins = with pkgs.obs-studio-plugins; [
           droidcam-obs
         ];
       };
-      onlyoffice.enable = true;
-      pavucontrol.enable = true;
-      qutebrowser.enable = true;
-      signal.enable = true;
-      spotify-player.enable = true;
-      st.enable = true;
-      tor-browser.enable = true;
-      vesktop.enable = true;
-      wezterm.enable = true;
-      zen-browser.enable = true;
+      onlyoffice.enable = lib.mkDefault true;
+      pavucontrol.enable = lib.mkDefault true;
+      qutebrowser.enable = lib.mkDefault true;
+      signal.enable = lib.mkDefault true;
+      spotify-player.enable = lib.mkDefault true;
+      st.enable = lib.mkDefault true;
+      tor-browser.enable = lib.mkDefault true;
+      vesktop.enable = lib.mkDefault true;
+      wezterm.enable = lib.mkDefault true;
+      zen-browser.enable = lib.mkDefault true;
     };
 
     xdg.mimeApps = {

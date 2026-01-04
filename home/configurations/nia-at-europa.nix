@@ -8,4 +8,4 @@ inputs:
 
   home.stateVersion = "24.11";
 }
-// import ./shared/gabby.nix inputs default
+// import ./shared/nia.nix inputs default
