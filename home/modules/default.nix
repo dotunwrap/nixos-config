@@ -53,6 +53,7 @@
 
     "programs/programming" = ./programs/programming;
     "programs/programming/c" = ./programs/programming/c;
+    "programs/programming/cpp" = ./programs/programming/cpp;
     "programs/programming/go" = ./programs/programming/go;
     "programs/programming/javascript" = ./programs/programming/javascript;
     "programs/programming/rust" = ./programs/programming/rust;

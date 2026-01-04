@@ -32,6 +32,7 @@ in
       opencode.enable = true;
       programming = {
         c.enable = true;
+        cpp.enable = true;
         go.enable = true;
         javascript.enable = true;
         rust.enable = true;

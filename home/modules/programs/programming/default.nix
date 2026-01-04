@@ -9,6 +9,7 @@ with lib;
 {
   options.programs.programming = {
     c.enable = mkEnableOption "Enable C";
+    cpp.enable = mkEnableOption "Enable C++";
     go.enable = mkEnableOption "Enable Go";
     javascript.enable = mkEnableOption "Enable JavaScript";
     rust.enable = mkEnableOption "Enable Rust";
