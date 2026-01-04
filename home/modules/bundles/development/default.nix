@@ -31,13 +31,12 @@ in
       monero-cli.enable = true;
       opencode.enable = true;
       programming = {
-        c.enable = true;
-        cpp.enable = true;
-        go.enable = true;
-        javascript.enable = true;
-        rust.enable = true;
-        typst.enable = true;
-        zig.enable = true;
+        c.enable = lib.mkDefault true;
+        go.enable = lib.mkDefault true;
+        javascript.enable = lib.mkDefault true;
+        rust.enable = lib.mkDefault true;
+        typst.enable = lib.mkDefault true;
+        zig.enable = lib.mkDefault true;
       };
     };
   };
