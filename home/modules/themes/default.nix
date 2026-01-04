@@ -14,6 +14,7 @@ with lib;
     enable = mkEnableOption "Enable stylix themeing";
     image = mkOption { };
     opacity = mkOption { default = 1.0; };
+    cursorSize = mkOption { default = 32; };
     gruvbox-dark.enable = mkEnableOption "Enable gruvbox-dark";
     flare.enable = mkEnableOption "Enable flare";
   };
@@ -37,7 +38,7 @@ with lib;
         # emoji = { };
       };
       cursor = {
-        size = 42;
+        size = config.themes.cursorSize;
         package = pkgs.volantes-cursors;
         name = "volantes_cursors";
       };
