@@ -12,6 +12,7 @@
     "programs" = ./programs;
     "programs/fldigi" = ./programs/fldigi;
     "programs/sdrpp" = ./programs/sdrpp;
+    "programs/gqrx" = ./programs/gqrx;
     "programs/monero-cli" = ./programs/monero-cli;
     "programs/tor-browser" = ./programs/tor-browser;
     "programs/mcrcon" = ./programs/mcrcon;
