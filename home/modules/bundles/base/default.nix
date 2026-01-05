@@ -69,6 +69,7 @@ in
       p7zip.enable = true;
       pulsemixer.enable = true;
       qalculate.enable = true;
+      ripgrep.enable = true;
       starship.enable = true;
       pay-respects.enable = true;
       wget.enable = true;
