@@ -71,6 +71,7 @@ in
         jack.enable = true;
       };
       printing.enable = true;
+      tailscale.enable = true;
       upower.enable = true;
     };
 
