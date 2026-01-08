@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    soapysdr.enable = mkEnableOption "Enable soapysdr";
     fldigi.enable = mkEnableOption "Enable fldigi";
     sdrpp.enable = mkEnableOption "Enable sdrpp";
     gqrx.enable = mkEnableOption "Enable gqrx";

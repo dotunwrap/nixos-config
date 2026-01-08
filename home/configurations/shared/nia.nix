@@ -57,6 +57,6 @@ in
   programs.fldigi.enable = true;
   programs.sdrpp.enable = true;
   programs.gqrx.enable = true;
-
+  programs.soapysdr.enable = true;
   stylix.targets.firefox.profileNames = [ "nia" ];
 }
