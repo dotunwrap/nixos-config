@@ -7,11 +7,11 @@ inputs:
     "dwm"
   ];
 
-  themes = {
-    enable = true;
-    image = ../../assets/wallpapers/miku.jpg;
-    opacity = 0.8;
-  };
+  # themes = {
+  #   enable = true;
+  #   image = ../../assets/wallpapers/miku.jpg;
+  #   opacity = 0.8;
+  # };
 
   home.stateVersion = "24.11";
 }
