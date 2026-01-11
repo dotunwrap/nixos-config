@@ -28,13 +28,7 @@ _:
   hardware = {
     graphics = {
       enable = true;
-    };
-    nvidia = {
-      open = false;
-      modesetting.enable = true;
-      nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      powerManagement.enable = true;
+      enable32Bit = true;
     };
   };
 
@@ -47,9 +41,6 @@ _:
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1
     '';
-    kernelParams = [
-      "pcie_port_pm=off"
-    ];
   };
 
   services.xserver = {
@@ -64,7 +55,6 @@ _:
       Option "PreferredMode" "5120x1440"
       Option "TargetRefresh" "240"
     '';
-    videoDrivers = [ "nvidia" ];
   };
   drivers.ffado.enable = true;
 
