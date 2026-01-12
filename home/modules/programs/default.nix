@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    protonvpn.enable = mkEnableOption "Enable protonvpn";
     soapysdr.enable = mkEnableOption "Enable soapysdr";
     fldigi.enable = mkEnableOption "Enable fldigi";
     sdrpp.enable = mkEnableOption "Enable sdrpp";
