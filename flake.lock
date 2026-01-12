@@ -785,11 +785,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767648622,
-        "narHash": "sha256-qyUDEBfKDK0OLmW5S+Hen1EtRBJy7plWYESjm4EPZMk=",
+        "lastModified": 1768189692,
+        "narHash": "sha256-fgd98TW2sY2MNXYO2dHajTZZd6kVlNIAx8zas5InkKQ=",
         "owner": "dotunwrap",
         "repo": "suckless-nix",
-        "rev": "869b5ff8f140cabaf64efa7f6f3e4e77032dc3c0",
+        "rev": "f5df4612cf8efb877f456f964fa18cfcba91d24b",
         "type": "github"
       },
       "original": {
