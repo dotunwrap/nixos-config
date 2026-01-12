@@ -17,8 +17,13 @@ in
         dwm = {
           enable = true;
           package = suckless.packages.${system}.dwm;
+          extraSessionCommands = ''
+            dwmblocks &
+          '';
         };
       };
     };
+
+    environment.systemPackages = [ suckless.packages.${system}.dwmblocks ];
   };
 }
