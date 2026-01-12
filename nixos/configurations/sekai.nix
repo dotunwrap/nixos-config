@@ -41,6 +41,7 @@ _:
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1
     '';
+    initrd.kernelModules = [ "amdgpu" ];
   };
 
   services.xserver = {
@@ -55,6 +56,11 @@ _:
       Option "PreferredMode" "5120x1440"
       Option "TargetRefresh" "240"
     '';
+    deviceSection = ''
+      Option "TearFree" "false"
+      Option "VariableRefresh" "true"
+    '';
+    videoDrivers = [ "amdgpu" ];
   };
   drivers.ffado.enable = true;
 
