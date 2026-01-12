@@ -47,7 +47,7 @@
     nvim = {
       url = "github:dotunwrap/determinvim";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-stable";
         flake-parts.follows = "flake-parts";
       };
     };
