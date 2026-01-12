@@ -18,10 +18,11 @@ in
   options.nix.flakes.enable = lib.mkEnableOption "Enable nix flakes";
 
   config = lib.mkIf config.nix.flakes.enable {
-    programs.command-not-found.dbPath = programs-db.packages.${pkgs.system}.programs-sqlite;
+    programs.command-not-found.dbPath =
+      programs-db.packages.${pkgs.stdenv.hostPlatform.system}.programs-sqlite;
 
     nix = {
-      package = lib.mkDefault nix.packages.${pkgs.system}.nix-cli;
+      package = lib.mkDefault nix.packages.${pkgs.stdenv.hostPlatform.system}.nix-cli;
 
       settings.experimental-features = [
         "nix-command"

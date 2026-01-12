@@ -53,7 +53,7 @@ in
         implementation = "broker";
         packages = with pkgs; [
           dconf
-          xfce.xfconf
+          xfconf
           gnome2.GConf
         ];
       };
