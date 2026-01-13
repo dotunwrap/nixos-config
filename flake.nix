@@ -55,7 +55,7 @@
     suckless = {
       url = "github:dotunwrap/suckless-nix";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-stable";
         flake-parts.follows = "flake-parts";
       };
     };
