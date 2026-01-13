@@ -37,9 +37,21 @@ in
   programs.firefox = {
     enable = true;
     profiles.nia = {
-      extensions = with firefox-addons.packages.${system}; [
+      settings = {
+        "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.urlbar.suggest.quicksuggest.sponsored" = false;
+        "browser.newtabpage.activity-stream.system.showSponsored" = false;
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        "browser.newtabpage.activity-stream.showSponsoredCheckboxes" = false;
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.newtabpage.activity-stream.discoverystream.enabled" = false;
+        "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+      };
+      extensions.packages = with firefox-addons.packages.${system}; [
         bitwarden
         ublock-origin
+        reddit-enhancement-suite
       ];
     };
   };
