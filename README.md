@@ -59,6 +59,7 @@ These are the users I have configured for my machines. This list shows the users
     - [sekai](/home/configurations/gabby-at-sekai.nix)
 
 - [nia](/nixos/configurations/users/nia.nix)
+    - [sekai](/home/configurations/nia-at-sekai.nix)
     - [europa](/home/configurations/nia-at-europa.nix)
 
 ## Credits
