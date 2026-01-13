@@ -10,7 +10,7 @@ inputs:
 
   themes = {
     enable = true;
-    image = ../../assets/wallpapers/tloz.png;
+    image = ../../assets/wallpapers/tloz.jpg;
     opacity = 0.8;
   };
 
