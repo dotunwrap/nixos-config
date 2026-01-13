@@ -69,8 +69,8 @@ _:
     networkmanager.enable = true;
     useDHCP = false;
     interfaces = {
-      enp6s0.useDHCP = true;
-      wlp13s0.useDHCP = true;
+      enp8s0.useDHCP = true;
+      wlp15s0.useDHCP = true;
     };
   };
 
