@@ -4,6 +4,7 @@ with lib;
 {
   options.programs = {
     protonvpn.enable = mkEnableOption "Enable protonvpn";
+    arduino-cli.enable = mkEnableOption "Enable arduino-cli";
     soapysdr.enable = mkEnableOption "Enable soapysdr";
     fldigi.enable = mkEnableOption "Enable fldigi";
     sdrpp.enable = mkEnableOption "Enable sdrpp";
