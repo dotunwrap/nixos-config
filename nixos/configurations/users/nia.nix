@@ -7,6 +7,7 @@
       "wheel"
       "audio"
       "networkmanager"
+      "dialout"
     ];
   };
 }
