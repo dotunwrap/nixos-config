@@ -44,8 +44,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvim = {
+    determinvim = {
       url = "github:dotunwrap/determinvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-stable";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+
+    niavim = {
+      url = "github:nyoshe/niavim";
       inputs = {
         nixpkgs.follows = "nixpkgs-stable";
         flake-parts.follows = "flake-parts";

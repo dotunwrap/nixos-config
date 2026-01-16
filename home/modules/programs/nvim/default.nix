@@ -1,4 +1,4 @@
-{ nvim, ... }:
+{ determinvim, ... }:
 {
   config,
   lib,
@@ -16,7 +16,7 @@ let
 in
 {
   options.programs.nvim = {
-    package = lib.mkOption { default = nvim.packages.${system}.default; };
+    package = lib.mkOption { default = determinvim.packages.${system}.default; };
   };
 
   config = lib.mkIf cfg.enable {
