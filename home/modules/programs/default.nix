@@ -26,6 +26,7 @@ with lib;
     killall.enable = mkEnableOption "Enable killall";
     lxsession.enable = mkEnableOption "Enable lxsession";
     macchina.enable = mkEnableOption "Enable macchina";
+    nvim.enable = mkEnableOption "Enable nvim";
     p7zip.enable = mkEnableOption "Enable p7zip";
     pavucontrol.enable = mkEnableOption "Enable pavucontrol";
     pulsemixer.enable = mkEnableOption "Enable pulsemixer";
