@@ -40,6 +40,7 @@
     "programs/killall" = ./programs/killall;
     "programs/lxsession" = ./programs/lxsession;
     "programs/macchina" = ./programs/macchina;
+    "programs/nvim" = ./programs/nvim;
     "programs/onlyoffice" = ./programs/onlyoffice;
     "programs/opencode" = ./programs/opencode;
     "programs/p7zip" = ./programs/p7zip;
