@@ -2,6 +2,7 @@
   firefox-addons,
   stylix,
   niavim,
+  monolisa,
   ...
 }:
 {
@@ -17,6 +18,13 @@ in
   accounts = {
     calendar.basePath = ".local/share/calendars";
     contact.basePath = ".local/share/contacts";
+  };
+
+  bundles.base.monolisaVersion = monolisa.packages.${system}.nia;
+  fonts.fontconfig.defaultFonts.monospace = [ "MonoLisa Nia" ];
+  stylix.fonts.monospace = {
+    package = monolisa.packages.${system}.nia;
+    name = "MonoLisa Nia";
   };
 
   programs = {
