@@ -17,13 +17,14 @@ in
 {
   options.bundles.base = {
     enable = lib.mkEnableOption "The base bundle. Should always be enabled.";
+    monolisaVersion = lib.mkOption { default = monolisa.packages.${system}.default; };
   };
 
   config = lib.mkIf cfg.enable {
     nixpkgs.config.allowUnfree = true;
 
     home.packages = [
-      monolisa.packages.${system}.default
+      config.bundles.base.monolisaVersion
     ];
 
     xdg.userDirs = {
@@ -39,7 +40,7 @@ in
     fonts.fontconfig = {
       enable = true;
       defaultFonts = {
-        monospace = [ "MonoLisa Variable" ];
+        monospace = lib.mkDefault [ "MonoLisa Variable" ];
       };
     };
 
