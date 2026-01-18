@@ -502,11 +502,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768710644,
-        "narHash": "sha256-FykBjBAMPvvS4drCTWVB5pp5HHbuSLFuUjxtQ2wzyy0=",
+        "lastModified": 1768711842,
+        "narHash": "sha256-fElOjXJZ+0vBnx4/zA5AHl4f1028J3HIDpzJZ3kK7A0=",
         "ref": "refs/heads/main",
-        "rev": "56e465e1603e35ce9398a382d913b2e98f9bfc82",
-        "revCount": 2,
+        "rev": "213a1de1ae1f42095a19777bfa03e94c44dfc91a",
+        "revCount": 3,
         "type": "git",
         "url": "ssh://git@github.com/dotunwrap/monolisa-font-nix"
       },
