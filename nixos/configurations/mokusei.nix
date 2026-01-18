@@ -40,6 +40,11 @@ _:
   };
 
   services.xserver = {
+    displayManager.sessionCommands = ''
+      ${pkgs.xorg.xrandr}/bin/xrandr \
+        --output HDMI-0 --primary --mode 1920x1080 --rate 74.97 --rotate normal \
+        --output DP-4 --mode 1920x1080 --rate 74.97 --rotate left --left-of HDMI-0
+    '';
     videoDrivers = [ "nvidia" ];
   };
   drivers.ffado.enable = true;
