@@ -40,11 +40,15 @@ These are a list of hosts that this config services. Some are NixOS machines; ot
 
 - [europa](/nixos/configurations/europa.nix)
 
-    A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Now my girlfriend's laptop.
+    A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Now [my girlfriend's](https://github.com/nyoshe) laptop.
 
 - [sekai](/nixos/configurations/sekai.nix)
 
     My desktop (Ryzen 9 9950X + Radeon RX 9070 XT). Used for _Linux gaming_.
+
+- [mokusei](/nixos/configurations/mokusei.nix)
+
+    [My girlfriend's](https://github.com/nyoshe) desktop (Ryzen 5 5600X + NVIDIA RTX 4070 Ti Super). Also used for _Linux gaming_.
 
 ### Home Manager
 
@@ -61,6 +65,7 @@ These are the users I have configured for my machines. This list shows the users
 - [nia](/nixos/configurations/users/nia.nix)
     - [sekai](/home/configurations/nia-at-sekai.nix)
     - [europa](/home/configurations/nia-at-europa.nix)
+    - [mokusei](/home/configurations/nia-at-mokusei.nix)
 
 ## Credits
 
