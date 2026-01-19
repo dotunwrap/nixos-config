@@ -63,10 +63,6 @@ in
         ];
       };
     };
-    programming = {
-      c.enable = false;
-      cpp.enable = true;
-    };
     zsh.shellAliases = {
       cl = "clang";
       clpp = "clang++";

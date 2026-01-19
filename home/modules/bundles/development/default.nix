@@ -31,7 +31,7 @@ in
       monero-cli.enable = true;
       opencode.enable = true;
       programming = {
-        c.enable = lib.mkDefault true;
+        cpp.enable = lib.mkDefault true;
         go.enable = lib.mkDefault true;
         javascript.enable = lib.mkDefault true;
         rust.enable = lib.mkDefault true;
