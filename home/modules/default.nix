@@ -11,7 +11,6 @@
 
     "programs" = ./programs;
     "programs/protonvpn" = ./programs/protonvpn;
-    "programs/arduino-cli" = ./programs/arduino-cli;
     "programs/soapysdr" = ./programs/soapysdr;
     "programs/fldigi" = ./programs/fldigi;
     "programs/sdrpp" = ./programs/sdrpp;

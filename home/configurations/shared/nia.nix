@@ -78,7 +78,6 @@ in
     sdrpp.enable = true;
     gqrx.enable = true;
     soapysdr.enable = true;
-    arduino-cli.enable = true;
   };
 
   stylix.targets.firefox.profileNames = [ "nia" ];
