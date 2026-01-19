@@ -101,11 +101,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1768850480,
-        "narHash": "sha256-sDe0VD6RTh685KWKeVqEr0I3PxIrjbXRGHSjlVupBPg=",
+        "lastModified": 1768866804,
+        "narHash": "sha256-vSQ//u4sYnIygrYAiQZf0TQf+662SL6tDXFPX5JwPaA=",
         "owner": "dotunwrap",
         "repo": "determinvim",
-        "rev": "1056ff24c13a58ec2ecf053267a68b5daa38e214",
+        "rev": "eecf2c4f7fbba83c567a85eb999c09253f428206",
         "type": "github"
       },
       "original": {
