@@ -55,7 +55,7 @@
     niavim = {
       url = "github:nyoshe/niavim";
       inputs = {
-        nixpkgs.follows = "nixpkgs-stable";
+        nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
       };
     };
