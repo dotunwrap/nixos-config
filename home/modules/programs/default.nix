@@ -6,7 +6,14 @@ with lib;
     protonvpn.enable = mkEnableOption "Enable protonvpn";
     soapysdr.enable = mkEnableOption "Enable soapysdr";
     fldigi.enable = mkEnableOption "Enable fldigi";
-    sdrpp.enable = mkEnableOption "Enable sdrpp";
+    sdrpp = {
+      enable = mkEnableOption "Enable sdrpp";
+      plugins = mkOption {
+        type = types.listOf types.path;
+        default = [];
+        description = "List of SDR++ plugin .so files to install";
+      };
+    };
     gqrx.enable = mkEnableOption "Enable gqrx";
     monero-cli.enable = mkEnableOption "Enable monero-cli";
     tor-browser.enable = mkEnableOption "Enable tor-browser";

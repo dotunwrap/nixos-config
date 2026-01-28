@@ -75,7 +75,12 @@ in
     qutebrowser.enable = false;
     zen-browser.enable = false;
     fldigi.enable = true;
-    sdrpp.enable = true;
+    sdrpp = {
+      enable = true;
+      plugins = [
+        ./../../modules/programs/sdrpp/plugins/tetra_demodulator.so
+      ];
+    };
     gqrx.enable = true;
     soapysdr.enable = true;
   };
