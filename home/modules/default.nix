@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/qbittorrent" = ./programs/qbittorrent;
     "programs/protonvpn" = ./programs/protonvpn;
     "programs/soapysdr" = ./programs/soapysdr;
     "programs/fldigi" = ./programs/fldigi;

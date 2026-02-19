@@ -33,6 +33,7 @@ in
       onlyoffice.enable = lib.mkDefault true;
       pavucontrol.enable = lib.mkDefault true;
       protonvpn.enable = lib.mkDefault true;
+      qbittorrent.enable = lib.mkDefault true;
       qutebrowser.enable = lib.mkDefault true;
       signal.enable = lib.mkDefault true;
       spotify-player.enable = lib.mkDefault true;
