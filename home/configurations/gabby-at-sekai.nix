@@ -14,8 +14,6 @@ inputs:
     opacity = 0.8;
   };
 
-  programs.wowup.enable = true;
-
   home.stateVersion = "24.11";
 }
 // import ./shared/gabby.nix inputs default

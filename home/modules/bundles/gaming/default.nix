@@ -18,6 +18,7 @@ in
       steam-tui.enable = true;
       prismlauncher.enable = true;
       mcrcon.enable = true;
+      wowup.enable = true;
     };
   };
 }
