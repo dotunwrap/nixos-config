@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    omnix.enable = mkEnableOption "Enable omnix";
     wowup.enable = mkEnableOption "Enable wowup";
     qbittorrent.enable = mkEnableOption "Enable qbittorrent";
     protonvpn.enable = mkEnableOption "Enable protonvpn";

@@ -29,6 +29,7 @@ in
       };
       httpie.enable = true;
       monero-cli.enable = true;
+      omnix.enable = true;
       opencode.enable = true;
       programming = {
         cpp.enable = lib.mkDefault true;
