@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    wowup.enable = mkEnableOption "Enable wowup";
     qbittorrent.enable = mkEnableOption "Enable qbittorrent";
     protonvpn.enable = mkEnableOption "Enable protonvpn";
     soapysdr.enable = mkEnableOption "Enable soapysdr";
