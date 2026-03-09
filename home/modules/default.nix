@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/spotify" = ./programs/spotify;
     "programs/omnix" = ./programs/omnix;
     "programs/wowup" = ./programs/wowup;
     "programs/qbittorrent" = ./programs/qbittorrent;

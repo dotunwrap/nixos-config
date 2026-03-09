@@ -36,6 +36,7 @@ in
       qbittorrent.enable = lib.mkDefault true;
       qutebrowser.enable = lib.mkDefault true;
       signal.enable = lib.mkDefault true;
+      spotify.enable = lib.mkDefault true;
       spotify-player.enable = lib.mkDefault true;
       st.enable = lib.mkDefault true;
       tor-browser.enable = lib.mkDefault true;
