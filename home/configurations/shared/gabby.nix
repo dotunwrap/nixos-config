@@ -28,12 +28,12 @@ in
         serverAliveInterval = 0;
         serverAliveCountMax = 3;
         compression = false;
-        addKeysToAgent = false;
+        addKeysToAgent = "no";
         hashKnownHosts = false;
         userKnownHostsFile = "~/.ssh/known_hosts";
-        controlMaster = false;
+        controlMaster = "no";
         controlPath = "~/.ssh/master-%r@%n:%p";
-        controlPersist = false;
+        controlPersist = "no";
       };
       "github.com" = {
         hostname = "github.com";
