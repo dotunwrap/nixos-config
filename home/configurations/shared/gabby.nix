@@ -21,7 +21,20 @@ in
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     matchBlocks = {
+      "*" = {
+        forwardAgent = false;
+        serverAliveInterval = 0;
+        serverAliveCountMax = 3;
+        compression = false;
+        addKeysToAgent = false;
+        hashKnownHosts = false;
+        userKnownHostsFile = "~/.ssh/known_hosts";
+        controlMaster = false;
+        controlPath = "~/.ssh/master-%r@%n:%p";
+        controlPersist = false;
+      };
       "github.com" = {
         hostname = "github.com";
         identityFile = "~/.ssh/github_ed25519";

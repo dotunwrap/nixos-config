@@ -14,7 +14,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    xdg.userDirs.extraConfig.XDG_CODE_DIR = "${config.home.homeDirectory}/Code";
+    xdg.userDirs.extraConfig.CODE = "${config.home.homeDirectory}/Code";
 
     programs = {
       claude-code = {

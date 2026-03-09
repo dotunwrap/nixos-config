@@ -16,7 +16,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    xdg.userDirs.extraConfig.XDG_SCREENSHOTS_DIR = "${config.home.homeDirectory}/Pictures/Screenshots";
+    xdg.userDirs.extraConfig.SCREENSHOTS = "${config.home.homeDirectory}/Pictures/Screenshots";
 
     programs = {
       bitwarden.enable = lib.mkDefault true;
@@ -42,7 +42,10 @@ in
       tor-browser.enable = lib.mkDefault true;
       vesktop.enable = lib.mkDefault true;
       wezterm.enable = lib.mkDefault true;
-      zen-browser.enable = lib.mkDefault true;
+      zen-browser = {
+        enable = lib.mkDefault true;
+        suppressXdgMigrationWarning = true;
+      };
     };
 
     xdg.mimeApps = {
