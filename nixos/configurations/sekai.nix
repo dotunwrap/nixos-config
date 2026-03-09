@@ -1,4 +1,4 @@
-_:
+{ nixpkgs-stable, ... }:
 {
   config,
   pkgs,
@@ -6,6 +6,13 @@ _:
 }:
 
 {
+  nixpkgs.overlays = [
+    (final: prev: {
+      xf86-video-amdgpu = nixpkgs-stable.legacyPackages.x86_64-linux.xorg.xf86videoamdgpu;
+      mesa = nixpkgs-stable.legacyPackages.x86_64-linux.mesa;
+    })
+  ];
+
   activeBundles = [
     "base"
     "dwm"
