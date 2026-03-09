@@ -97,6 +97,7 @@ in
                 { nixpkgs.hostPlatform.system = config.system; }
                 { nixpkgs.overlays = [ inputs.rust-overlay.overlays.default ]; }
                 inputs.stylix.nixosModules.stylix
+                inputs.sops-nix.nixosModules.sops
               ]
               ++ config.modules
               ++ builtins.attrValues {
