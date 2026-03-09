@@ -1,4 +1,4 @@
-{ nixpkgs-stable, ... }:
+_:
 {
   config,
   lib,
@@ -7,10 +7,6 @@
 }:
 
 let
-  stable-pkgs = import nixpkgs-stable {
-    inherit (pkgs.stdenv.hostPlatform) system;
-    config.allowUnfree = true;
-  };
   cfg = config.bundles.dwm;
 in
 
@@ -60,7 +56,6 @@ in
       flameshot.enable = true;
       picom = {
         enable = true;
-        package = stable-pkgs.picom;
         backend = "glx";
         shadow = true;
         inactiveOpacity = 0.8;
