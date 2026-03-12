@@ -14,6 +14,7 @@
     "drivers/ffado" = ./drivers/ffado;
 
     "programs" = ./programs;
+    "programs/libnotify" = ./programs/libnotify;
     "programs/gnupg" = ./programs/gnupg;
     "programs/protonup-ng" = ./programs/protonup-ng;
     "programs/usbutils" = ./programs/usbutils;
