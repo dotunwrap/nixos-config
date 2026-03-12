@@ -57,6 +57,9 @@ in
     };
 
     services = {
+      dunst = {
+        enable = true;
+      };
       flameshot.enable = true;
       picom = {
         enable = true;

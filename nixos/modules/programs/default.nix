@@ -8,6 +8,7 @@ with lib;
 
 {
   options.programs = {
+    libnotify.enable = mkEnableOption "Enable libnotify";
     gnupg.enable = mkEnableOption "Enable gnupg";
     protonup-ng.enable = mkEnableOption "Enable protonup-ng";
     usbutils.enable = mkEnableOption "Enable usbutils";
