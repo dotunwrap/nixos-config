@@ -60,6 +60,7 @@ in
       killall.enable = true;
       macchina.enable = true;
       magic-wormhole.enable = true;
+      nix-index.enable = true;
       nvim.enable = true;
       p7zip.enable = true;
       pulsemixer.enable = true;
