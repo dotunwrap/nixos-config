@@ -10,8 +10,8 @@ inputs:
 
   themes = {
     enable = true;
-    image = ../../assets/wallpapers/poly.png;
-    opacity = 0.8;
+    image = ../../assets/wallpapers/stephen_njoto.png;
+    opacity = 0.9;
   };
 
   home.stateVersion = "24.11";
