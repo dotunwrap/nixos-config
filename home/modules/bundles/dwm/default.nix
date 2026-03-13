@@ -16,6 +16,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    xsession.enable = true;
     xdg.userDirs.extraConfig.SCREENSHOTS = "${config.home.homeDirectory}/Pictures/Screenshots";
 
     programs = {

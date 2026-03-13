@@ -5,58 +5,55 @@
   pkgs,
   ...
 }:
+with lib;
 let
   inherit (pkgs.stdenv.hostPlatform) system;
+  anyThemeEnabled = any (theme: theme.enable) (attrValues config.themes);
 in
-with lib;
 {
   options.themes = {
-    enable = mkEnableOption "Enable stylix themeing";
-    image = mkOption { };
-    opacity = mkOption { default = 1.0; };
-    cursorSize = mkOption { default = 32; };
-    gruvbox-dark.enable = mkEnableOption "Enable gruvbox-dark";
-    flare.enable = mkEnableOption "Enable flare";
+    catppuccin.enable = mkEnableOption "Enable the Catppuccin theme.";
+    dracula.enable = mkEnableOption "Enable the Dracula theme.";
+    everforest.enable = mkEnableOption "Enable the Everforest theme.";
+    gruvbox.enable = mkEnableOption "Enable the Gruvbox theme.";
+    mocha.enable = mkEnableOption "Enable the Mocha theme.";
+    monokai.enable = mkEnableOption "Enable the Monokai theme.";
+    nord.enable = mkEnableOption "Enable the Nord theme.";
   };
 
-  config = mkIf config.themes.enable {
+  config = mkIf anyThemeEnabled {
     stylix = {
       enable = true;
-      image = config.themes.image;
-      polarity = "dark";
-      opacity = {
-        terminal = config.themes.opacity;
-        applications = config.themes.opacity;
+      polarity = mkDefault "dark";
+      fonts.monospace = {
+        package = mkDefault monolisa.packages.${system}.default;
+        name = "MonoLisa Variable";
       };
-      fonts = {
-        # serif = { };
-        # sansSerif = { };
-        monospace = {
-          package = mkDefault monolisa.packages.${system}.default;
-          name = mkDefault "MonoLisa Variable";
-        };
-        # emoji = { };
+      opacity = {
+        terminal = mkDefault 0.8;
+        applications = mkDefault 0.8;
       };
       cursor = {
-        size = config.themes.cursorSize;
-        package = pkgs.volantes-cursors;
-        name = "volantes_cursors";
+        size = mkDefault 32;
+        package = mkDefault pkgs.volantes-cursors;
+        name = mkDefault "volantes_cursors";
       };
+      targets.feh.enable = mkIf config.bundles.dwm.enable true;
     };
-
-    home.file.".background-image".source = lib.mkIf config.bundles.dwm.enable config.themes.image;
-    xresources.properties =
-      with config.lib.stylix.colors.withHashtag;
-      lib.mkIf config.bundles.dwm.enable {
-        "dwm.normbordercolor" = base00;
-        "dwm.normbgcolor" = base00;
-        "dwm.normfgcolor" = base0D;
-        "dwm.selbordercolor" = base03;
-        "dwm.selbgcolor" = base0D;
-        "dwm.selfgcolor" = base00;
-      };
-    xdg.configFile."lxsession/LXDE/autostart".text = lib.mkIf config.bundles.dwm.enable ''
-      @xsetroot -cursor_name left_ptr
-    '';
   };
+
+  # home.file.".background-image".source = lib.mkIf config.bundles.dwm.enable config.themes.image;
+  # xresources.properties =
+  #   with config.lib.stylix.colors.withHashtag;
+  #   lib.mkIf config.bundles.dwm.enable {
+  #     "dwm.normbordercolor" = base00;
+  #     "dwm.normbgcolor" = base00;
+  #     "dwm.normfgcolor" = base0D;
+  #     "dwm.selbordercolor" = base03;
+  #     "dwm.selbgcolor" = base0D;
+  #     "dwm.selfgcolor" = base00;
+  #   };
+  # xdg.configFile."lxsession/LXDE/autostart".text = lib.mkIf config.bundles.dwm.enable ''
+  #   @xsetroot -cursor_name left_ptr
+  # '';
 }

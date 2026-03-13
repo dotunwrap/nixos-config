@@ -1,18 +1,16 @@
 inputs:
-{ pkgs, ... }@default:
-
-{
+{ lib, pkgs, ... }@default:
+lib.recursiveUpdate {
   activeBundles = [
     "development"
     "dwm"
   ];
 
-  themes = {
+  themes.everforest = {
     enable = true;
-    image = ../../assets/wallpapers/bubbles.jpg;
-    opacity = 0.8;
+    flavor = "dark-hard";
   };
+  stylix.image = ../../assets/wallpapers/bubbles.jpg;
 
   home.stateVersion = "24.11";
-}
-// import ./shared/nia.nix inputs default
+} (import ./shared/nia.nix inputs default)

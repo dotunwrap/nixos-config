@@ -1,19 +1,18 @@
 inputs:
-{ pkgs, ... }@default:
-
-{
+{ lib, pkgs, ... }@default:
+# TODO: Remove Nia's account from this machine.
+lib.recursiveUpdate {
   activeBundles = [
     "development"
     "dwm"
     "gaming"
   ];
 
-  themes = {
+  themes.everforest = {
     enable = true;
-    image = ../../assets/wallpapers/tloz.jpg;
-    opacity = 0.8;
+    flavor = "dark-hard";
   };
+  stylix.image = ../../assets/wallpapers/tloz.jpg;
 
   home.stateVersion = "24.11";
-}
-// import ./shared/nia.nix inputs default
+} (import ./shared/nia.nix inputs default)

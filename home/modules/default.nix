@@ -73,7 +73,12 @@
     "programs/shells/zsh" = ./programs/shells/zsh;
 
     "themes" = ./themes;
-    "themes/gruvbox-dark" = ./themes/gruvbox-dark;
-    "themes/flare" = ./themes/flare;
+    "themes/catppuccin" = ./themes/catppuccin;
+    "themes/dracula" = ./themes/dracula;
+    "themes/everforest" = ./themes/everforest;
+    "themes/gruvbox" = ./themes/gruvbox;
+    "themes/mocha" = ./themes/mocha;
+    "themes/monokai" = ./themes/monokai;
+    "themes/nord" = ./themes/nord;
   };
 }
