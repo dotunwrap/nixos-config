@@ -1,19 +1,14 @@
 inputs:
-{ pkgs, ... }@default:
-
-{
+{ lib, pkgs, ... }@default:
+lib.recursiveUpdate {
   activeBundles = [
     "development"
     "dwm"
     "gaming"
   ];
 
-  themes = {
-    enable = true;
-    image = ../../assets/wallpapers/stephen_njoto.png;
-    opacity = 0.9;
-  };
+  themes.everforest.enable = true;
+  stylix.image = ../../assets/wallpapers/stephen_njoto.png;
 
   home.stateVersion = "24.11";
-}
-// import ./shared/gabby.nix inputs default
+} (import ./shared/gabby.nix inputs default)

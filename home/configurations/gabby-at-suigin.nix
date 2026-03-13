@@ -1,16 +1,15 @@
 inputs:
-{ pkgs, ... }@default:
-{
+{ lib, pkgs, ... }@default:
+lib.recursiveUpdate {
   activeBundles = [
     "development"
     "dwm"
   ];
 
-  themes = {
-    enable = true;
-    image = ../../assets/wallpapers/bay.jpeg;
-    opacity = 0.8;
-    cursorSize = 42;
+  themes.monokai.enable = true;
+  stylix = {
+    image = ../../assets/wallpapers/smile.png;
+    cursor.size = 42;
   };
 
   xresources.properties = {
@@ -18,5 +17,4 @@ inputs:
   };
 
   home.stateVersion = "24.11";
-}
-// import ./shared/gabby.nix inputs default
+} (import ./shared/gabby.nix inputs default)
