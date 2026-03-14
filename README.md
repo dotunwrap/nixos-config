@@ -12,8 +12,8 @@
 
 - [Overview](#overview)
 - [Hosts](#hosts)
-    - [NixOS](#nixos)
-    - [Home Manager](#home-manager)
+  - [NixOS](#nixos)
+  - [Home Manager](#home-manager)
 - [Users](#users)
 - [Credits](#credits)
 
@@ -36,19 +36,19 @@ These are a list of hosts that this config services. Some are NixOS machines; ot
 
 - [suigin](/nixos/configurations/suigin.nix)
 
-    My Framework 13 (Ryzen 9 AI HX 370). My main machine.
+  My Framework 13 (Ryzen 9 AI HX 370). My main machine.
 
 - [europa](/nixos/configurations/europa.nix)
 
-    A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Now [my girlfriend's](https://github.com/nyoshe) laptop.
+  A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Now [my girlfriend's](https://github.com/nyoshe) laptop.
 
 - [sekai](/nixos/configurations/sekai.nix)
 
-    My desktop (Ryzen 9 9950X + Radeon RX 9070 XT). Used for _Linux gaming_.
+  My desktop (Ryzen 9 9950X + Radeon RX 9070 XT). Used for _Linux gaming_.
 
 - [mokusei](/nixos/configurations/mokusei.nix)
 
-    [My girlfriend's](https://github.com/nyoshe) desktop (Ryzen 5 5600X + NVIDIA RTX 4070 Ti Super). Also used for _Linux gaming_.
+  [My girlfriend's](https://github.com/nyoshe) desktop (Ryzen 5 5600X + NVIDIA RTX 4070 Ti Super). Also used for _Linux gaming_.
 
 ### Home Manager
 
@@ -59,34 +59,33 @@ Currently none.
 These are the users I have configured for my machines. This list shows the users as well as the hosts they are used on.
 
 - [gabby](/nixos/configurations/users/gabby.nix)
-    - [suigin](/home/configurations/gabby-at-suigin.nix)
-    - [sekai](/home/configurations/gabby-at-sekai.nix)
+  - [suigin](/home/configurations/gabby-at-suigin.nix)
+  - [sekai](/home/configurations/gabby-at-sekai.nix)
 
 - [nia](/nixos/configurations/users/nia.nix)
-    - [sekai](/home/configurations/nia-at-sekai.nix)
-    - [europa](/home/configurations/nia-at-europa.nix)
-    - [mokusei](/home/configurations/nia-at-mokusei.nix)
+  - [sekai](/home/configurations/nia-at-sekai.nix)
+  - [europa](/home/configurations/nia-at-europa.nix)
+  - [mokusei](/home/configurations/nia-at-mokusei.nix)
 
 ## Credits
 
 - [gignsky](https://github.com/gignsky)
 
-    For being the first person who tried to enlighten me with NixOS despite my previous tight grasp on Arch.
+  For being the first person who tried to enlighten me with NixOS despite my previous tight grasp on Arch.
 
 - [jlevere](https://github.com/jlevere)
 
-    For being the person who actually convinced me to give NixOS a shot.
+  For being the person who actually convinced me to give NixOS a shot.
 
 - [NobbZ](https://github.com/NobbZ)
 
-    For being the person who opened my eyes to the importance of a well-structured, modular configuration & heavy reference material.
+  For being the person who opened my eyes to the importance of a well-structured, modular configuration & heavy reference material.
 
 <!---->
 
 [CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml
 [Nix]: https://nixos.org
 [Follow X]: https://twitter.com/intent/user?screen_name=dotunwrap
-
-[Badge CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml/badge.svg
+[Badge CI]: https://github.com/dotunwrap/nixos-config/actions/workflows/ci.yml/badge.svg?branch=main
 [Badge Nix]: https://img.shields.io/badge/-nix_btw-75afd7?logo=nixos&logoColor=CAD3F5&labelColor=24273A
 [Badge X]: https://img.shields.io/twitter/follow/dotunwrap
