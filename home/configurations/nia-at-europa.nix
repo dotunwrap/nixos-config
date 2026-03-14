@@ -8,7 +8,7 @@ lib.recursiveUpdate {
 
   themes.everforest = {
     enable = true;
-    flavor = "dark-hard";
+    flavor = "hard";
   };
   stylix.image = ../../assets/wallpapers/bubbles.jpg;
 
