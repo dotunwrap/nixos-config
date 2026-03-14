@@ -27,7 +27,7 @@ in
       polarity = mkDefault "dark";
       fonts.monospace = {
         package = mkDefault monolisa.packages.${system}.default;
-        name = "MonoLisa Variable";
+        name = mkDefault "MonoLisa Variable";
       };
       opacity = {
         terminal = mkDefault 0.8;
