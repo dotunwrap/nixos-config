@@ -58,6 +58,7 @@ in
           gnome2.GConf
         ];
       };
+      geoclue2.enable = true;
       gvfs.enable = true;
       openssh = {
         enable = true;
