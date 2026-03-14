@@ -41,19 +41,4 @@ in
       targets.feh.enable = mkIf config.bundles.dwm.enable true;
     };
   };
-
-  # home.file.".background-image".source = lib.mkIf config.bundles.dwm.enable config.themes.image;
-  # xresources.properties =
-  #   with config.lib.stylix.colors.withHashtag;
-  #   lib.mkIf config.bundles.dwm.enable {
-  #     "dwm.normbordercolor" = base00;
-  #     "dwm.normbgcolor" = base00;
-  #     "dwm.normfgcolor" = base0D;
-  #     "dwm.selbordercolor" = base03;
-  #     "dwm.selbgcolor" = base0D;
-  #     "dwm.selfgcolor" = base00;
-  #   };
-  # xdg.configFile."lxsession/LXDE/autostart".text = lib.mkIf config.bundles.dwm.enable ''
-  #   @xsetroot -cursor_name left_ptr
-  # '';
 }
