@@ -9,7 +9,7 @@ lib.recursiveUpdate {
 
   themes.everforest = {
     enable = true;
-    flavor = "dark-hard";
+    flavor = "hard";
   };
   stylix.image = ../../assets/wallpapers/made-in-abyss.jpg;
 
