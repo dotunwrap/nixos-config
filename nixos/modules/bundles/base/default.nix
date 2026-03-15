@@ -74,6 +74,7 @@ in
       };
       printing.enable = true;
       tailscale.enable = true;
+      udisks2.enable = true;
       upower.enable = true;
     };
 

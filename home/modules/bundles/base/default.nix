@@ -74,6 +74,8 @@ in
       zsh.enable = true;
     };
 
+    services.udiskie.enable = true;
+
     home.sessionVariables = {
       EDITOR = "nvim";
     };
