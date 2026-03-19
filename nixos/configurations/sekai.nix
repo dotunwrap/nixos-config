@@ -27,11 +27,6 @@
       fsType = "ext4";
       neededForBoot = false;
     };
-    "/mnt/external" = {
-      device = "/dev/disk/by-label/external";
-      fsType = "ext4";
-      neededForBoot = false;
-    };
   };
 
   hardware = {
