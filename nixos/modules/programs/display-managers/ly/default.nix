@@ -19,7 +19,6 @@ in
         default_input = "password";
         vi_mode = true;
         box_title = "${config.networking.hostName}";
-        hide_system_users = true;
       };
     };
   };
