@@ -43,10 +43,7 @@ in
       tor-browser.enable = lib.mkDefault true;
       vesktop.enable = lib.mkDefault true;
       wezterm.enable = lib.mkDefault true;
-      zen-browser = {
-        enable = lib.mkDefault true;
-        suppressXdgMigrationWarning = true;
-      };
+      zen-browser.enable = lib.mkDefault true;
     };
 
     xdg.mimeApps = {
