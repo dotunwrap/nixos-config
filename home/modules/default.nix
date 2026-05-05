@@ -22,7 +22,6 @@
     "programs/monero-cli" = ./programs/monero-cli;
     "programs/tor-browser" = ./programs/tor-browser;
     "programs/mcrcon" = ./programs/mcrcon;
-    "programs/qalculate" = ./programs/qalculate;
     "programs/httpie" = ./programs/httpie;
     "programs/steam-tui" = ./programs/steam-tui;
     "programs/brightnessctl" = ./programs/brightnessctl;

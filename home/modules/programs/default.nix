@@ -15,7 +15,6 @@ with lib;
     monero-cli.enable = mkEnableOption "Enable monero-cli";
     tor-browser.enable = mkEnableOption "Enable tor-browser";
     mcrcon.enable = mkEnableOption "Enable mcrcon";
-    qalculate.enable = mkEnableOption "Enable qalculate";
     httpie.enable = mkEnableOption "Enable httpie";
     steam-tui.enable = mkEnableOption "Enable steam-tui";
     brightnessctl.enable = mkEnableOption "Enable brightnessctl";
