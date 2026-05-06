@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    trezor-suite.enable = mkEnableOption "Enable trezor-suite";
     spotify.enable = mkEnableOption "Enable spotify";
     omnix.enable = mkEnableOption "Enable omnix";
     wowup.enable = mkEnableOption "Enable wowup";

@@ -19,6 +19,8 @@ in
     email = "gabby@dotunwrap.dev";
   };
 
+  programs.trezor-suite.enable = true;
+
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
