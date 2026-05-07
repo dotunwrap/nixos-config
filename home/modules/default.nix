@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/eigenwallet" = ./programs/eigenwallet;
     "programs/trezor-suite" = ./programs/trezor-suite;
     "programs/spotify" = ./programs/spotify;
     "programs/omnix" = ./programs/omnix;

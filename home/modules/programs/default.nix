@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    eigenwallet.enable = mkEnableOption "Enable eigenwallet";
     trezor-suite.enable = mkEnableOption "Enable trezor-suite";
     spotify.enable = mkEnableOption "Enable spotify";
     omnix.enable = mkEnableOption "Enable omnix";

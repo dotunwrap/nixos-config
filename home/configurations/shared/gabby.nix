@@ -14,6 +14,8 @@ in
     contact.basePath = ".local/share/contacts";
   };
 
+  programs.eigenwallet.enable = true;
+
   programs.git.settings.user = {
     name = "Gabby Simpson";
     email = "gabby@dotunwrap.dev";
