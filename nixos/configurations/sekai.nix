@@ -48,23 +48,46 @@
     initrd.kernelModules = [ "amdgpu" ];
   };
 
-  services.xserver = {
-    resolutions = [
-      {
-        x = 5120;
-        y = 1440;
-      }
-    ];
-    # WARNING: This will BREAK the display server entirely if the Odyssey G9 is out of game mode for some reason.
-    monitorSection = ''
-      Option "PreferredMode" "5120x1440"
-      Option "TargetRefresh" "240"
-    '';
-    deviceSection = ''
-      Option "TearFree" "false"
-      Option "VariableRefresh" "true"
-    '';
-    videoDrivers = [ "amdgpu" ];
+  services = {
+    monero = {
+      enable = true;
+
+      rpc = {
+        address = "0.0.0.0";
+        port = 18081;
+        restricted = false;
+      };
+
+      extraConfig = ''
+        confirm-external-bind=1
+
+        rpc-restricted-bind-ip=0.0.0.0
+        rpc-restricted-bind-port=18089
+
+        no-igd=1
+
+        enable-dns-blocklist=1
+        no-zmq=1
+      '';
+    };
+    xserver = {
+      resolutions = [
+        {
+          x = 5120;
+          y = 1440;
+        }
+      ];
+      # WARNING: This will BREAK the display server entirely if the Odyssey G9 is out of game mode for some reason.
+      monitorSection = ''
+        Option "PreferredMode" "5120x1440"
+        Option "TargetRefresh" "240"
+      '';
+      deviceSection = ''
+        Option "TearFree" "false"
+        Option "VariableRefresh" "true"
+      '';
+      videoDrivers = [ "amdgpu" ];
+    };
   };
   drivers.ffado.enable = true;
 
@@ -75,6 +98,22 @@
     interfaces = {
       enp8s0.useDHCP = true;
       wlp15s0.useDHCP = true;
+    };
+    firewall = {
+      enable = true;
+
+      allowedTCPPorts = [ 18080 ];
+
+      interfaces = {
+        enp8s0.allowedTCPPorts = [
+          18081
+          18089
+        ];
+        tailscale0.allowedTCPPorts = [
+          18081
+          18089
+        ];
+      };
     };
   };
 
