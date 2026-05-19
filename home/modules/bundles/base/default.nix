@@ -48,6 +48,7 @@ in
       bat.enable = true;
       brightnessctl.enable = true;
       btop.enable = true;
+      cryptsetup.enable = true;
       direnv.enable = true;
       eza.enable = true;
       fzf.enable = true;
