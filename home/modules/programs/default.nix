@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    gajim.enable = mkEnableOption "Enable gajim";
     cryptsetup.enable = mkEnableOption "Enable cryptsetup";
     eigenwallet.enable = mkEnableOption "Enable eigenwallet";
     trezor-suite.enable = mkEnableOption "Enable trezor-suite";

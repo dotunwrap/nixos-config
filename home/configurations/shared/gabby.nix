@@ -16,6 +16,8 @@ in
 
   programs.eigenwallet.enable = true;
 
+  programs.gajim.enable = true;
+
   programs.git.settings.user = {
     name = "Gabby Simpson";
     email = "gabby@dotunwrap.dev";

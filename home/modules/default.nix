@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/gajim" = ./programs/gajim;
     "programs/cryptsetup" = ./programs/cryptsetup;
     "programs/eigenwallet" = ./programs/eigenwallet;
     "programs/trezor-suite" = ./programs/trezor-suite;
