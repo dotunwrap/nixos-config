@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    xsel.enable = mkEnableOption "Enable xsel";
     mat2.enable = mkEnableOption "Enable mat2";
     gajim.enable = mkEnableOption "Enable gajim";
     cryptsetup.enable = mkEnableOption "Enable cryptsetup";

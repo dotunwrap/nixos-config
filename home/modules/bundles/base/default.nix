@@ -71,6 +71,7 @@ in
       starship.enable = true;
       pay-respects.enable = true;
       wget.enable = true;
+      xsel.enable = true;
       yazi.enable = true;
       zip.enable = true;
       zsh.enable = true;

@@ -10,6 +10,7 @@
     "misc/home" = ./misc/home;
 
     "programs" = ./programs;
+    "programs/xsel" = ./programs/xsel;
     "programs/mat2" = ./programs/mat2;
     "programs/gajim" = ./programs/gajim;
     "programs/cryptsetup" = ./programs/cryptsetup;
