@@ -61,6 +61,7 @@ in
       killall.enable = true;
       macchina.enable = true;
       magic-wormhole.enable = true;
+      mat2.enable = true;
       nix-index.enable = true;
       nvim.enable = true;
       p7zip.enable = true;

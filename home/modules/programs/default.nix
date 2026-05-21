@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    mat2.enable = mkEnableOption "Enable mat2";
     gajim.enable = mkEnableOption "Enable gajim";
     cryptsetup.enable = mkEnableOption "Enable cryptsetup";
     eigenwallet.enable = mkEnableOption "Enable eigenwallet";
