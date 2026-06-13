@@ -42,7 +42,7 @@ in
     };
 
     services = {
-      displayManager.defaultSession = "dwm";
+      displayManager.defaultSession = "none+dwm";
     };
 
     xdg.portal = {
