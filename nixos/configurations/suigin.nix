@@ -7,7 +7,7 @@
 
   activeBundles = [
     "base"
-    "dwm"
+    "niri"
   ];
 
   networking = {
@@ -16,15 +16,6 @@
     useDHCP = false;
     interfaces = {
       wlp192s0.useDHCP = true;
-    };
-  };
-
-  services.libinput = {
-    enable = true;
-    touchpad = {
-      tapping = false;
-      naturalScrolling = true;
-      clickMethod = "clickfinger";
     };
   };
 

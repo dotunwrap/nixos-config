@@ -3,17 +3,13 @@ inputs:
 lib.recursiveUpdate {
   activeBundles = [
     "development"
-    "dwm"
+    "niri"
   ];
 
   themes.monokai.enable = true;
   stylix = {
     image = ../../assets/wallpapers/smile.png;
     cursor.size = 42;
-  };
-
-  xresources.properties = {
-    "Xft.dpi" = "150";
   };
 
   home.stateVersion = "24.11";
