@@ -95,8 +95,14 @@ in
                 { documentation.man.enable = true; }
                 { documentation.man.cache.enable = true; }
                 { nixpkgs.hostPlatform.system = config.system; }
-                { nixpkgs.overlays = [ inputs.rust-overlay.overlays.default ]; }
+                {
+                  nixpkgs.overlays = [
+                    inputs.rust-overlay.overlays.default
+                    inputs.niri-flake.overlays.niri
+                  ];
+                }
                 inputs.stylix.nixosModules.stylix
+                inputs.niri-flake.nixosModules.niri
               ]
               ++ config.modules
               ++ builtins.attrValues {

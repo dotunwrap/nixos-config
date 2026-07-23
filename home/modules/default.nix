@@ -5,11 +5,16 @@
     "bundles/development" = ./bundles/development;
     "bundles/dwm" = ./bundles/dwm;
     "bundles/gaming" = ./bundles/gaming;
+    "bundles/niri" = ./bundles/niri;
 
+    "misc" = ./misc;
     "misc/dwm" = ./misc/dwm;
     "misc/home" = ./misc/home;
+    "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/wayland-utils" = ./programs/wayland-utils;
+    "programs/wl-clipboard" = ./programs/wl-clipboard;
     "programs/xsel" = ./programs/xsel;
     "programs/mat2" = ./programs/mat2;
     "programs/gajim" = ./programs/gajim;
