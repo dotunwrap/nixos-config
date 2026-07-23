@@ -4,6 +4,7 @@
     "bundles/base" = ./bundles/base;
     "bundles/dwm" = ./bundles/dwm;
     "bundles/gaming" = ./bundles/gaming;
+    "bundles/niri" = ./bundles/niri;
 
     "core/cachix" = ./core/cachix;
     "core/flake" = ./core/flake;

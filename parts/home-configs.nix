@@ -111,10 +111,13 @@ in
                   nixpkgs.overlays = [
                     inputs.rust-overlay.overlays.default
                     inputs.claude-code-overlay.overlays.default
+                    inputs.niri-flake.overlays.niri
                   ];
                 }
                 inputs.stylix.homeModules.stylix
                 inputs.zen-browser.homeModules.twilight
+                inputs.niri-flake.homeModules.niri
+                inputs.niri-flake.homeModules.stylix
               ]
               ++ config.modules
               ++ builtins.attrValues self.homeManagerModules;

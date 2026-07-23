@@ -3,6 +3,8 @@ _:
 with lib;
 {
   options.programs = {
+    wayland-utils.enable = mkEnableOption "Enable wayland-utils";
+    wl-clipboard.enable = mkEnableOption "Enable wl-clipboard";
     xsel.enable = mkEnableOption "Enable xsel";
     mat2.enable = mkEnableOption "Enable mat2";
     gajim.enable = mkEnableOption "Enable gajim";
