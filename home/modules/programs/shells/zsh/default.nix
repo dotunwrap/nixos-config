@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.zsh = {
       autocd = lib.mkDefault true;
-      shellAliases = { } // import ../shellAliases.nix;
+      shellAliases = { } // import ../shellAliases.nix { inherit config; };
 
       antidote = {
         enable = true;
