@@ -61,7 +61,6 @@ in
 
     environment = {
       systemPackages = [ pkgs.hyprpolkitagent ];
-      variables.NIXOS_OZONE_WL = "1";
     };
   };
 }
