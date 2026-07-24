@@ -14,4 +14,5 @@
   "signon.rememberSignons" = false;
   "extensions.formautofill.addresses.enabled" = false;
   "extensions.formautofill.creditCards.enabled" = false;
+  "zen.view.compact.enable-at-startup" = true;
 }
