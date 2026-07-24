@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    imagemagick.enable = mkEnableOption "Enable imagemagick";
     wayland-utils.enable = mkEnableOption "Enable wayland-utils";
     wl-clipboard.enable = mkEnableOption "Enable wl-clipboard";
     xsel.enable = mkEnableOption "Enable xsel";

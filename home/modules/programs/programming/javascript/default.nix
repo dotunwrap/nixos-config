@@ -13,5 +13,10 @@ in
     programs = {
       bun.enable = true;
     };
+
+    home.packages = with pkgs; [
+      deno
+      nodejs
+    ];
   };
 }

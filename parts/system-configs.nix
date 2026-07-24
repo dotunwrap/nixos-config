@@ -103,6 +103,7 @@ in
                 }
                 inputs.stylix.nixosModules.stylix
                 inputs.niri-flake.nixosModules.niri
+                inputs.vicinae.nixosModules.default
               ]
               ++ config.modules
               ++ builtins.attrValues {

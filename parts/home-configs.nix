@@ -118,6 +118,7 @@ in
                 inputs.zen-browser.homeModules.twilight
                 inputs.niri-flake.homeModules.niri
                 inputs.niri-flake.homeModules.stylix
+                inputs.vicinae.homeManagerModules.default
               ]
               ++ config.modules
               ++ builtins.attrValues self.homeManagerModules;

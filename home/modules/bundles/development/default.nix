@@ -17,16 +17,7 @@ in
     xdg.userDirs.extraConfig.CODE = "${config.home.homeDirectory}/Code";
 
     programs = {
-      claude-code = {
-        enable = true;
-        package = pkgs.claude-code;
-        mcpServers = {
-          deepwiki = {
-            type = "http";
-            url = "https://mcp.deepwiki.com/mcp";
-          };
-        };
-      };
+      claude-code.enable = true;
       httpie.enable = true;
       monero-cli.enable = true;
       omnix.enable = true;
