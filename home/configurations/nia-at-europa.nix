@@ -13,4 +13,4 @@ lib.recursiveUpdate {
   stylix.image = ../../assets/wallpapers/bubbles.jpg;
 
   home.stateVersion = "24.11";
-} (import ./shared/nia.nix inputs default)
+} (import ./shared/nia inputs default)

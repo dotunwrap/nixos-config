@@ -6,11 +6,13 @@ lib.recursiveUpdate {
     "niri"
   ];
 
-  themes.monokai.enable = true;
+  themes.catppuccin = {
+    enable = true;
+    flavor = "mocha";
+  };
   stylix = {
-    image = ../../assets/wallpapers/smile.png;
-    cursor.size = 42;
+    image = ../../assets/wallpapers/anyb-girl.png;
   };
 
   home.stateVersion = "24.11";
-} (import ./shared/gabby.nix inputs default)
+} (import ./shared/gabby inputs default)

@@ -13,6 +13,8 @@
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/claude-code" = ./programs/claude-code;
+    "programs/imagemagick" = ./programs/imagemagick;
     "programs/wayland-utils" = ./programs/wayland-utils;
     "programs/wl-clipboard" = ./programs/wl-clipboard;
     "programs/xsel" = ./programs/xsel;
@@ -80,6 +82,8 @@
 
     "programs/shells/nushell" = ./programs/shells/nushell;
     "programs/shells/zsh" = ./programs/shells/zsh;
+
+    "services/mako" = ./services/mako;
 
     "themes" = ./themes;
     "themes/catppuccin" = ./themes/catppuccin;

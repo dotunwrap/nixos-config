@@ -15,4 +15,4 @@ lib.recursiveUpdate {
   stylix.image = ../../assets/wallpapers/tloz.jpg;
 
   home.stateVersion = "24.11";
-} (import ./shared/nia.nix inputs default)
+} (import ./shared/nia inputs default)

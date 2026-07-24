@@ -51,13 +51,12 @@ in
 
   programs.starship.prompt = "pure";
 
-  programs.zen-browser.profiles.gabby = lib.mkIf config.programs.zen-browser.enable {
-    extensions.packages = with firefox-addons.packages.${system}; [
-      bitwarden
-      ublock-origin
-      darkreader
-    ];
-  };
-
-  stylix.targets.zen-browser.profileNames = lib.mkIf config.programs.zen-browser.enable [ "gabby" ];
+  programs.zen-browser = lib.mkIf config.programs.zen-browser.enable (import ./zen {
+    inherit
+      firefox-addons
+      system
+      pkgs
+      ;
+  });
+  stylix.targets.zen-browser.profileNames = lib.mkIf config.programs.zen-browser.enable [ "default" ];
 }

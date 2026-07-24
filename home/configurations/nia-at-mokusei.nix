@@ -14,4 +14,4 @@ lib.recursiveUpdate {
   stylix.image = ../../assets/wallpapers/made-in-abyss.jpg;
 
   home.stateVersion = "24.11";
-} (import ./shared/nia.nix inputs default)
+} (import ./shared/nia inputs default)

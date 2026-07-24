@@ -57,7 +57,7 @@ in
     };
     firefox = {
       enable = true;
-      profiles.nia = {
+      profiles.default = {
         settings = {
           "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
           "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsored" = false;
@@ -93,5 +93,5 @@ in
     soapysdr.enable = true;
   };
 
-  stylix.targets.firefox.profileNames = [ "nia" ];
+  stylix.targets.firefox.profileNames = [ "default" ];
 }

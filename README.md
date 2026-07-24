@@ -36,19 +36,19 @@ These are a list of hosts that this config services. Some are NixOS machines; ot
 
 - [suigin](/nixos/configurations/suigin.nix)
 
-  My Framework 13 (Ryzen 9 AI HX 370). My main machine.
+  My Framework 13 (Ryzen 9 AI HX 370). My main machine. Runs Niri on Wayland.
 
 - [europa](/nixos/configurations/europa.nix)
 
-  A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Now [my girlfriend's](https://github.com/nyoshe) laptop.
+  A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Now [my girlfriend's](https://github.com/nyoshe) laptop. Runs Niri on Wayland.
 
 - [sekai](/nixos/configurations/sekai.nix)
 
-  My desktop (Ryzen 9 9950X + Radeon RX 9070 XT). Used for _Linux gaming_.
+  My desktop (Ryzen 9 9950X + Radeon RX 9070 XT). Runs dwm on X11. Used for _Linux gaming_.
 
 - [mokusei](/nixos/configurations/mokusei.nix)
 
-  [My girlfriend's](https://github.com/nyoshe) desktop (Ryzen 5 5600X + NVIDIA RTX 4070 Ti Super). Also used for _Linux gaming_.
+  [My girlfriend's](https://github.com/nyoshe) desktop (Ryzen 5 5600X + NVIDIA RTX 4070 Ti Super). Runs Niri on Wayland. Also used for _Linux gaming_.
 
 ### Home Manager
 
