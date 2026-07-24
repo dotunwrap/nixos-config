@@ -2,7 +2,6 @@
 
 {
   gaps = lib.mkDefault 12;
-  empty-workspace-above-first = lib.mkDefault true;
   focus-ring = {
     enable = lib.mkDefault false;
   };
