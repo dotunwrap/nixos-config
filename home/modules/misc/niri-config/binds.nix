@@ -28,6 +28,13 @@ let
     maximize-column
     fullscreen-window
     ;
+
+  workspaceBinds = lib.listToAttrs (
+    lib.map (n: {
+      name = "Mod+${toString n}";
+      value.action = focus-workspace n;
+    }) (lib.range 1 9)
+  );
 in
 {
   # General binds
@@ -78,3 +85,4 @@ in
   "XF86MonBrightnessUp".action = spawn-sh "brightnessctl set 10%+";
   "XF86MonBrightnessDown".action = spawn-sh "brightnessctl set 10%-";
 }
+// workspaceBinds
