@@ -11,6 +11,10 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
+    home.activation.restartVicinaeServer = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run vicinae server --replace || true
+    '';
+
     programs.vicinae = {
       systemd = {
         enable = lib.mkDefault true;
