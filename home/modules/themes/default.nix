@@ -39,6 +39,8 @@ in
         name = mkDefault "volantes_cursors";
       };
       targets.feh.enable = mkIf config.bundles.dwm.enable true;
+      # NOTE: gtksourceview target causes inkscape to rebuild every hm generation build
+      targets.gtksourceview.enable = mkDefault false;
     };
   };
 }

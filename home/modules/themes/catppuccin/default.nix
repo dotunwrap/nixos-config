@@ -60,16 +60,25 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/${fileName}.yaml";
-    stylix.override = lib.mkIf (cfg.accent != "blue") (
-      let
-        rawColors = config.stylix.base16.mkSchemeAttrs config.stylix.base16Scheme;
-      in
-      {
-        base0D = rawColors.${accentKey cfg.accent};
-        ${accentKey cfg.accent} = rawColors.base0D;
-      }
-    );
+    stylix = {
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/${fileName}.yaml";
+      override = lib.mkIf (cfg.accent != "blue") (
+        let
+          rawColors = config.stylix.base16.mkSchemeAttrs config.stylix.base16Scheme;
+        in
+        {
+          base0D = rawColors.${accentKey cfg.accent};
+          ${accentKey cfg.accent} = rawColors.base0D;
+        }
+      );
+
+      cursor = {
+        size = 24;
+        package = pkgs.catppuccin-cursors."${cfg.flavor}${titleCase cfg.accent}";
+        name = "catppuccin-${cfg.flavor}-${cfg.accent}-cursors";
+      };
+    };
+
     programs.freetube.settings =
       lib.mkIf (config.programs.freetube.enable && cfg.flavor != "macchiato")
         {
