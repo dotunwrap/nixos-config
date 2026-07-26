@@ -9,6 +9,8 @@ lib.recursiveUpdate {
   themes.catppuccin = {
     enable = true;
     flavor = "mocha";
+    accent = "mauve";
+    subaccent = "lavender";
   };
   stylix = {
     image = ../../assets/wallpapers/anyb-girl.png;

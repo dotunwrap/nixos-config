@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    protonmail-desktop.enable = mkEnableOption "Enable protonmail-desktop";
     imagemagick.enable = mkEnableOption "Enable imagemagick";
     wayland-utils.enable = mkEnableOption "Enable wayland-utils";
     wl-clipboard.enable = mkEnableOption "Enable wl-clipboard";
