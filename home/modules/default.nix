@@ -13,6 +13,10 @@
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/protonmail-desktop" = ./programs/protonmail-desktop;
+    "programs/vicinae" = ./programs/vicinae;
+    "programs/freetube" = ./programs/freetube;
+    "programs/obs-studio" = ./programs/obs-studio;
     "programs/claude-code" = ./programs/claude-code;
     "programs/imagemagick" = ./programs/imagemagick;
     "programs/wayland-utils" = ./programs/wayland-utils;
