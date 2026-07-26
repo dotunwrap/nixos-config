@@ -42,6 +42,13 @@ in
       };
     };
 
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "application/pdf" = lib.mkDefault "zen-twilight.desktop";
+      };
+    };
+
     misc.niri-config.enable = true;
 
     services = {
