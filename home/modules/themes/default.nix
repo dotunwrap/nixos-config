@@ -29,10 +29,6 @@ in
         package = mkDefault monolisa.packages.${system}.default;
         name = mkDefault "MonoLisa Variable";
       };
-      opacity = {
-        terminal = mkDefault 0.8;
-        applications = mkDefault 0.8;
-      };
       cursor = {
         size = mkDefault 32;
         package = mkDefault pkgs.volantes-cursors;
