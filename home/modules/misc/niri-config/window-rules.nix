@@ -36,4 +36,12 @@
     ];
     open-maximized = true;
   }
+  {
+    matches = [
+      { app-id = "^org\\.wezfurlong\\.wezterm"; }
+    ];
+    default-window-height = {
+      proportion = 1.0;
+    };
+  }
 ]

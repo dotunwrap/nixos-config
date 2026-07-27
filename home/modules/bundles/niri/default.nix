@@ -61,5 +61,9 @@ in
       };
       swayosd.enable = true;
     };
+
+    home.packages = with pkgs; [
+      xwayland-satellite
+    ];
   };
 }
