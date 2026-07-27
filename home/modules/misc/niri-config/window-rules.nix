@@ -25,6 +25,7 @@
     matches = [
       { app-id = "^zen-twilight$"; }
       { app-id = "^firefox$"; }
+      { app-id = "^freetube$"; }
     ];
     opacity = 1.0;
   }
