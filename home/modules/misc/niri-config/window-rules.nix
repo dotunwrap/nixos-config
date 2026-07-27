@@ -13,5 +13,19 @@
         bottom-left = lib.mkDefault r;
       };
     clip-to-geometry = lib.mkDefault true;
+    opacity = 0.8;
+  }
+  {
+    matches = [
+      { is-active = true; }
+    ];
+    opacity = 0.9;
+  }
+  {
+    matches = [
+      { app-id = "^signal$"; }
+      { app-id = "^vesktop$"; }
+    ];
+    open-maximized = true;
   }
 ]
