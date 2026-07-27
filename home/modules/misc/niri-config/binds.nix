@@ -76,13 +76,13 @@ in
 }
 // {
   # FN row media controls
-  "XF86AudioRaiseVolume".action = spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+";
-  "XF86AudioLowerVolume".action = spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-";
-  "XF86AudioMute".action = spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-  "XF86AudioNext".action = spawn-sh "playerctl next";
-  "XF86AudioPrev".action = spawn-sh "playerctl previous";
-  "XF86AudioPlay".action = spawn-sh "playerctl play-pause";
-  "XF86MonBrightnessUp".action = spawn-sh "brightnessctl set 10%+";
-  "XF86MonBrightnessDown".action = spawn-sh "brightnessctl set 10%-";
+  "XF86AudioRaiseVolume".action = spawn-sh "swayosd-client --output-volume raise";
+  "XF86AudioLowerVolume".action = spawn-sh "swayosd-client --output-volume lower";
+  "XF86AudioMute".action = spawn-sh "swayosd-client --output-volume mute-toggle";
+  "XF86AudioNext".action = spawn-sh "swayosd-client --playerctl next";
+  "XF86AudioPrev".action = spawn-sh "swayosd-client --playerctl previous";
+  "XF86AudioPlay".action = spawn-sh "swayosd-client --playerctl play-pause";
+  "XF86MonBrightnessUp".action = spawn-sh "swayosd-client --brightness raise";
+  "XF86MonBrightnessDown".action = spawn-sh "swayosd-client --brightness lower";
 }
 // workspaceBinds
