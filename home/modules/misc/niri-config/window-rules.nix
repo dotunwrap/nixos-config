@@ -26,6 +26,7 @@
       { app-id = "^zen-twilight$"; }
       { app-id = "^firefox$"; }
       { app-id = "^freetube$"; }
+      { app-id = "^Tor Browser$"; }
     ];
     opacity = 1.0;
   }
