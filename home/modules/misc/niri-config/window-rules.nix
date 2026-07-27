@@ -23,6 +23,13 @@
   }
   {
     matches = [
+      { app-id = "^zen-twilight$"; }
+      { app-id = "^firefox$"; }
+    ];
+    opacity = 1.0;
+  }
+  {
+    matches = [
       { app-id = "^signal$"; }
       { app-id = "^vesktop$"; }
     ];
