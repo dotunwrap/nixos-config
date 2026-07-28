@@ -12,7 +12,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [
       pkgs.trezor-suite
-      pkgs.trezorctl
+      pkgs.python312Packages.trezor
     ];
   };
 }
