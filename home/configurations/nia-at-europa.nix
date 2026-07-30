@@ -3,7 +3,7 @@ inputs:
 lib.recursiveUpdate {
   activeBundles = [
     "development"
-    "dwm"
+    "niri"
   ];
 
   themes.everforest = {

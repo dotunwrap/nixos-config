@@ -3,7 +3,7 @@ _:
 {
   activeBundles = [
     "base"
-    "dwm"
+    "niri"
   ];
 
   core.kernel.enable = true;
@@ -33,6 +33,8 @@ _:
   };
 
   nix.package = pkgs.nix;
+
+  services.fprintd.enable = true;
 
   users.users = import ./users/nia.nix pkgs;
 
