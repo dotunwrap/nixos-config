@@ -17,6 +17,7 @@ let
     move-column-right
     move-window-down
     move-window-up
+    move-window-to-workspace
     move-column-to-workspace-down
     move-column-to-workspace-up
     focus-workspace
@@ -29,12 +30,19 @@ let
     fullscreen-window
     ;
 
-  workspaceBinds = lib.listToAttrs (
-    lib.map (n: {
-      name = "Mod+${toString n}";
-      value.action = focus-workspace n;
-    }) (lib.range 1 9)
-  );
+  workspaceBinds =
+    lib.listToAttrs (
+      lib.map (n: {
+        name = "Mod+${toString n}";
+        value.action = focus-workspace n;
+      }) (lib.range 1 9)
+    )
+    // lib.listToAttrs (
+      lib.map (n: {
+        name = "Mod+Shift+${toString n}";
+        value.action = move-window-to-workspace n;
+      }) (lib.range 1 0)
+    );
 in
 {
   # General binds
