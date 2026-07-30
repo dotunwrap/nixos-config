@@ -51,12 +51,14 @@ in
 
   programs.starship.prompt = "pure";
 
-  programs.zen-browser = lib.mkIf config.programs.zen-browser.enable (import ./zen {
-    inherit
-      firefox-addons
-      system
-      pkgs
-      ;
-  });
+  programs.zen-browser = lib.mkIf config.programs.zen-browser.enable (
+    import ./zen {
+      inherit
+        firefox-addons
+        system
+        pkgs
+        ;
+    }
+  );
   stylix.targets.zen-browser.profileNames = lib.mkIf config.programs.zen-browser.enable [ "default" ];
 }
