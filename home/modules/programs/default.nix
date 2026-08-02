@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    bisq.enable = mkEnableOption "Enable bisq";
     protonmail-desktop.enable = mkEnableOption "Enable protonmail-desktop";
     imagemagick.enable = mkEnableOption "Enable imagemagick";
     wayland-utils.enable = mkEnableOption "Enable wayland-utils";
