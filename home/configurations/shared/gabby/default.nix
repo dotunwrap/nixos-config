@@ -17,6 +17,7 @@ in
   programs = {
     bisq.enable = true;
     eigenwallet.enable = true;
+    feather-wallet.enable = true;
     gajim.enable = true;
     git.settings.user = {
       name = "Gabby Simpson";

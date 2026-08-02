@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    feather-wallet.enable = mkEnableOption "Enable feather-wallet";
     bisq.enable = mkEnableOption "Enable bisq";
     protonmail-desktop.enable = mkEnableOption "Enable protonmail-desktop";
     imagemagick.enable = mkEnableOption "Enable imagemagick";

@@ -13,6 +13,7 @@
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/feather-wallet" = ./programs/feather-wallet;
     "programs/bisq" = ./programs/bisq;
     "programs/protonmail-desktop" = ./programs/protonmail-desktop;
     "programs/vicinae" = ./programs/vicinae;
