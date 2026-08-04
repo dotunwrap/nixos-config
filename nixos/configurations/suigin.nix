@@ -8,6 +8,7 @@
   activeBundles = [
     "base"
     "niri"
+    "gaming"
   ];
 
   networking = {
