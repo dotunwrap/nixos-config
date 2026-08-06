@@ -4,6 +4,7 @@ _:
   activeBundles = [
     "base"
     "niri"
+    "gaming"
   ];
 
   core.kernel.enable = true;
