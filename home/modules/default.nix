@@ -15,6 +15,7 @@
     "programs" = ./programs;
     "programs/feather-wallet" = ./programs/feather-wallet;
     "programs/bisq" = ./programs/bisq;
+    "programs/vlc" = ./programs/vlc;
     "programs/firefox" = ./programs/firefox;
     "programs/protonmail-desktop" = ./programs/protonmail-desktop;
     "programs/vicinae" = ./programs/vicinae;

@@ -5,6 +5,7 @@ with lib;
   options.programs = {
     feather-wallet.enable = mkEnableOption "Enable feather-wallet";
     bisq.enable = mkEnableOption "Enable bisq";
+    vlc.enable = mkEnableOption "Enable vlc";
     protonmail-desktop.enable = mkEnableOption "Enable protonmail-desktop";
     imagemagick.enable = mkEnableOption "Enable imagemagick";
     wayland-utils.enable = mkEnableOption "Enable wayland-utils";
