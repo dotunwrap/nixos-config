@@ -55,6 +55,11 @@ in
         };
       };
     };
+    chromium = {
+      # A chromium browser is required for betaflight to function properly
+      enable = true;
+      package = pkgs.ungoogled-chromium;
+    };
     firefox = {
       enable = true;
       profiles.default = {
