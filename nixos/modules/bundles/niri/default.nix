@@ -41,7 +41,10 @@ in
 
     services = {
       displayManager.defaultSession = "niri";
+      gnome.gnome-keyring.enable = true;
     };
+
+    security.pam.services.ly.enableGnomeKeyring = true;
 
     xdg.portal = {
       enable = true;
