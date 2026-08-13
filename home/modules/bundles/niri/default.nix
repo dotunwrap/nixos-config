@@ -20,6 +20,7 @@ in
 
     programs = {
       bitwarden.enable = lib.mkDefault true;
+      element-desktop.enable = lib.mkDefault true;
       freetube.enable = lib.mkDefault true;
       imagemagick.enable = lib.mkDefault true;
       obs-studio.enable = lib.mkDefault true;
