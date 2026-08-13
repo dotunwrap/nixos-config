@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    betaflight-configurator.enable = mkEnableOption "Enable betaflight-configurator";
     feather-wallet.enable = mkEnableOption "Enable feather-wallet";
     bisq.enable = mkEnableOption "Enable bisq";
     vlc.enable = mkEnableOption "Enable vlc";

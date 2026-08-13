@@ -55,6 +55,7 @@ in
         };
       };
     };
+    betaflight-configurator.enable = true;
     chromium = {
       # A chromium browser is required for betaflight to function properly
       enable = true;
