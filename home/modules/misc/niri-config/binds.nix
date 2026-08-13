@@ -17,7 +17,6 @@ let
     move-column-right
     move-window-down
     move-window-up
-    move-window-to-workspace
     move-column-to-workspace-down
     move-column-to-workspace-up
     focus-workspace
@@ -40,8 +39,8 @@ let
     // lib.listToAttrs (
       lib.map (n: {
         name = "Mod+Shift+${toString n}";
-        value.action = move-window-to-workspace n;
-      }) (lib.range 1 0)
+        value.action.move-window-to-workspace = n;
+      }) (lib.range 1 9)
     );
 in
 {
