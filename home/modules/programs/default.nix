@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    proton-authenticator.enable = mkEnableOption "Enable proton-authenticator";
     betaflight-configurator.enable = mkEnableOption "Enable betaflight-configurator";
     feather-wallet.enable = mkEnableOption "Enable feather-wallet";
     bisq.enable = mkEnableOption "Enable bisq";

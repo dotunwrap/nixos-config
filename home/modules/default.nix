@@ -13,6 +13,7 @@
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/proton-authenticator" = ./programs/proton-authenticator;
     "programs/betaflight-configurator" = ./programs/betaflight-configurator;
     "programs/feather-wallet" = ./programs/feather-wallet;
     "programs/bisq" = ./programs/bisq;

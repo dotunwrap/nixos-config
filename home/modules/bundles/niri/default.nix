@@ -26,6 +26,7 @@ in
       obs-studio.enable = lib.mkDefault true;
       onlyoffice.enable = lib.mkDefault true;
       pavucontrol.enable = lib.mkDefault true;
+      proton-authenticator.enable = lib.mkDefault true;
       protonmail-desktop.enable = lib.mkDefault true;
       protonvpn.enable = lib.mkDefault true;
       qbittorrent.enable = lib.mkDefault true;
