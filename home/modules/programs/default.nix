@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    qFlipper.enable = mkEnableOption "Enable qFlipper";
     proton-authenticator.enable = mkEnableOption "Enable proton-authenticator";
     betaflight-configurator.enable = mkEnableOption "Enable betaflight-configurator";
     feather-wallet.enable = mkEnableOption "Enable feather-wallet";

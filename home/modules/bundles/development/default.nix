@@ -30,6 +30,7 @@ in
         typst.enable = lib.mkDefault true;
         zig.enable = lib.mkDefault true;
       };
+      qFlipper.enable = lib.mkDefault true;
     };
   };
 }
