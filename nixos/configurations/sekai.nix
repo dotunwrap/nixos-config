@@ -17,6 +17,7 @@
 
   activeBundles = [
     "base"
+    "development"
     "dwm"
     "gaming"
   ];

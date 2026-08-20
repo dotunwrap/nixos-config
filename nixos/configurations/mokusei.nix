@@ -8,6 +8,7 @@ _:
 {
   activeBundles = [
     "base"
+    "development"
     "dwm"
     "gaming"
   ];

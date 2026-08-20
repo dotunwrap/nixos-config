@@ -7,6 +7,7 @@
 
   activeBundles = [
     "base"
+    "development"
     "niri"
     "gaming"
   ];

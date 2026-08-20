@@ -3,6 +3,7 @@ _:
 {
   activeBundles = [
     "base"
+    "development"
     "niri"
     "gaming"
   ];

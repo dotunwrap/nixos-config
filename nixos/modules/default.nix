@@ -2,6 +2,7 @@
   dotunwrap.nixosModules = {
     "bundles" = ./bundles;
     "bundles/base" = ./bundles/base;
+    "bundles/development" = ./bundles/development;
     "bundles/dwm" = ./bundles/dwm;
     "bundles/gaming" = ./bundles/gaming;
     "bundles/niri" = ./bundles/niri;
