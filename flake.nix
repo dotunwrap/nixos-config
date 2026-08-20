@@ -60,6 +60,9 @@
 
     claude-code-overlay.url = "github:sadjow/claude-code-nix";
     claude-code-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
+    yazi.url = "github:sxyazi/yazi";
+    yazi.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
