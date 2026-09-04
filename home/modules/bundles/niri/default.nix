@@ -36,6 +36,7 @@ in
       vesktop.enable = lib.mkDefault true;
       vicinae.enable = lib.mkDefault true;
       vlc.enable = lib.mkDefault true;
+      waybar.enable = lib.mkDefault true;
       wayland-utils.enable = lib.mkDefault true;
       wezterm.enable = lib.mkDefault true;
       wl-clipboard.enable = lib.mkDefault true;

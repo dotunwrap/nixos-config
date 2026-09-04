@@ -19,6 +19,7 @@
     "programs/bisq" = ./programs/bisq;
     "programs/vlc" = ./programs/vlc;
     "programs/firefox" = ./programs/firefox;
+    "programs/waybar" = ./programs/waybar;
     "programs/protonmail-desktop" = ./programs/protonmail-desktop;
     "programs/vicinae" = ./programs/vicinae;
     "programs/freetube" = ./programs/freetube;
