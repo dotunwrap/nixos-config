@@ -46,7 +46,10 @@
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1
     '';
-    initrd.kernelModules = [ "amdgpu" ];
+    initrd = {
+      kernelModules = [ "amdgpu" ];
+      systemd.network.wait-online.enable = false;
+    };
   };
 
   services = {
@@ -100,10 +103,14 @@
       enp8s0.useDHCP = true;
       wlp15s0.useDHCP = true;
     };
+    nftables.enable = true;
     firewall = {
       enable = true;
 
+      trustedInterfaces = [ config.services.tailscale.interfaceName ];
+
       allowedTCPPorts = [ 18080 ];
+      allowedUDPPorts = [ config.services.tailscale.port ];
 
       interfaces = {
         enp8s0.allowedTCPPorts = [
@@ -116,6 +123,13 @@
         ];
       };
     };
+  };
+
+  systemd = {
+    services.tailscaled.serviceConfig.Environment = [
+      "TS_DEBUG_FIREWALL_MODE=nftables"
+    ];
+    network.wait-online.enable = false;
   };
 
   time.timeZone = "America/New_York";

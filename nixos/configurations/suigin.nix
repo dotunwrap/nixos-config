@@ -1,5 +1,5 @@
 { nixos-hardware, ... }:
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   imports = [
     nixos-hardware.nixosModules.framework-amd-ai-300-series
@@ -12,6 +12,8 @@
     "gaming"
   ];
 
+  boot.initrd.systemd.network.wait-online.enable = false;
+
   networking = {
     hostName = "suigin";
     networkmanager.enable = true;
@@ -19,6 +21,20 @@
     interfaces = {
       wlp192s0.useDHCP = true;
     };
+    nftables.enable = true;
+    firewall = {
+      enable = true;
+
+      trustedInterfaces = [ config.services.tailscale.interfaceName ];
+      allowedUDPPorts = [ config.services.tailscale.port ];
+    };
+  };
+
+  systemd = {
+    services.tailscaled.serviceConfig.Environment = [
+      "TS_DEBUG_FIREWALL_MODE=nftables"
+    ];
+    network.wait-online.enable = false;
   };
 
   time.timeZone = "America/New_York";

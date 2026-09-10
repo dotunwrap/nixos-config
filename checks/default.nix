@@ -5,8 +5,8 @@ let
     config.allowUnfree = true;
   };
 
-  callPackage = pkgs.lib.callPackageWith (pkgs // { inherit (inputs) self; });
+  treefmt = import ../treefmt.nix { inherit pkgs; };
 in
 {
-  nixfmt = callPackage ./nixfmt.nix { };
+  treefmt = treefmt.check inputs.self;
 }

@@ -23,6 +23,7 @@ in
       name = "Gabby Simpson";
       email = "gabby@dotunwrap.dev";
     };
+    monero-cli.enable = true;
     trezor-suite.enable = true;
     ssh = {
       enable = true;

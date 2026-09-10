@@ -62,6 +62,7 @@ in
       macchina.enable = true;
       magic-wormhole.enable = true;
       mat2.enable = true;
+      nix-auth.enable = true;
       nix-index.enable = true;
       nvim.enable = true;
       p7zip.enable = true;

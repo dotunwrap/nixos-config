@@ -18,10 +18,10 @@ in
 
     programs = {
       claude-code.enable = true;
+      devenv.enable = true;
+      difftastic.enable = true;
       httpie.enable = true;
-      monero-cli.enable = true;
       omnix.enable = true;
-      opencode.enable = true;
       programming = {
         cpp.enable = lib.mkDefault true;
         go.enable = lib.mkDefault true;
@@ -30,6 +30,7 @@ in
         typst.enable = lib.mkDefault true;
         zig.enable = lib.mkDefault true;
       };
+      secretspec.enable = true;
     };
   };
 }

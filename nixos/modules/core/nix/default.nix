@@ -25,7 +25,10 @@ in
     { nix.settings.auto-optimise-store = lib.mkDefault true; }
     {
       nix.settings = {
-        trusted-users = lib.mkDefault [
+        # Plain assignment, not mkDefault: nixpkgs' own nix.nix module sets
+        # trusted-users = [ "root" ] at normal priority, which otherwise wins
+        # outright over a weaker mkDefault and silently drops "@wheel".
+        trusted-users = [
           "root"
           "@wheel"
         ];

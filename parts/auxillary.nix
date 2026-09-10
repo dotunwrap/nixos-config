@@ -1,4 +1,5 @@
-_: {
+{ self, ... }:
+{
   perSystem =
     {
       config,
@@ -8,17 +9,16 @@ _: {
       system,
       ...
     }:
+    let
+      treefmt = import "${self}/treefmt.nix" { inherit pkgs; };
+    in
     {
-      formatter = pkgs.nixfmt-tree;
+      formatter = treefmt;
 
       devShells.default = pkgs.mkShell {
         packages = builtins.attrValues {
-          inherit (pkgs)
-            sops
-            nil
-            nixfmt-tree
-            nixfmt
-            ;
+          inherit (pkgs) sops nil;
+          inherit treefmt;
         };
       };
     };
