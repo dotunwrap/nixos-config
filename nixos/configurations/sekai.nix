@@ -9,7 +9,7 @@
   # TODO: These overlays exist to fix a regression in MESA with AMD 9000 series GPUs.
   # This should be removed after the regression has been fixed.
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: _prev: {
       xf86-video-amdgpu = nixpkgs-stable.legacyPackages.x86_64-linux.xorg.xf86videoamdgpu;
       mesa = nixpkgs-stable.legacyPackages.x86_64-linux.mesa;
     })

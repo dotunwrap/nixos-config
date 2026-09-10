@@ -26,7 +26,7 @@ TYPE="$1"
 MODULE_PATH="$2"
 MODULE="$3"
 
-if [[ ! " ${VALID_TYPES[*]} " =~ " $TYPE " ]]; then
+if [[ ! " ${VALID_TYPES[*]} " == *" $TYPE "* ]]; then
   print_usage
 fi
 

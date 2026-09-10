@@ -6,14 +6,21 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
-    # This is added just to dedupe the lock file
+    # These are added just to dedupe the lock file
+    systems.url = "github:nix-systems/default";
+    systems-future.url = "github:nix-systems/default/future-26.11";
     flake-utils.url = "github:numtide/flake-utils";
+    flake-utils.inputs.systems.follows = "systems";
+    nixvim.url = "github:nix-community/nixvim";
+    nixvim.inputs.systems.follows = "systems-future";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    nix.url = "github:nixos/nix";
-    nix.inputs.nixpkgs.follows = "nixpkgs";
-    nix.inputs.flake-parts.follows = "flake-parts";
+    nix = {
+      url = "github:nixos/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
 
     nix-auth.url = "github:numtide/nix-auth";
 
@@ -26,35 +33,59 @@
     programs-db.url = "github:wamserma/flake-programs-sqlite";
     programs-db.inputs.nixpkgs.follows = "nixpkgs";
 
-    stylix.url = "github:nix-community/stylix";
-    stylix.inputs.nixpkgs.follows = "nixpkgs";
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems-future";
+    };
 
-    determinvim.url = "github:dotunwrap/determinvim";
-    determinvim.inputs.nixpkgs.follows = "nixpkgs";
-    determinvim.inputs.flake-parts.follows = "flake-parts";
+    determinvim = {
+      url = "github:dotunwrap/determinvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        nixvim.follows = "nixvim";
+        systems.follows = "systems-future";
+      };
+    };
 
-    niavim.url = "github:nyoshe/niavim";
-    niavim.inputs.nixpkgs.follows = "nixpkgs";
-    niavim.inputs.flake-parts.follows = "flake-parts";
+    niavim = {
+      url = "github:nyoshe/niavim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        nixvim.follows = "nixvim";
+        systems.follows = "systems-future";
+      };
+    };
 
-    suckless.url = "github:dotunwrap/suckless-nix";
-    suckless.inputs.nixpkgs.follows = "nixpkgs-stable";
-    suckless.inputs.flake-parts.follows = "flake-parts";
+    suckless = {
+      url = "github:dotunwrap/suckless-nix";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.flake-parts.follows = "flake-parts";
+    };
 
-    monolisa.url = "git+ssh://git@github.com/dotunwrap/monolisa-font-nix";
-    monolisa.inputs.nixpkgs.follows = "nixpkgs";
-    monolisa.inputs.flake-parts.follows = "flake-parts";
+    monolisa = {
+      url = "git+ssh://git@github.com/dotunwrap/monolisa-font-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
 
     niri-flake.url = "github:sodiboo/niri-flake";
     niri-flake.inputs.nixpkgs.follows = "nixpkgs";
 
     vicinae.url = "github:vicinaehq/vicinae";
-    vicinae-extensions.url = "github:vicinaehq/extensions";
-    vicinae-extensions.inputs.nixpkgs.follows = "nixpkgs";
+    vicinae-extensions = {
+      url = "github:vicinaehq/extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.vicinae.follows = "vicinae";
+    };
 
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
-    zen-browser.inputs.home-manager.follows = "home-manager";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
 
     zennotes.url = "github:ZenNotes/zennotes";
 
@@ -64,15 +95,26 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
-    claude-code-overlay.url = "github:sadjow/claude-code-nix";
-    claude-code-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    claude-code-overlay = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+    };
 
-    claude-desktop.url = "github:heytcass/claude-desktop-linux-flake";
-    claude-desktop.inputs.nixpkgs.follows = "nixpkgs";
-    claude-desktop.inputs.flake-utils.follows = "flake-utils";
+    claude-desktop = {
+      url = "github:heytcass/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
 
-    yazi.url = "github:sxyazi/yazi";
-    yazi.inputs.nixpkgs.follows = "nixpkgs";
+    yazi = {
+      url = "github:sxyazi/yazi";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+        rust-overlay.follows = "rust-overlay";
+      };
+    };
   };
 
   outputs =

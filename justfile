@@ -22,7 +22,3 @@ switch:
 
 check:
   nix flake check --keep-going --allow-import-from-derivation
-
-update *ARGS:
-  nix flake update {{ARGS}}
-  auto-follow --in-place

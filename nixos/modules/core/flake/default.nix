@@ -1,7 +1,6 @@
 {
   nix,
   nixpkgs,
-  programs-db,
   ...
 }:
 {
