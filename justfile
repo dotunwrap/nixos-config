@@ -21,4 +21,4 @@ switch:
   just hmsw
 
 check:
-  nix flake check --keep-going --allow-import-from-derivation
+  nix flake check --keep-going

@@ -42,7 +42,12 @@ in
   git-hooks.hooks = {
     action-validator.enable = true;
     actionlint.enable = true;
+    check-added-large-files.enable = true;
     check-merge-conflicts.enable = true;
+    check-json.enable = true;
+    check-shebang-scripts-are-executable.enable = true;
+    check-symlinks.enable = true;
+    check-yaml.enable = true;
     nil.enable = true;
     shellcheck.enable = true;
 

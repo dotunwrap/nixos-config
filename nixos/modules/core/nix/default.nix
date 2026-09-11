@@ -34,7 +34,6 @@ in
         ];
         min-free = lib.mkDefault (5 * (1024 * 1024 * 1024));
         max-free = lib.mkDefault (25 * (1024 * 1024 * 1024));
-        allow-import-from-derivation = lib.mkDefault true;
       };
     }
     {

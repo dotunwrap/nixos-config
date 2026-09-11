@@ -10,7 +10,7 @@ Personal, flake-based NixOS + Home Manager configuration (nixpkgs unstable) cove
 
 Use `just` (see `justfile`) for common operations:
 
-- `just check` — `nix flake check --keep-going --allow-import-from-derivation`. Run this after any change.
+- `just check` — `nix flake check --keep-going`. Run this after any change.
 - `just osev SYSTEM OUTPUT *ARGS` — `nix eval .#nixosConfigurations.<SYSTEM>.<OUTPUT>` (e.g. inspect a single option without building).
 - `just hmev USER SYSTEM *ARGS` — `nix eval .#homeConfigurations."<USER>@<SYSTEM>"`.
 - `just ossw` — `sudo nixos-rebuild switch` (applies the NixOS config to the current machine — only run when asked).
