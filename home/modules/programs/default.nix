@@ -4,7 +4,6 @@ with lib;
 {
   options.programs = {
     nix-auth.enable = mkEnableOption "Enable nix-auth";
-    secretspec.enable = mkEnableOption "Enable secretspec";
     proton-authenticator.enable = mkEnableOption "Enable proton-authenticator";
     betaflight-configurator.enable = mkEnableOption "Enable betaflight-configurator";
     feather-wallet.enable = mkEnableOption "Enable feather-wallet";

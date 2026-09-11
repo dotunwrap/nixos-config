@@ -15,7 +15,6 @@
     "programs" = ./programs;
     "programs/difftastic" = ./programs/difftastic;
     "programs/nix-auth" = ./programs/nix-auth;
-    "programs/secretspec" = ./programs/secretspec;
     "programs/proton-authenticator" = ./programs/proton-authenticator;
     "programs/betaflight-configurator" = ./programs/betaflight-configurator;
     "programs/feather-wallet" = ./programs/feather-wallet;
