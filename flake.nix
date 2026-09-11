@@ -94,14 +94,18 @@
     niri-flake.url = "github:epireyn/niri-flake";
     niri-flake.inputs.nixpkgs.follows = "nixpkgs";
 
+    # vicinae intentionally does NOT follow our nixpkgs: it's a large Qt6/CMake/C++
+    # build, so any drift between our nixpkgs pin and vicinae's own guarantees a
+    # cache miss against vicinae.cachix.org and a from-source rebuild. We prioritize
+    # build speed (real cache hits) over lock file dedup here; see nix-auto-follow's
+    # `--ignore vicinae` in devenv.nix.
     vicinae = {
       url = "github:vicinaehq/vicinae";
-      inputs.nixpkgs.follows = "nixpkgs";
       inputs.systems.follows = "systems";
     };
     vicinae-extensions = {
       url = "github:vicinaehq/extensions";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "vicinae/nixpkgs";
       inputs.vicinae.follows = "vicinae";
     };
 

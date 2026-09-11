@@ -73,14 +73,21 @@ in
     };
 
     # Fails the commit if flake.lock's `inputs.*.follows` aren't deduplicated,
-    nix-auto-follow = {
-      enable = true;
-      name = "nix-auto-follow";
-      description = "Check flake.lock inputs.*.follows are deduplicated via nix-auto-follow";
-      entry = "${autoFollow} --check";
-      files = "^flake\\.lock$";
-      pass_filenames = false;
-    };
+    nix-auto-follow =
+      let
+        ignoredInputs = [
+          "vicinae"
+        ];
+        ignoreFlags = lib.concatMapStringsSep " " (input: "--ignore ${input}") ignoredInputs;
+      in
+      {
+        enable = true;
+        name = "nix-auto-follow";
+        description = "Check flake.lock inputs.*.follows are deduplicated via nix-auto-follow";
+        entry = "${autoFollow} --check ${ignoreFlags}";
+        files = "^flake\\.lock$";
+        pass_filenames = false;
+      };
   };
 
   difftastic.enable = true;

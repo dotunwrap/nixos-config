@@ -59,7 +59,7 @@ Prefer `just osadd <path> <module>` / `just hmadd <path> <module>` over hand-edi
 
 ### Inputs worth knowing about
 
-Several flake inputs are this author's own forks/projects, not upstream: `determinvim`, `niavim` (neovim configs consumed via `nvim.package`), `suckless` (dwm build), `monolisa` (private font, `git+ssh`), `niri-flake` is pinned to a fork (`epireyn/niri-flake`) because upstream is stale against current nixpkgs — check that fork's status before assuming upstream `sodiboo/niri-flake` behavior applies. `nix-auto-follow` (via `devenv.nix`) enforces that `flake.lock` `inputs.*.follows` stay deduplicated as a git-hook check.
+Several flake inputs are this author's own forks/projects, not upstream: `determinvim`, `niavim` (neovim configs consumed via `nvim.package`), `suckless` (dwm build), `monolisa` (private font, `git+ssh`), `niri-flake` is pinned to a fork (`epireyn/niri-flake`) because upstream is stale against current nixpkgs — check that fork's status before assuming upstream `sodiboo/niri-flake` behavior applies. `nix-auto-follow` (via `devenv.nix`) enforces that `flake.lock` `inputs.*.follows` stay deduplicated as a git-hook check, with one deliberate exception: `vicinae` does not follow our `nixpkgs` (and `vicinae-extensions` follows `vicinae/nixpkgs` instead of ours), because it's a large Qt6/CMake/C++ build — any drift from vicinae's own pin guarantees a cache miss against `vicinae.cachix.org` and a from-source rebuild. The hook is passed `--ignore vicinae` to allow this. General policy: prefer a real cache hit (build speed) over lock file dedup when the two conflict for a given input.
 
 ### CI
 
