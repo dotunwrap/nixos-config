@@ -1,7 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -11,10 +10,19 @@
     systems-future.url = "github:nix-systems/default/future-26.11";
     flake-utils.url = "github:numtide/flake-utils";
     flake-utils.inputs.systems.follows = "systems";
-    nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.systems.follows = "systems-future";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems-future";
+        flake-parts.follows = "flake-parts";
+      };
+    };
 
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nix = {
       url = "github:nixos/nix";
@@ -22,7 +30,14 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
-    nix-auth.url = "github:numtide/nix-auth";
+    nix-auth = {
+      url = "github:numtide/nix-auth";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+      };
+    };
 
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -35,8 +50,11 @@
 
     stylix = {
       url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.systems.follows = "systems-future";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems-future";
+        flake-parts.follows = "flake-parts";
+      };
     };
 
     determinvim = {
@@ -61,7 +79,7 @@
 
     suckless = {
       url = "github:dotunwrap/suckless-nix";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
 
@@ -71,10 +89,16 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
-    niri-flake.url = "github:sodiboo/niri-flake";
+    # Fork of sodiboo/niri-flake; upstream is stale and broken against current nixpkgs
+    # (still requires the removed libdisplay-info_0_2), this fork tracks nixpkgs properly.
+    niri-flake.url = "github:epireyn/niri-flake";
     niri-flake.inputs.nixpkgs.follows = "nixpkgs";
 
-    vicinae.url = "github:vicinaehq/vicinae";
+    vicinae = {
+      url = "github:vicinaehq/vicinae";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+    };
     vicinae-extensions = {
       url = "github:vicinaehq/extensions";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -88,6 +112,7 @@
     };
 
     zennotes.url = "github:ZenNotes/zennotes";
+    zennotes.inputs.nixpkgs.follows = "nixpkgs";
 
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
