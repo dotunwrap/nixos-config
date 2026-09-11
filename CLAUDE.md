@@ -13,10 +13,13 @@ Use `just` (see `justfile`) for common operations:
 - `just check` — `nix flake check --keep-going`. Run this after any change.
 - `just osev SYSTEM OUTPUT *ARGS` — `nix eval .#nixosConfigurations.<SYSTEM>.<OUTPUT>` (e.g. inspect a single option without building).
 - `just hmev USER SYSTEM *ARGS` — `nix eval .#homeConfigurations."<USER>@<SYSTEM>"`.
-- `just ossw` — `sudo nixos-rebuild switch` (applies the NixOS config to the current machine — only run when asked).
-- `just hmsw` — `home-manager switch --flake .` (applies the Home Manager config for the current user — only run when asked).
+- `just ossw` — `nh os switch` (applies the NixOS config to the current machine — only run when asked).
+- `just hmsw` — `nh home switch` (applies the Home Manager config for the current user — only run when asked).
 - `just switch` — runs both of the above.
+- `just clean` — `nh clean all --keep 5 --keep-since 7d` (manual store cleanup; also runs automatically, see below).
 - `just osadd PATH MODULE` / `just hmadd PATH MODULE` — scaffold a new NixOS/Home Manager module (see "Adding a new module" below). Do this instead of hand-writing the three touch points.
+
+Rebuilds and cleanup go through [`nh`](https://github.com/nix-community/nh) rather than the stock `nixos-rebuild`/`home-manager`/`nix-collect-garbage` CLIs — it's available in the devshell/devenv and enabled system-wide via `nixos/modules/core/nh`, which also turns on `programs.nh.clean` (weekly, `--keep 5 --keep-since 7d`) and disables `nix.gc.automatic` in `core/nix` to avoid the two cleanup paths fighting each other.
 
 Formatting/linting is handled by `treefmt` (nixfmt, shfmt, prettier) plus `statix` and `deadnix`, wired up via `devenv.nix` git-hooks — these run through `devenv test` / pre-commit, not as standalone scripts. If devenv isn't running, `nix fmt` invokes the same treefmt config directly (see `treefmt.nix`).
 

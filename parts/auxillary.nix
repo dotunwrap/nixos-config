@@ -17,7 +17,7 @@
 
       devShells.default = pkgs.mkShell {
         packages = builtins.attrValues {
-          inherit (pkgs) sops nil;
+          inherit (pkgs) sops nil nh;
           inherit treefmt;
         };
       };

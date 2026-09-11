@@ -24,6 +24,7 @@ in
     statix
     deadnix
     treefmt
+    nh
     inputs.nix-auto-follow.packages.${system}.default
   ];
 

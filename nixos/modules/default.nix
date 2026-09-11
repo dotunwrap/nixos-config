@@ -10,6 +10,7 @@
     "core/cachix" = ./core/cachix;
     "core/flake" = ./core/flake;
     "core/kernel" = ./core/kernel;
+    "core/nh" = ./core/nh;
     "core/nix" = ./core/nix;
 
     "drivers" = ./drivers;

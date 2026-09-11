@@ -2,7 +2,7 @@ osev SYSTEM OUTPUT *ARGS:
   nix eval .#nixosConfigurations.{{SYSTEM}}.{{OUTPUT}} {{ARGS}}
 
 ossw:
-  sudo nixos-rebuild switch
+  nh os switch
 
 osadd PATH MODULE:
   ./scripts/mkmodule.sh nixos {{PATH}} {{MODULE}}
@@ -11,7 +11,7 @@ hmev USER SYSTEM *ARGS:
   nix eval .#homeConfigurations."{{USER}}@{{SYSTEM}}" {{ARGS}}
 
 hmsw:
-  home-manager switch --flake .
+  nh home switch
 
 hmadd PATH MODULE:
   ./scripts/mkmodule.sh home {{PATH}} {{MODULE}}
@@ -19,6 +19,9 @@ hmadd PATH MODULE:
 switch:
   just ossw
   just hmsw
+
+clean:
+  nh clean all --keep 5 --keep-since 7d
 
 check:
   nix flake check --keep-going
