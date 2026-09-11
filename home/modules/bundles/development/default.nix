@@ -18,6 +18,8 @@ in
 
     programs = {
       claude-code.enable = true;
+      # devenv's own package already bundles a `secretspec` binary, so a
+      # separate programs.secretspec.enable collides on bin/secretspec.
       devenv.enable = true;
       difftastic.enable = true;
       httpie.enable = true;
@@ -30,7 +32,6 @@ in
         typst.enable = lib.mkDefault true;
         zig.enable = lib.mkDefault true;
       };
-      secretspec.enable = true;
     };
   };
 }
