@@ -13,6 +13,7 @@
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/devenv" = ./programs/devenv;
     "programs/difftastic" = ./programs/difftastic;
     "programs/nix-auth" = ./programs/nix-auth;
     "programs/proton-authenticator" = ./programs/proton-authenticator;
