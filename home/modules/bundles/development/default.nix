@@ -20,7 +20,7 @@ in
       claude-code.enable = true;
       # devenv's own package already bundles a `secretspec` binary, so a
       # separate programs.secretspec.enable collides on bin/secretspec.
-      devenv.enable = true;
+      devenv_.enable = true;
       difftastic.enable = true;
       httpie.enable = true;
       omnix.enable = true;

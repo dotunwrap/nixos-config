@@ -3,6 +3,9 @@ _:
 with lib;
 {
   options.programs = {
+    # NOTE: This cannot be devenv as hm has a devenv module natively
+    #       which has been out of date for months.
+    devenv_.enable = mkEnableOption "Enable devenv";
     nix-auth.enable = mkEnableOption "Enable nix-auth";
     proton-authenticator.enable = mkEnableOption "Enable proton-authenticator";
     betaflight-configurator.enable = mkEnableOption "Enable betaflight-configurator";
