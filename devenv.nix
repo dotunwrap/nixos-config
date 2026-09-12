@@ -8,25 +8,18 @@
 
 let
   inherit (pkgs.stdenv.hostPlatform) system;
+  inherit (lib) getExe concatMapStringsSep;
 
-  autoFollow = lib.getExe' inputs.nix-auto-follow.packages.${system}.default "auto-follow";
+  autoFollow = inputs.nix-auto-follow.packages.${system}.default;
 
   treefmt = import ./treefmt.nix { inherit pkgs; };
 in
 {
   # https://devenv.sh/packages/
-  packages = with pkgs; [
-    git
-    just
-    jq
-    sops
-    nil
-    statix
-    deadnix
-    treefmt
-    nh
-    inputs.nix-auto-follow.packages.${system}.default
-  ];
+  packages = [
+    autoFollow
+  ]
+  ++ import ./shell-pkgs.nix { inherit pkgs; };
 
   # https://devenv.sh/languages/
   languages = {
@@ -79,13 +72,13 @@ in
         ignoredInputs = [
           "vicinae"
         ];
-        ignoreFlags = lib.concatMapStringsSep " " (input: "--ignore ${input}") ignoredInputs;
+        ignoreFlags = concatMapStringsSep " " (input: "--ignore ${input}") ignoredInputs;
       in
       {
         enable = true;
         name = "nix-auto-follow";
         description = "Check flake.lock inputs.*.follows are deduplicated via nix-auto-follow";
-        entry = "${autoFollow} --check ${ignoreFlags}";
+        entry = "${getExe autoFollow} --check ${ignoreFlags}";
         files = "^flake\\.lock$";
         pass_filenames = false;
       };

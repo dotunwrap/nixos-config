@@ -10,25 +10,15 @@
       ...
     }:
     let
+      inherit (pkgs) mkShell;
+
       treefmt = import "${self}/treefmt.nix" { inherit pkgs; };
     in
     {
       formatter = treefmt;
 
-      devShells.default = pkgs.mkShell {
-        packages = builtins.attrValues {
-          inherit (pkgs)
-            sops
-            nil
-            nh
-            git
-            just
-            jq
-            statix
-            deadnix
-            ;
-          inherit treefmt;
-        };
+      devShells.default = mkShell {
+        packages = import "${self}/shell-pkgs.nix" { inherit pkgs; };
       };
 
       checks = {
