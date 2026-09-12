@@ -11,8 +11,32 @@ on:
       - main
 
 jobs:
+  plan:
+    name: Plan
+    runs-on: ubuntu-latest
+    outputs:
+      nix-version: ${{ steps.nix-version.outputs.version }}
+      packages: ${{ steps.set-matrix.outputs.packages }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v5
+      - name: Resolve nix version from flake.lock's nixpkgs pin
+        id: nix-version
+        run: echo "version=$(scripts/resolve-nix-version.sh)" >> "$GITHUB_OUTPUT"
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+        with:
+          nix-version: ${{ steps.nix-version.outputs.version }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Compute build matrix
+        id: set-matrix
+        run: |
+          packages=$(nix eval .#packages.x86_64-linux --apply builtins.attrNames --json)
+          echo "packages=$packages" >> "$GITHUB_OUTPUT"
+
   devenv_test:
     name: Devenv test
+    needs: plan
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -20,6 +44,7 @@ jobs:
       - name: Setup Nix
         uses: ./.github/actions/setup-nix
         with:
+          nix-version: ${{ needs.plan.outputs.nix-version }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Install cachix
         uses: cachix/cachix-action@v16
@@ -30,39 +55,22 @@ jobs:
       - name: Build the devenv shell and run all git hooks
         run: devenv test
 
-  matrix:
-    name: Compute build matrix
-    runs-on: ubuntu-latest
-    outputs:
-      packages: ${{ steps.set-matrix.outputs.packages }}
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v5
-      - name: Setup Nix
-        uses: ./.github/actions/setup-nix
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: List output derivations
-        id: set-matrix
-        run: |
-          packages=$(nix eval .#packages.x86_64-linux --apply builtins.attrNames --json)
-          echo "packages=$packages" >> "$GITHUB_OUTPUT"
-
   build:
     name: Build ${{ matrix.package }}
-    needs: matrix
+    needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJson(needs.matrix.outputs.packages) }}
+        package: ${{ fromJson(needs.plan.outputs.packages) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v5
       - name: Setup Nix
         uses: ./.github/actions/setup-nix
         with:
+          nix-version: ${{ needs.plan.outputs.nix-version }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Build
         env:

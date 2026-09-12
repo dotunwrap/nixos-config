@@ -1,7 +1,10 @@
 name: Setup Nix
-description: Install Nix and configure SSH access for private flake inputs (e.g. the monolisa git+ssh input)
+description: Install a specific Nix version and configure SSH access for private flake inputs (e.g. the monolisa git+ssh input)
 
 inputs:
+  nix-version:
+    description: Exact Nix version to install (see scripts/resolve-nix-version.sh)
+    required: true
   ssh-private-key:
     description: Private key with access to the private flake inputs
     required: true
@@ -17,7 +20,7 @@ runs:
           experimental-features = nix-command flakes
           substituters = https://cache.nixos.org/ https://nix-community.cachix.org
           trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
-        install_url: https://releases.nixos.org/nix/nix-2.28.0/install
+        install_url: https://releases.nixos.org/nix/nix-${{ inputs.nix-version }}/install
     - name: Setup SSH
       shell: bash
       run: |
