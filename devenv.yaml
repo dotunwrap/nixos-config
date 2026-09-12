@@ -11,3 +11,8 @@ inputs:
         follows: nixpkgs
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
+
+secretspec:
+  enable: true
+  provider: keyring
+  profile: default

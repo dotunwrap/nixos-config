@@ -8,10 +8,10 @@
 
 let
   inherit (pkgs.stdenv.hostPlatform) system;
-  inherit (lib) getExe concatMapStringsSep;
+  inherit (lib) getExe concatMapStringsSep mkIf;
+  inherit (config.secretspec) secrets;
 
   autoFollow = inputs.nix-auto-follow.packages.${system}.default;
-
   treefmt = import ./treefmt.nix { inherit pkgs; };
 in
 {
@@ -41,8 +41,10 @@ in
     check-json.enable = true;
     check-shebang-scripts-are-executable.enable = true;
     check-symlinks.enable = true;
+    check-toml.enable = true;
     check-yaml.enable = true;
     nil.enable = true;
+    ripsecrets.enable = true;
     shellcheck.enable = true;
 
     statix = {
@@ -96,6 +98,11 @@ in
         env = {
           DEVENV_ROOT = config.devenv.root;
         };
+      };
+      github = mkIf (secrets.GITHUB_PAT or null != null) {
+        type = "http";
+        url = "https://api.githubcopilot.com/mcp";
+        headers.Authorization = "Bearer ${secrets.GITHUB_PAT}";
       };
     };
   };
