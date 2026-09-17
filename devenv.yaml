@@ -14,5 +14,9 @@ inputs:
 
 secretspec:
   enable: true
-  provider: keyring
   profile: default
+  # No explicit `provider:` override here: an explicit override forces that
+  # single provider for every secret. Leaving it unset lets each secret's own
+  # `providers` fallback chain in secretspec.toml run instead, so `keyring`
+  # (used on real dev machines) can fall back to `env` wherever no keyring/dbus
+  # session exists (CI runners, minimal servers, containers).
