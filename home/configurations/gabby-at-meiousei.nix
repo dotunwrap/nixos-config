@@ -3,7 +3,7 @@ inputs:
 lib.recursiveUpdate {
   activeBundles = [
     "development"
-    "niri"
+    "dwm"
     "gaming"
   ];
 
@@ -13,9 +13,7 @@ lib.recursiveUpdate {
     accent = "mauve";
     subaccent = "lavender";
   };
-  stylix = {
-    image = ../../assets/wallpapers/anyb-girl.png;
-  };
+  stylix.image = ../../assets/wallpapers/anyb-girl.png;
 
   home.stateVersion = "24.11";
 } (import ./shared/gabby inputs default)

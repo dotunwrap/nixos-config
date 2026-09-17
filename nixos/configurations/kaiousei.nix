@@ -13,15 +13,10 @@
 
   hardware.framework.enableKmod = true;
 
-  boot.initrd.systemd.network.wait-online.enable = false;
-
   networking = {
     hostName = "kaiousei";
     networkmanager.enable = true;
-    useDHCP = false;
-    interfaces = {
-      wlp192s0.useDHCP = true;
-    };
+    # NOTE: Removed DHCP configuration for my interfaces as NetworkManager handles this by default.
     nftables.enable = true;
     firewall = {
       enable = true;
@@ -31,12 +26,9 @@
     };
   };
 
-  systemd = {
-    services.tailscaled.serviceConfig.Environment = [
-      "TS_DEBUG_FIREWALL_MODE=nftables"
-    ];
-    network.wait-online.enable = false;
-  };
+  systemd.services.tailscaled.serviceConfig.Environment = [
+    "TS_DEBUG_FIREWALL_MODE=nftables"
+  ];
 
   time.timeZone = "America/New_York";
 

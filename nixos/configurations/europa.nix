@@ -4,20 +4,12 @@ _:
   activeBundles = [
     "base"
     "development"
-    "niri"
-    "gaming"
+    # TODO: Build and add a "server" bundle.
   ];
-
-  core.kernel.enable = true;
 
   networking = {
     hostName = "europa";
     networkmanager.enable = true;
-    useDHCP = false;
-    interfaces = {
-      enp0s31f6.useDHCP = true;
-      wlp2s0.useDHCP = true;
-    };
   };
 
   services.libinput = {
@@ -36,9 +28,8 @@ _:
 
   nix.package = pkgs.nix;
 
-  services.fprintd.enable = true;
-
-  users.users = import ./users/nia.nix pkgs;
+  # TODO: Add some sysadmin user for servers to ingest
+  # users.users = ...
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

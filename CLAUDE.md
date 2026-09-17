@@ -40,7 +40,7 @@ Practical implication: importing a module into the registry is cheap and global 
 
 ### Bundles → Programs/Themes/Misc
 
-- **Bundles** (`nixos/modules/bundles/*`, `home/modules/bundles/*`) are coarse feature groups (`base`, `dwm`, `niri`, `gaming`, `development`). A host/user turns bundles on via `activeBundles = [ "base" "niri" ... ];` (see e.g. `nixos/configurations/sekai.nix`); `nixos/modules/bundles/default.nix` / `home/modules/bundles/default.nix` fold that list into `bundles.<name>.enable = true`. Bundle modules are self-contained: `options.bundles.<name>` and `config = lib.mkIf cfg.enable { ... }` live in the same file, and a bundle typically flips on a batch of `programs.*`/`services.*` options (see `home/modules/bundles/niri/default.nix`).
+- **Bundles** (`nixos/modules/bundles/*`, `home/modules/bundles/*`) are coarse feature groups (`base`, `dwm`, `niri`, `gaming`, `development`). A host/user turns bundles on via `activeBundles = [ "base" "niri" ... ];` (see e.g. `nixos/configurations/chikyuu.nix`); `nixos/modules/bundles/default.nix` / `home/modules/bundles/default.nix` fold that list into `bundles.<name>.enable = true`. Bundle modules are self-contained: `options.bundles.<name>` and `config = lib.mkIf cfg.enable { ... }` live in the same file, and a bundle typically flips on a batch of `programs.*`/`services.*` options (see `home/modules/bundles/niri/default.nix`).
 - **Programs** (`{nixos,home}/modules/programs/*`) are per-application modules, one directory per program. Unlike bundles, these split declaration from implementation: `options.programs.<name>.enable` is declared centrally in `{nixos,home}/modules/programs/default.nix`, while `config = lib.mkIf cfg.enable { ... }` lives in `programs/<name>/default.nix`. **Both halves, plus the registry entry in `{nixos,home}/modules/default.nix`, must exist or the module silently does nothing** — always use `just osadd`/`just hmadd` (backed by `scripts/mkmodule.sh` and `templates/*-module.nix.template`) to scaffold new program modules so all three stay in sync.
 - **Themes** (`home/modules/themes/*`) follow the bundle pattern (self-contained) and drive `stylix` when any theme is enabled.
 - One known naming collision: Home Manager's own `programs.just` module already exists, so this repo's `just` program module is exposed as `programs.just_.enable`.
@@ -51,10 +51,11 @@ Defined in `nixos/configurations/default.nix` and `home/configurations/default.n
 
 Hosts/users, from `README.md`:
 
-- `suigin` (gabby, Framework 13, Niri/Wayland, main machine)
-- `europa` (nia, ThinkPad X1 Carbon, Niri/Wayland)
-- `sekai` (gabby + nia, desktop, dwm/X11, gaming)
-- `mokusei` (nia, desktop, Niri/Wayland, gaming)
+- `chikyuu` (gabby, desktop, dwm/X11, gaming)
+- `europa` (nia, ThinkPad X1 Carbon, Niri/Wayland, previously her main machine, soon a home server)
+- `kaiousei` (gabby, Framework 13 Pro, Niri/Wayland, main machine)
+- `meiousei` (gabby + nia, desktop, Niri/Wayland, previously a gaming desktop, soon an HTPC)
+- `suisei` (nia, Framework 13, Niri/Wayland, her main machine)
 
 ### Adding a new module
 

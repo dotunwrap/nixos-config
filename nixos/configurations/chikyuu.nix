@@ -37,10 +37,7 @@ _:
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1
     '';
-    initrd = {
-      kernelModules = [ "amdgpu" ];
-      systemd.network.wait-online.enable = false;
-    };
+    initrd.kernelModules = [ "amdgpu" ];
   };
 
   services = {
@@ -87,13 +84,8 @@ _:
   drivers.ffado.enable = true;
 
   networking = {
-    hostName = "sekai";
+    hostName = "chikyuu";
     networkmanager.enable = true;
-    useDHCP = false;
-    interfaces = {
-      enp8s0.useDHCP = true;
-      wlp15s0.useDHCP = true;
-    };
     nftables.enable = true;
     firewall = {
       enable = true;
@@ -116,12 +108,9 @@ _:
     };
   };
 
-  systemd = {
-    services.tailscaled.serviceConfig.Environment = [
-      "TS_DEBUG_FIREWALL_MODE=nftables"
-    ];
-    network.wait-online.enable = false;
-  };
+  systemd.services.tailscaled.serviceConfig.Environment = [
+    "TS_DEBUG_FIREWALL_MODE=nftables"
+  ];
 
   time.timeZone = "America/New_York";
 
@@ -131,7 +120,7 @@ _:
 
   nix.package = pkgs.nix;
 
-  users.users = import ./users/gabby.nix pkgs // import ./users/nia.nix pkgs;
+  users.users = import ./users/gabby.nix pkgs;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

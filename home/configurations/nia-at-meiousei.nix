@@ -7,11 +7,13 @@ lib.recursiveUpdate {
     "gaming"
   ];
 
-  themes.everforest = {
+  themes.catppuccin = {
     enable = true;
-    flavor = "hard";
+    flavor = "mocha";
+    accent = "mauve";
+    subaccent = "lavender";
   };
-  stylix.image = ../../assets/wallpapers/made-in-abyss.jpg;
+  stylix.image = ../../assets/wallpapers/anyb-girl.png;
 
   home.stateVersion = "24.11";
 } (import ./shared/nia inputs default)
