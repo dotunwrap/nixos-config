@@ -35,6 +35,7 @@ in
       publicShare = null;
       music = null;
       videos = null;
+      setSessionVariables = true;
     };
 
     fonts.fontconfig = {
