@@ -37,6 +37,7 @@ in
     programs = {
       niri.enable = true;
       display-managers.ly.enable = true;
+      vicinae.input-server.enable = true;
     };
 
     services = {

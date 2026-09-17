@@ -104,6 +104,10 @@ in
                 inputs.stylix.nixosModules.stylix
                 inputs.niri-flake.nixosModules.niri
                 inputs.vicinae.nixosModules.default
+                # NOTE: Vicinae's NixOS module has the input-server enabled by default. Implicit actions bad.
+                # I have spoken with contributors on their Discord server, and this is something that will be
+                # changed later.
+                { programs.vicinae.input-server.enable = lib.mkDefault false; }
               ]
               ++ config.modules
               ++ builtins.attrValues {
