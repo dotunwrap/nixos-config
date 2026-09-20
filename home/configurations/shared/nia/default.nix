@@ -65,15 +65,17 @@ in
       enable = true;
       profiles.default = {
         settings = {
-          "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-          "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsored" = false;
-          "browser.urlbar.suggest.quicksuggest.sponsored" = false;
-          "browser.newtabpage.activity-stream.system.showSponsored" = false;
-          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-          "browser.newtabpage.activity-stream.showSponsoredCheckboxes" = false;
-          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.aboutConfig.showWarning" = false;
           "browser.newtabpage.activity-stream.discoverystream.enabled" = false;
           "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredCheckboxes" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+          "browser.newtabpage.activity-stream.system.showSponsored" = false;
+          "browser.urlbar.suggest.quicksuggest.sponsored" = false;
+          "extensions.update.autoUpdateDefault" = false;
+          "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsored" = false;
+          "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
         };
         extensions.packages = with firefox-addons.packages.${system}; [
           bitwarden
