@@ -76,6 +76,7 @@ in
           "extensions.update.autoUpdateDefault" = false;
           "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsored" = false;
           "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+          "signon.rememberSignons" = false;
         };
         extensions.packages = with firefox-addons.packages.${system}; [
           bitwarden
