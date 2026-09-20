@@ -1,4 +1,18 @@
 {
+  # Sourced from nixos/modules/core/cachix/caches.nix so the flake-level
+  # substituters (read before evaluation, so even a fresh machine's first
+  # rebuild can use them) can never drift from the NixOS module's nix.settings
+  # (which only lands in /etc/nix/nix.conf once this config has been switched
+  # in once).
+  nixConfig =
+    let
+      caches = import ./nixos/modules/core/cachix/caches.nix;
+    in
+    {
+      extra-substituters = builtins.map (c: c.url) caches;
+      extra-trusted-public-keys = builtins.map (c: c.key) caches;
+    };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 

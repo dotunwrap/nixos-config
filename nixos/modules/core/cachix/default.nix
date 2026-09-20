@@ -1,18 +1,13 @@
 _:
-{
-  pkgs,
-  lib,
-  ...
-}:
+{ pkgs, ... }:
 let
-  folder = ./caches;
-  toImport = name: _: folder + ("/" + name);
-  filterCaches = key: value: value == "regular" && lib.hasSuffix ".nix" key;
-  imports = lib.mapAttrsToList toImport (lib.filterAttrs filterCaches (builtins.readDir folder));
+  caches = import ./caches.nix;
 in
 {
-  inherit imports;
-  nix.settings.substituters = [ "https://cache.nixos.org" ];
+  nix.settings = {
+    substituters = [ "https://cache.nixos.org" ] ++ builtins.map (c: c.url) caches;
+    trusted-public-keys = builtins.map (c: c.key) caches;
+  };
 
   environment.systemPackages = with pkgs; [ cachix ];
 }
