@@ -23,7 +23,7 @@ runs:
       uses: cachix/cachix-action@v16
       with:
         name: nix-community
-        extraPullNames: vicinae,yazi
+        extraPullNames: vicinae,yazi,niri-epireyn
     - name: Setup SSH
       shell: bash
       run: |
