@@ -15,6 +15,14 @@ let
   treefmt = import ./treefmt.nix { inherit pkgs; };
 in
 {
+  cachix.pull = [
+    "devenv"
+    "niri-epireyn"
+    "vicinae"
+    "nix-community"
+    "yazi"
+  ];
+
   # https://devenv.sh/packages/
   packages = [
     autoFollow
