@@ -6,7 +6,6 @@ firefox-addons: system: with firefox-addons.packages.${system}; [
   owasp-penetration-testing-kit
   react-devtools
   simplelogin
-  shinigami-eyes
   stylus
   ublock-origin
   unpaywall
