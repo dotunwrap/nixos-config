@@ -7,6 +7,7 @@ firefox-addons: system: with firefox-addons.packages.${system}; [
   react-devtools
   simplelogin
   stylus
+  tridactyl
   ublock-origin
   unpaywall
   violentmonkey
