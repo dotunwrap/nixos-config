@@ -36,7 +36,10 @@
 
   nix.package = pkgs.nix;
 
-  services.fprintd.enable = true;
+  services = {
+    fprintd.enable = true;
+    fwupd.enable = true;
+  };
 
   users.users = import ./users/nia.nix pkgs;
 

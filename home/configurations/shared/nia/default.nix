@@ -100,6 +100,7 @@ in
     sdrpp.enable = true;
     gqrx.enable = true;
     soapysdr.enable = true;
+    winboat.enable = true;
   };
 
   stylix.targets.firefox.profileNames = [ "default" ];

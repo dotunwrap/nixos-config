@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    winboat.enable = mkEnableOption "Enable winboat";
     # NOTE: This cannot be devenv as hm has a devenv module natively
     #       which has been out of date for months.
     devenv_.enable = mkEnableOption "Enable devenv";
