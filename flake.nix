@@ -1,116 +1,135 @@
+# DO-NOT-EDIT. This file was auto-generated using github:denful/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
+  nixConfig = {
+    commit-lock-file-summary = "chore: Update flake.lock";
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://dotunwrap.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "dotunwrap.cachix.org-1:p7ePw6DuH9OjOqpzJUg/RJor+9tl3vKtjHGBACvthW0="
+    ];
+  };
+
+  inputs = {
+    claude-code-overlay = {
+      url = "github:sadjow/claude-code-nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
+    claude-desktop = {
+      url = "github:heytcass/claude-desktop-linux-flake";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    determinvim = {
+      url = "github:dotunwrap/determinvim";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        nixvim.follows = "nixvim";
+        systems.follows = "systems-future";
+      };
+    };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-file.url = "github:denful/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-
-    # These are added just to dedupe the lock file
-    systems.url = "github:nix-systems/default";
-    systems-future.url = "github:nix-systems/default/future-26.11";
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems-future";
-        flake-parts.follows = "flake-parts";
-      };
-    };
-
-    nixos-hardware = {
-      url = "github:NixOS/nixos-hardware/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix = {
-      url = "github:nixos/nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-      };
-    };
-
-    nix-auth = {
-      url = "github:numtide/nix-auth";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-        treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
-      };
-    };
-
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems-future";
-        flake-parts.follows = "flake-parts";
-      };
-    };
-
-    determinvim = {
-      url = "github:dotunwrap/determinvim";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-        nixvim.follows = "nixvim";
-        systems.follows = "systems-future";
-      };
-    };
-
-    niavim = {
-      url = "github:nyoshe/niavim";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-        nixvim.follows = "nixvim";
-        systems.follows = "systems-future";
-      };
-    };
-
-    suckless = {
-      url = "github:dotunwrap/suckless-nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-      };
-    };
-
+    import-tree.url = "github:denful/import-tree";
     monolisa = {
       url = "git+ssh://git@github.com/dotunwrap/monolisa-font-nix";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    niavim = {
+      url = "github:nyoshe/niavim";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        nixvim.follows = "nixvim";
+        systems.follows = "systems-future";
       };
     };
     niri-flake = {
-      # Fork of sodiboo/niri-flake; upstream is stale and broken against current nixpkgs
-      # (still requires the removed libdisplay-info_0_2), this fork tracks nixpkgs properly.
       url = "github:epireyn/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # vicinae intentionally does NOT follow our nixpkgs: it's a large Qt6/CMake/C++
-    # build, so any drift between our nixpkgs pin and vicinae's own guarantees a
-    # cache miss against vicinae.cachix.org and a from-source rebuild. We prioritize
-    # build speed (real cache hits) over lock file dedup here; see nix-auto-follow's
-    # `--ignore vicinae` in devenv.nix.
+    nix = {
+      url = "github:nixos/nix";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    nix-auth = {
+      url = "github:numtide/nix-auth";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+      };
+    };
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems-future";
+      };
+    };
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems-future";
+      };
+    };
+    suckless = {
+      url = "github:dotunwrap/suckless-nix";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    systems.url = "github:nix-systems/default";
+    systems-future.url = "github:nix-systems/default/future-26.11";
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.systems.follows = "systems";
@@ -122,75 +141,24 @@
         vicinae.follows = "vicinae";
       };
     };
-
+    yazi = {
+      url = "github:sxyazi/yazi";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+        rust-overlay.follows = "rust-overlay";
+      };
+    };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
       };
     };
-
     zennotes = {
       url = "github:ZenNotes/zennotes";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    claude-code-overlay = {
-      url = "github:sadjow/claude-code-nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
-    };
-
-    claude-desktop = {
-      url = "github:heytcass/claude-desktop-linux-flake";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-
-    yazi = {
-      url = "github:sxyazi/yazi";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-        rust-overlay.follows = "rust-overlay";
-      };
-    };
   };
-
-  outputs =
-    { flake-parts, ... }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "x86_64-linux"
-      ];
-
-      imports = [
-        ./parts/auxillary.nix
-        ./parts/home-configs.nix
-        ./parts/home-modules.nix
-        ./parts/nixos-modules.nix
-        ./parts/system-configs.nix
-
-        ./nixos/configurations
-        ./home/configurations
-
-        ./home/modules
-        ./nixos/modules
-      ];
-    };
 }
