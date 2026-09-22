@@ -79,7 +79,10 @@ in
       zsh.enable = true;
     };
 
-    services.udiskie.enable = true;
+    services = {
+      mpris-proxy.enable = true;
+      udiskie.enable = true;
+    };
 
     home.sessionVariables = {
       EDITOR = "nvim";
