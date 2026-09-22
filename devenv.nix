@@ -5,7 +5,6 @@
   inputs,
   ...
 }:
-
 let
   inherit (pkgs.stdenv.hostPlatform) system;
   inherit (lib) getExe concatMapStringsSep mkIf;

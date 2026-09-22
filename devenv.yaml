@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
 inputs:
   nix-auto-follow:
     url: github:fzakaria/nix-auto-follow
