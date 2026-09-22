@@ -34,9 +34,16 @@ in
         package = mkDefault pkgs.volantes-cursors;
         name = mkDefault "volantes_cursors";
       };
-      targets.feh.enable = mkIf config.bundles.dwm.enable true;
-      # NOTE: gtksourceview target causes inkscape to rebuild every hm generation build
-      targets.gtksourceview.enable = mkDefault false;
+      targets = {
+        feh.enable = mkIf config.bundles.dwm.enable true;
+        # x11 and sxiv targets default to enabled regardless of session type and both
+        # write to ~/.Xresources; only wire x11 up on X11 (dwm) hosts, and sxiv not at
+        # all since we don't use it, so Wayland/Niri hosts don't get a ~/.Xresources
+        x11.enable = mkDefault config.bundles.dwm.enable;
+        sxiv.enable = mkDefault false;
+        # NOTE: gtksourceview target causes inkscape to rebuild every hm generation build
+        gtksourceview.enable = mkDefault false;
+      };
     };
   };
 }
