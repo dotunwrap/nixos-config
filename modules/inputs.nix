@@ -5,9 +5,26 @@
 
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
+    nix-unit = {
+      url = "github:nix-community/nix-unit";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+
+    nix-github-actions = {
+      url = "github:nix-community/nix-github-actions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # These are added just to dedupe the lock file
     systems.url = "github:nix-systems/default";
     systems-future.url = "github:nix-systems/default/future-26.11";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
@@ -39,7 +56,7 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
-        treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
       };
     };
 

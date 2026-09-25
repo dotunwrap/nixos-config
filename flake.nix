@@ -89,7 +89,18 @@
       inputs = {
         flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
-        treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+    nix-github-actions = {
+      url = "github:nix-community/nix-github-actions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-unit = {
+      url = "github:nix-community/nix-unit";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
       };
     };
     nixos-hardware = {
@@ -130,6 +141,10 @@
     };
     systems.url = "github:nix-systems/default";
     systems-future.url = "github:nix-systems/default/future-26.11";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.systems.follows = "systems";
