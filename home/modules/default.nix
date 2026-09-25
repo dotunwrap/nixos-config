@@ -13,6 +13,7 @@
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/bottles-unwrapped" = ./programs/bottles-unwrapped;
     "programs/winboat" = ./programs/winboat;
     "programs/devenv" = ./programs/devenv;
     "programs/difftastic" = ./programs/difftastic;
