@@ -1,6 +1,7 @@
 {
   imports = [
     ../parts/auxillary.nix
+    ../parts/checks.nix
     ../parts/home-configs.nix
     ../parts/home-modules.nix
     ../parts/nixos-modules.nix

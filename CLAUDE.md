@@ -23,7 +23,7 @@ Rebuilds and cleanup go through [`nh`](https://github.com/nix-community/nh) rath
 
 Formatting/linting is handled by `treefmt` (nixfmt, shfmt, prettier) plus `statix` and `deadnix`, wired up via `devenv.nix` git-hooks — these run through `devenv test` / pre-commit, not as standalone scripts. If devenv isn't running, `nix fmt` invokes the same treefmt config directly (see `treefmt.nix`).
 
-There is no application code, no test suite in the conventional sense, and no build in the CI-artifact sense — "correctness" here means `nix flake check` passing and the affected host's config evaluating/building cleanly (`just osev <host> config.system.build.toplevel` or `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`).
+There is no application code in the conventional sense, but there is a real, if narrow, test suite — see "Testing" below. `just check` is deliberately eval-only/fast (never builds a full host or profile); full-closure correctness is CI's job, not the local dev-loop's — run `just osev <host> config.system.build.toplevel` / `nix build .#nixosConfigurations.<host>.config.system.build.toplevel` by hand if you need to confirm a specific host actually builds.
 
 ## Architecture
 
@@ -67,10 +67,21 @@ Hosts/users, from `README.md`:
 
 Prefer `just osadd <path> <module>` / `just hmadd <path> <module>` over hand-editing. This scaffolds `{nixos,home}/modules/<path>/<module>/default.nix` from the template, inserts `<module>.enable = mkEnableOption ...` into `{nixos,home}/modules/<path>/default.nix`, and adds the registry entry to `{nixos,home}/modules/default.nix`. It assumes the underlying package already exists in nixpkgs and is not enabled by default; edit the generated `config` block for anything beyond a trivial `environment.systemPackages`/`home.packages` addition. Note it does not handle adding options for the module — those must be defined by hand within the generated `default.nix` if the module needs configurable options beyond `enable`.
 
+### Testing
+
+`checks.<system>.*` (what `nix flake check`/`just check` builds) is deliberately kept lightweight — `treefmt`, `check-flake-file`, `legacy-bridge-manifest`, `module-helpers-tests` (`lib.runTests`, `parts/module-helpers.tests.nix`, testing legacy-only `callModule`), `stylix-xresources-regression` (`modules/checks-stylix.nix` — a regression pin: asserts `stylix.targets.x11.enable == bundles.dwm.enable` and `sxiv.enable == false` across every home profile, guarding the bug fixed in `c8bca61`), and `nix-unit` (`modules/nix-unit.nix` + co-located `nix-unit.tests` blocks, e.g. `modules/legacy-check.nix`'s `assertExactKeys` throw-behavior tests — use this over `lib.runTests` whenever a test needs to assert _how_ something throws, since `lib.runTests` aborts its whole suite's evaluation on any uncaught throw).
+
+**Full host/profile builds are never part of `checks`.** `modules/checks-builds.nix` projects `nixosConfigurations`/`homeConfigurations` into a _separate_ `flake.ciChecks.<system>.{nixos-<host>,home-<profile>}` output instead — building every host's complete closure (gaming bundle, SDR stack, etc.) in parallel is a real memory hazard on a daily-driver machine, not a hypothetical one (it's killed a live terminal session before). `modules/github-actions.nix` unions `checks` + `ciChecks` (`lib.recursiveUpdate`) into `flake.githubActions`, via [`nix-github-actions`](https://github.com/nix-community/nix-github-actions) — that's the _only_ consumer of `ciChecks`; CI runs on disposable GitHub-hosted runners where an OOM just fails a job. Never move something from `ciChecks` into `checks` without confirming it's actually cheap to build.
+
+The custom `packages.*` registry this repo used to have (`packageName`/`packageModule`/`finalPackage` in `parts/system-configs.nix`/`parts/home-configs.nix`) is gone — it existed solely to feed CI's old hand-rolled build matrix, which `ciChecks` + `nix-github-actions` now does properly.
+
 ### Inputs worth knowing about
 
 Several flake inputs are this author's own forks/projects, not upstream: `determinvim`, `niavim` (neovim configs consumed via `nvim.package`), `suckless` (dwm build), `monolisa` (private font, `git+ssh`), `niri-flake` is pinned to a fork (`epireyn/niri-flake`) because upstream is stale against current nixpkgs — check that fork's status before assuming upstream `sodiboo/niri-flake` behavior applies. `nix-auto-follow` (via `devenv.nix`) enforces that `flake.lock` `inputs.*.follows` stay deduplicated as a git-hook check, with one deliberate exception: `vicinae` does not follow our `nixpkgs` (and `vicinae-extensions` follows `vicinae/nixpkgs` instead of ours), because it's a large Qt6/CMake/C++ build — any drift from vicinae's own pin guarantees a cache miss against `vicinae.cachix.org` and a from-source rebuild. The hook is passed `--ignore vicinae` to allow this. General policy: prefer a real cache hit (build speed) over lock file dedup when the two conflict for a given input.
 
 ### CI
 
-`.github/workflows/ci.yml` runs `devenv test` (which runs all git-hooks: treefmt, statix, deadnix, nil, action-validator, actionlint, nix-auto-follow check) on PRs and pushes to `main`. It does not build any host configs.
+`.github/workflows/ci.yml` has two independent tracks on PRs and pushes to `main`:
+
+- `devenv_test` — runs all `devenv.nix` git-hooks (treefmt, statix, deadnix, nil, action-validator, actionlint, nix-auto-follow check).
+- `checks-matrix` → `checks` — `checks-matrix` evaluates `.#githubActions.matrix` (generated by `nix-github-actions` from the union of `checks` + `ciChecks`, see "Testing" above) and `checks` fans that out into one parallel job per entry, each running `nix build -L '.#<matrix.attr>'`. This is what actually builds every host/profile closure — add a check in Nix and it's picked up automatically next run, no workflow-file edits needed.

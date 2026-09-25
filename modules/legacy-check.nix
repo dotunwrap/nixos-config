@@ -32,5 +32,31 @@ in
           "nia@suisei"
         ] (builtins.attrNames config.flake.homeConfigurations);
         pkgs.runCommand "legacy-bridge-manifest-check" { } "touch $out";
+
+      nix-unit.tests = {
+        testAssertExactKeysPassesWhenSetsMatch = {
+          expr =
+            assertExactKeys "x"
+              [
+                "a"
+                "b"
+              ]
+              [ "a" "b" ];
+          expected = true;
+        };
+        testAssertExactKeysThrowsWithMissingAndExtra = {
+          expr =
+            assertExactKeys "x"
+              [
+                "a"
+                "b"
+              ]
+              [ "a" "c" ];
+          expectedError = {
+            type = "ThrownError";
+            msg = "flake\\.x regressed: missing \\[\"b\"\\], extra \\[\"c\"\\]";
+          };
+        };
+      };
     };
 }
