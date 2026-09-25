@@ -53,6 +53,12 @@ sed -i "s#{{PATH}}#${MODULE_PATH//\//.}#" "$NEW_MODULE_DIR/default.nix"
 sed -i "s#{{MODULE}}#$MODULE#" "$NEW_MODULE_DIR/default.nix"
 echo "CREATED: $TYPE/modules/$MODULE_PATH/$MODULE/default.nix"
 
+# Mark the new file as intent-to-add so Nix's git-aware source filtering
+# (builtins.fetchGit/flake source) sees it immediately, without needing a
+# separate `git add` before the next rebuild.
+git -C "$SCRIPTS_DIR/.." add --intent-to-add "$NEW_MODULE_DIR/default.nix"
+echo "GIT INTENT-TO-ADD: $TYPE/modules/$MODULE_PATH/$MODULE/default.nix"
+
 # Add mkEnableOption
 grep -q "options\.${MODULE_PATH//\//.} = {" "$MODULES_DIR/$MODULE_PATH/default.nix" || (
   echo "No existing entry for $MODULE_PATH in $MODULES_DIR/default.nix"
