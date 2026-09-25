@@ -3,7 +3,7 @@ _:
 with lib;
 {
   options.programs = {
-    bottles-unwrapped.enable = mkEnableOption "Enable bottles-unwraped";
+    bottles.enable = mkEnableOption "Enable bottles";
     winboat.enable = mkEnableOption "Enable winboat";
     # NOTE: This cannot be devenv as hm has a devenv module natively
     #       which has been out of date for months.

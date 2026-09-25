@@ -101,7 +101,7 @@ in
     gqrx.enable = true;
     soapysdr.enable = true;
     winboat.enable = true;
-    bottles-unwrapped.enable = true;
+    bottles.enable = true;
   };
 
   stylix.targets.firefox.profileNames = [ "default" ];
