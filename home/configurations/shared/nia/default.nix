@@ -102,6 +102,7 @@ in
     soapysdr.enable = true;
     winboat.enable = true;
     bottles.enable = true;
+    bambu-studio.enable = true;
   };
 
   stylix.targets.firefox.profileNames = [ "default" ];

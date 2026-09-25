@@ -14,6 +14,7 @@
 
     "programs" = ./programs;
     "programs/vial" = ./programs/vial;
+    "programs/bambu-studio" = ./programs/bambu-studio;
     "programs/bottles" = ./programs/bottles;
     "programs/winboat" = ./programs/winboat;
     "programs/devenv" = ./programs/devenv;
