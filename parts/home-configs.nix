@@ -11,8 +11,6 @@ let
   enabledCfgs = lib.filterAttrs (_: config: config.enable) cfg;
 
   configs = builtins.mapAttrs (_: config: config.finalHome) enabledCfgs;
-
-  packages = builtins.attrValues (builtins.mapAttrs (_: config: config.packageModule) enabledCfgs);
 in
 {
   options = {
@@ -74,22 +72,7 @@ in
                 readOnly = true;
               };
 
-              packageName = lib.mkOption {
-                type = lib.types.str;
-                readOnly = true;
-              };
-
-              finalPackage = lib.mkOption {
-                type = lib.types.package;
-                readOnly = true;
-              };
-
               finalHome = lib.mkOption {
-                type = lib.types.unspecified;
-                readOnly = true;
-              };
-
-              packageModule = lib.mkOption {
                 type = lib.types.unspecified;
                 readOnly = true;
               };
@@ -123,13 +106,6 @@ in
               ++ config.modules
               ++ builtins.attrValues self.homeManagerModules;
 
-              packageName = "home/config/${name}";
-              finalPackage = config.finalHome.activationPackage;
-
-              packageModule = {
-                ${config.system}.${config.packageName} = config.finalPackage;
-              };
-
               finalHome = inputs.home-manager.lib.homeManagerConfiguration {
                 pkgs = config.nixpkgs.legacyPackages.${config.system};
                 extraSpecialArgs = { };
@@ -143,5 +119,4 @@ in
   };
 
   config.flake.homeConfigurations = configs;
-  config.flake.packages = lib.mkMerge packages;
 }
