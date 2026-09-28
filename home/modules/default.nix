@@ -14,6 +14,8 @@
 
     "programs" = ./programs;
     "programs/vial" = ./programs/vial;
+    "programs/freecad" = ./programs/freecad;
+    "programs/orca-slicer" = ./programs/orca-slicer;
     "programs/bambu-studio" = ./programs/bambu-studio;
     "programs/bottles" = ./programs/bottles;
     "programs/winboat" = ./programs/winboat;

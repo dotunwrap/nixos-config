@@ -4,6 +4,8 @@ with lib;
 {
   options.programs = {
     vial.enable = mkEnableOption "Enable vial";
+    freecad.enable = mkEnableOption "Enable freecad";
+    orca-slicer.enable = mkEnableOption "Enable orca-slicer";
     bambu-studio.enable = mkEnableOption "Enable bambu-studio";
     bottles.enable = mkEnableOption "Enable bottles";
     winboat.enable = mkEnableOption "Enable winboat";

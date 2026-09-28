@@ -103,6 +103,8 @@ in
     winboat.enable = true;
     bottles.enable = true;
     bambu-studio.enable = true;
+    orca-slicer.enable = true;
+    freecad.enable = true;
   };
 
   stylix.targets.firefox.profileNames = [ "default" ];
