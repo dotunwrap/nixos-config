@@ -120,6 +120,7 @@
       inputs = {
         nixpkgs.follows = "vicinae/nixpkgs";
         vicinae.follows = "vicinae";
+        systems.follows = "systems";
       };
     };
 
