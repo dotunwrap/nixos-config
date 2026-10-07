@@ -49,6 +49,7 @@ in
       };
     };
     starship.prompt = "pure";
+    vial.enable = true;
     zen-browser = lib.mkIf config.programs.zen-browser.enable (
       import ./zen {
         inherit

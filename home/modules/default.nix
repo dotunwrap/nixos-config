@@ -13,6 +13,7 @@
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;
+    "programs/vial" = ./programs/vial;
     "programs/bottles" = ./programs/bottles;
     "programs/winboat" = ./programs/winboat;
     "programs/devenv" = ./programs/devenv;

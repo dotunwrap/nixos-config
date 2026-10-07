@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    vial.enable = mkEnableOption "Enable vial";
     bottles.enable = mkEnableOption "Enable bottles";
     winboat.enable = mkEnableOption "Enable winboat";
     # NOTE: This cannot be devenv as hm has a devenv module natively
