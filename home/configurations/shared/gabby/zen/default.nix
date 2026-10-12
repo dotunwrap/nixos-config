@@ -11,6 +11,6 @@
     extensions.packages = import ./extensions.nix firefox-addons system;
     search = import ./search-engines.nix pkgs;
     keyboardShortcuts = import ./shortcuts.nix;
-    keyboardShortcutsVersion = 20;
+    keyboardShortcutsVersion = 21;
   };
 }
