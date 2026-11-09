@@ -5,6 +5,26 @@
 
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
+    # NOTE: must be declared here, not left to denful/den's own dendritic.nix
+    # mkDefault -- that default only takes effect once `inputs.den` already
+    # resolves, which requires this declaration to exist first. Bootstrap, not
+    # redundant.
+    den.url = "github:denful/den";
+
+    # NOTE: den's nix/lib/schema.nix prefers a consumer-provided `gen` input
+    # (via gen's own `lib.mkGenLibs`), falling back to an impure fetchTarball
+    # of a pinned rev when absent. That fallback fetch runs inside a sandboxed
+    # build (e.g. the nix-unit check), where it has no network access and
+    # fails outright -- declaring `gen` ourselves takes the real-input path
+    # instead, which resolves at normal flake-lock time, not inside a build.
+    gen = {
+      url = "github:sini/gen";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        import-tree.follows = "import-tree";
+      };
+    };
+
     nix-unit = {
       url = "github:nix-community/nix-unit";
       inputs = {
@@ -41,14 +61,6 @@
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix = {
-      url = "github:nixos/nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-      };
     };
 
     nix-auth = {

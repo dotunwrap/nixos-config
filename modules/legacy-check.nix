@@ -24,13 +24,12 @@ in
           "meiousei"
           "suisei"
         ] (builtins.attrNames config.flake.nixosConfigurations);
-        assert assertExactKeys "homeConfigurations" [
-          "gabby@chikyuu"
-          "gabby@kaiousei"
-          "gabby@meiousei"
-          "nia@meiousei"
-          "nia@suisei"
-        ] (builtins.attrNames config.flake.homeConfigurations);
+        # All 5 Home Manager profiles migrated to NixOS-integrated home-manager
+        # (home-manager.users.<name> inside each host's own nixosSystem) --
+        # standalone flake.homeConfigurations is retired, not replaced.
+        assert assertExactKeys "homeConfigurations" [ ] (
+          builtins.attrNames config.flake.homeConfigurations
+        );
         pkgs.runCommand "legacy-bridge-manifest-check" { } "touch $out";
 
       nix-unit.tests = {

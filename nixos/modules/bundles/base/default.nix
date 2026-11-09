@@ -41,6 +41,10 @@ in
     };
 
     nixpkgs.config.allowUnfree = true;
+    # NOTE: needed here, not just at home/modules/programs/betaflight-configurator
+    # (which used to set this itself) -- forbidden per-user under
+    # home-manager.useGlobalPkgs, same reasoning as allowUnfree above.
+    nixpkgs.config.permittedInsecurePackages = [ "nwjs-0.102.1" ];
 
     programs = {
       dconf.enable = true;

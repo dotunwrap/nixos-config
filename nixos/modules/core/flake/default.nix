@@ -1,5 +1,4 @@
 {
-  nix,
   nixpkgs,
   ...
 }:
@@ -18,7 +17,7 @@ in
 
   config = lib.mkIf config.nix.flakes.enable {
     nix = {
-      package = lib.mkDefault nix.packages.${pkgs.stdenv.hostPlatform.system}.nix-cli;
+      package = lib.mkDefault pkgs.nix;
 
       settings.experimental-features = [
         "nix-command"

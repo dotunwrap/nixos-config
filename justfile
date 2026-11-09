@@ -7,18 +7,21 @@ ossw:
 osadd PATH MODULE:
   ./scripts/mkmodule.sh nixos {{PATH}} {{MODULE}}
 
+# NOTE: standalone homeConfigurations.* is retired -- Home Manager now
+# activates as part of `just ossw` (home-manager.users.<name> inside each
+# host's own nixosSystem). Full justfile cleanup deferred; this is a minimal
+# stopgap so these don't error outright.
 hmev USER SYSTEM *ARGS:
-  nix eval .#homeConfigurations."{{USER}}@{{SYSTEM}}" {{ARGS}}
+  @echo "no longer applicable -- Home Manager is now part of 'just ossw'"
 
 hmsw:
-  nh home switch
+  @echo "no longer applicable -- Home Manager is now part of 'just ossw'"
 
 hmadd PATH MODULE:
   ./scripts/mkmodule.sh home {{PATH}} {{MODULE}}
 
 switch:
   just ossw
-  just hmsw
 
 clean:
   nh clean all --keep 5 --keep-since 7d

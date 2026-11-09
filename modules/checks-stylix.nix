@@ -3,7 +3,12 @@
   perSystem =
     { pkgs, ... }:
     let
-      hmConfig = profile: config.flake.homeConfigurations.${profile}.config;
+      # NOTE: Home Manager moved from standalone `flake.homeConfigurations.*`
+      # to NixOS-integrated `home-manager.users.<name>` inside each host's own
+      # nixosSystem -- read from there instead now.
+      hmConfig =
+        { host, user }:
+        config.flake.nixosConfigurations.${host}.config.home-manager.users.${user};
 
       # NOTE: regression pin for c8bca61 -- stylix's x11/sxiv targets both
       # default to enabled upstream and both write ~/.Xresources; only the
@@ -11,9 +16,10 @@
       stylixTargetFailures =
         builtins.concatMap
           (
-            profile:
+            { host, user }:
             let
-              cfg = hmConfig profile;
+              profile = "${user}@${host}";
+              cfg = hmConfig { inherit host user; };
               dwm = cfg.bundles.dwm.enable;
               x11 = cfg.stylix.targets.x11.enable;
               sxiv = cfg.stylix.targets.sxiv.enable;
@@ -23,11 +29,26 @@
             ++ lib.optional sxiv "${profile}: stylix.targets.sxiv.enable is true (writes ~/.Xresources unconditionally)"
           )
           [
-            "gabby@chikyuu"
-            "gabby@kaiousei"
-            "gabby@meiousei"
-            "nia@meiousei"
-            "nia@suisei"
+            {
+              host = "chikyuu";
+              user = "gabby";
+            }
+            {
+              host = "kaiousei";
+              user = "gabby";
+            }
+            {
+              host = "meiousei";
+              user = "gabby";
+            }
+            {
+              host = "meiousei";
+              user = "nia";
+            }
+            {
+              host = "suisei";
+              user = "nia";
+            }
           ];
     in
     {

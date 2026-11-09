@@ -30,6 +30,7 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    den.url = "github:denful/den";
     determinvim = {
       url = "github:dotunwrap/determinvim";
       inputs = {
@@ -51,6 +52,13 @@
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
+    };
+    gen = {
+      url = "github:sini/gen";
+      inputs = {
+        import-tree.follows = "import-tree";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -76,13 +84,6 @@
     niri-flake = {
       url = "github:epireyn/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix = {
-      url = "github:nixos/nix";
-      inputs = {
-        flake-parts.follows = "flake-parts";
-        nixpkgs.follows = "nixpkgs";
-      };
     };
     nix-auth = {
       url = "github:numtide/nix-auth";

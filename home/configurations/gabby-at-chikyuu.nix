@@ -9,6 +9,4 @@ lib.recursiveUpdate {
 
   themes.everforest.enable = true;
   stylix.image = ../../assets/wallpapers/stephen_njoto.png;
-
-  home.stateVersion = "24.11";
 } (import ./shared/gabby inputs default)

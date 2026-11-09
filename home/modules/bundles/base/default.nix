@@ -21,8 +21,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    nixpkgs.config.allowUnfree = true;
-
+    # NOTE: not `nixpkgs.config.allowUnfree` here -- forbidden under
+    # `home-manager.useGlobalPkgs` (now on for every NixOS-integrated profile),
+    # and redundant anyway: the NixOS-side `base` bundle already sets it on the
+    # one shared `pkgs` instance every profile now uses.
     home.packages = [
       config.bundles.base.monolisaVersion
     ];
