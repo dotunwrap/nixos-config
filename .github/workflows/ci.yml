@@ -18,13 +18,13 @@ permissions:
   contents: read
 
 jobs:
-  plan:
-    name: plan
+  checks-matrix:
+    name: checks-matrix
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
       nix-version: ${{ steps.nix-version.outputs.version }}
-      packages: ${{ steps.set-matrix.outputs.packages }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v5
@@ -36,15 +36,15 @@ jobs:
         with:
           nix-version: ${{ steps.nix-version.outputs.version }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Compute build matrix
+      - name: Compute checks matrix
         id: set-matrix
         run: |
-          packages=$(nix eval .#packages.x86_64-linux --apply builtins.attrNames --json)
-          echo "packages=$packages" >> "$GITHUB_OUTPUT"
+          matrix=$(nix eval --json '.#githubActions.matrix')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   devenv_test:
     name: devenv test
-    needs: plan
+    needs: checks-matrix
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -53,7 +53,7 @@ jobs:
       - name: Setup Nix
         uses: ./.github/actions/setup-nix
         with:
-          nix-version: ${{ needs.plan.outputs.nix-version }}
+          nix-version: ${{ needs.checks-matrix.outputs.nix-version }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Install cachix
         uses: cachix/cachix-action@v16
@@ -64,24 +64,21 @@ jobs:
       - name: Build the devenv shell and run all git hooks
         run: devenv test
 
-  build:
-    name: build ${{ matrix.package }}
-    needs: plan
-    runs-on: ubuntu-latest
+  checks:
+    name: ${{ matrix.name }}
+    needs: checks-matrix
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
-      matrix:
-        package: ${{ fromJson(needs.plan.outputs.packages) }}
+      matrix: ${{ fromJson(needs.checks-matrix.outputs.matrix) }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v5
       - name: Setup Nix
         uses: ./.github/actions/setup-nix
         with:
-          nix-version: ${{ needs.plan.outputs.nix-version }}
+          nix-version: ${{ needs.checks-matrix.outputs.nix-version }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Build
-        env:
-          PACKAGE: ${{ matrix.package }}
-        run: nix build ".#packages.x86_64-linux.\"$PACKAGE\"" --no-link --print-build-logs
+        run: nix build -L ".#${{ matrix.attr }}" --no-link

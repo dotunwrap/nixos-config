@@ -6,10 +6,7 @@
       timeout = 2;
     };
 
-    initrd = {
-      enable = true;
-      systemd.enable = true;
-    };
+    initrd.enable = true;
 
     consoleLogLevel = 3;
   };

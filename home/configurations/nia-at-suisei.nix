@@ -12,6 +12,4 @@ lib.recursiveUpdate {
     flavor = "hard";
   };
   stylix.image = ../../assets/wallpapers/bubbles.jpg;
-
-  home.stateVersion = "24.11";
 } (import ./shared/nia inputs default)

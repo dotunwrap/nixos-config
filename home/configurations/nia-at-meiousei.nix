@@ -14,6 +14,4 @@ lib.recursiveUpdate {
     subaccent = "lavender";
   };
   stylix.image = ../../assets/wallpapers/anyb-girl.png;
-
-  home.stateVersion = "24.11";
 } (import ./shared/nia inputs default)
