@@ -10,10 +10,13 @@
       intoAttr = [ ];
       users.gabby.classes = [ "homeManager" ];
     };
-    europa = {
-      intoAttr = [ ];
-      users.nia = { };
-    };
+    # No `users.nia` here: unlike the other 4 hosts, `nixos/configurations/europa.nix`
+    # has no real `users.users.nia` account yet (still a commented-out TODO) -- Den
+    # synthesizes a `users.users.nia` stub for ANY declared user entity regardless of
+    # `classes`, which fails NixOS's own user assertions (isNormalUser/isSystemUser/
+    # group all unset) the moment a real account doesn't back it. Add this back once
+    # europa's real account exists.
+    europa.intoAttr = [ ];
     kaiousei = {
       intoAttr = [ ];
       users.gabby.classes = [ "homeManager" ];

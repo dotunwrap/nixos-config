@@ -60,6 +60,29 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    gen-algebra.follows = "gen/gen-algebra";
+    gen-aspects.follows = "gen/gen-aspects";
+    gen-assemble.follows = "gen/gen-assemble";
+    gen-bind.follows = "gen/gen-bind";
+    gen-class.follows = "gen/gen-class";
+    gen-delivery.follows = "gen/gen-delivery";
+    gen-dispatch.follows = "gen/gen-dispatch";
+    gen-graph.follows = "gen/gen-graph";
+    gen-identity.follows = "gen/gen-identity";
+    gen-inspect.follows = "gen/gen-inspect";
+    gen-link.follows = "gen/gen-link";
+    gen-memo.follows = "gen/gen-memo";
+    gen-merge.follows = "gen/gen-merge";
+    gen-prelude.follows = "gen/gen-prelude";
+    gen-product.follows = "gen/gen-product";
+    gen-program.follows = "gen/gen-program";
+    gen-rules.follows = "gen/gen-rules";
+    gen-schema.follows = "gen/gen-schema";
+    gen-scope.follows = "gen/gen-scope";
+    gen-select.follows = "gen/gen-select";
+    gen-settings.follows = "gen/gen-settings";
+    gen-types.follows = "gen/gen-types";
+    gen-view.follows = "gen/gen-view";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -91,6 +114,13 @@
         flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
         treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+    nix-effects = {
+      url = "github:denful/nix-effects";
+      inputs = {
+        nix-unit.follows = "nix-unit";
+        nixpkgs.follows = "nixpkgs";
       };
     };
     nix-github-actions = {

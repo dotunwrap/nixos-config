@@ -25,6 +25,60 @@
       };
     };
 
+    # NOTE: same fallback-avoidance shape as `gen` above, for Den's (currently
+    # unused) FX pipeline dependency -- `nix/lib/fx.nix` does
+    # `inputs.nix-effects.lib or nfx`, where `nfx` is an impure fetchTarball
+    # fallback forced the moment `inputs.nix-effects` isn't declared. That
+    # fallback is reachable from nix-unit's sandboxed re-evaluation of Den's
+    # module surface even though this repo doesn't use the FX pipeline at all
+    # (not adopted -- see the plan's "Not adopting (yet)" list). Declaring the
+    # real input, unused otherwise, keeps the sandboxed check off that fallback.
+    nix-effects = {
+      url = "github:denful/nix-effects";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nix-unit.follows = "nix-unit";
+      };
+    };
+
+    # NOTE: nix-unit's own flake module (lib/modules/flake/system.nix) only
+    # pre-materializes whatever this repo's `modules/nix-unit.nix` hands it via
+    # `perSystem.nix-unit.inputs` (currently the whole top-level `inputs`
+    # attrset, passed through as `--override-input` flags) into the sandboxed
+    # check's build inputs -- anything NOT a top-level input of this flake is
+    # invisible to that sandbox and triggers a real (failing) network fetch the
+    # moment Den's code forces evaluation of it. `gen`'s own sub-libraries
+    # (gen-program et al, referenced directly inside gen's own `outputs`
+    # function as `inputs.gen-algebra` etc.) are exactly that: inputs of `gen`,
+    # not of us. Promoting each to a top-level `follows` here (mirroring gen's
+    # own "HUB" convergence pattern one level up) makes them real top-level
+    # inputs of this flake too, so the existing `inputs = inputs;` passthrough
+    # picks them up automatically -- same fix shape as the `gen` input itself
+    # above, just one level deeper.
+    gen-algebra.follows = "gen/gen-algebra";
+    gen-aspects.follows = "gen/gen-aspects";
+    gen-assemble.follows = "gen/gen-assemble";
+    gen-bind.follows = "gen/gen-bind";
+    gen-class.follows = "gen/gen-class";
+    gen-delivery.follows = "gen/gen-delivery";
+    gen-dispatch.follows = "gen/gen-dispatch";
+    gen-graph.follows = "gen/gen-graph";
+    gen-identity.follows = "gen/gen-identity";
+    gen-inspect.follows = "gen/gen-inspect";
+    gen-link.follows = "gen/gen-link";
+    gen-memo.follows = "gen/gen-memo";
+    gen-merge.follows = "gen/gen-merge";
+    gen-prelude.follows = "gen/gen-prelude";
+    gen-product.follows = "gen/gen-product";
+    gen-program.follows = "gen/gen-program";
+    gen-rules.follows = "gen/gen-rules";
+    gen-schema.follows = "gen/gen-schema";
+    gen-scope.follows = "gen/gen-scope";
+    gen-select.follows = "gen/gen-select";
+    gen-settings.follows = "gen/gen-settings";
+    gen-types.follows = "gen/gen-types";
+    gen-view.follows = "gen/gen-view";
+
     nix-unit = {
       url = "github:nix-community/nix-unit";
       inputs = {

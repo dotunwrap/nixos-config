@@ -1176,6 +1176,29 @@
         "type": "github"
       }
     },
+    "nix-effects": {
+      "inputs": {
+        "nix-unit": [
+          "nix-unit"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1778686186,
+        "narHash": "sha256-oxjrcHFSV2+Rxg4LE4Hupa5HjleTvU1Ir6jp5SburLE=",
+        "owner": "denful",
+        "repo": "nix-effects",
+        "rev": "c3c68a45deb892d028711eeff8b80937e30a90dd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "denful",
+        "repo": "nix-effects",
+        "type": "github"
+      }
+    },
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
@@ -1410,12 +1433,105 @@
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
         "gen": "gen",
+        "gen-algebra": [
+          "gen",
+          "gen-algebra"
+        ],
+        "gen-aspects": [
+          "gen",
+          "gen-aspects"
+        ],
+        "gen-assemble": [
+          "gen",
+          "gen-assemble"
+        ],
+        "gen-bind": [
+          "gen",
+          "gen-bind"
+        ],
+        "gen-class": [
+          "gen",
+          "gen-class"
+        ],
+        "gen-delivery": [
+          "gen",
+          "gen-delivery"
+        ],
+        "gen-dispatch": [
+          "gen",
+          "gen-dispatch"
+        ],
+        "gen-graph": [
+          "gen",
+          "gen-graph"
+        ],
+        "gen-identity": [
+          "gen",
+          "gen-identity"
+        ],
+        "gen-inspect": [
+          "gen",
+          "gen-inspect"
+        ],
+        "gen-link": [
+          "gen",
+          "gen-link"
+        ],
+        "gen-memo": [
+          "gen",
+          "gen-memo"
+        ],
+        "gen-merge": [
+          "gen",
+          "gen-merge"
+        ],
+        "gen-prelude": [
+          "gen",
+          "gen-prelude"
+        ],
+        "gen-product": [
+          "gen",
+          "gen-product"
+        ],
+        "gen-program": [
+          "gen",
+          "gen-program"
+        ],
+        "gen-rules": [
+          "gen",
+          "gen-rules"
+        ],
+        "gen-schema": [
+          "gen",
+          "gen-schema"
+        ],
+        "gen-scope": [
+          "gen",
+          "gen-scope"
+        ],
+        "gen-select": [
+          "gen",
+          "gen-select"
+        ],
+        "gen-settings": [
+          "gen",
+          "gen-settings"
+        ],
+        "gen-types": [
+          "gen",
+          "gen-types"
+        ],
+        "gen-view": [
+          "gen",
+          "gen-view"
+        ],
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "monolisa": "monolisa",
         "niavim": "niavim",
         "niri-flake": "niri-flake",
         "nix-auth": "nix-auth",
+        "nix-effects": "nix-effects",
         "nix-github-actions": "nix-github-actions",
         "nix-unit": "nix-unit",
         "nixos-hardware": "nixos-hardware",
