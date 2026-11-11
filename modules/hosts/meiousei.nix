@@ -6,6 +6,7 @@
     includes = [
       den.aspects.gaming
       den.aspects.dwm
+      den.aspects.development
     ];
 
     nixos =

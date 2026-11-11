@@ -1,7 +1,10 @@
 { den, inputs, ... }:
 {
   den.aspects.kaiousei = {
-    includes = [ den.aspects.niri ];
+    includes = [
+      den.aspects.niri
+      den.aspects.development
+    ];
 
     nixos =
       { ... }:

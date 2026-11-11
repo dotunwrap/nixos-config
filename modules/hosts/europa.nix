@@ -1,23 +1,28 @@
+{ den, ... }:
 {
-  den.aspects.europa.nixos =
-    { ... }:
-    {
-      imports = [ ./_hardware/europa.nix ];
+  den.aspects.europa = {
+    includes = [ den.aspects.development ];
 
-      networking = {
-        hostName = "europa";
-        networkmanager.enable = true;
-      };
+    nixos =
+      { ... }:
+      {
+        imports = [ ./_hardware/europa.nix ];
 
-      services.libinput = {
-        enable = true;
-        touchpad = {
-          tapping = true;
-          naturalScrolling = true;
+        networking = {
+          hostName = "europa";
+          networkmanager.enable = true;
         };
-      };
 
-      time.timeZone = "America/New_York";
-      i18n.defaultLocale = "en_US.UTF-8";
-    };
+        services.libinput = {
+          enable = true;
+          touchpad = {
+            tapping = true;
+            naturalScrolling = true;
+          };
+        };
+
+        time.timeZone = "America/New_York";
+        i18n.defaultLocale = "en_US.UTF-8";
+      };
+  };
 }

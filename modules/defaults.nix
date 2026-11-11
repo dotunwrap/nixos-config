@@ -1,12 +1,13 @@
 { inputs, lib, ... }:
 {
   # Formerly nixos/modules/bundles/base, nixos/modules/core/{cachix,flake,nh,nix},
-  # nixos/configurations/bootloader/*, and the development bundle's NixOS half
-  # (hardware.flipperzero) -- every one of these was unconditional on every
-  # host (base/bootloader/core via no gating at all; development because
-  # every host's activeBundles listed it), so they all move to
-  # den.default.nixos (broadcast to every host) rather than becoming
-  # aspects some host would need to `includes`.
+  # and nixos/configurations/bootloader/* -- all unconditional on every host
+  # with no gating at all, so they move to den.default.nixos (broadcast to
+  # every host) rather than becoming aspects some host would need to
+  # `includes`. (The development bundle, unlike these, stays its own aspect
+  # -- see modules/aspects/development.nix -- since it's something a host or
+  # user should be able to opt out of, even though every one currently
+  # includes it.)
   den.default.nixos =
     { pkgs, ... }:
     {
@@ -44,8 +45,6 @@
           };
         };
         enableAllFirmware = true;
-        # Formerly the development bundle.
-        flipperzero.enable = true;
       };
 
       nixpkgs.config.allowUnfree = true;
@@ -168,10 +167,10 @@
     };
 
   # Formerly home/modules/bundles/base (force-enabled for every profile via
-  # home/modules/misc/home, bypassing activeBundles entirely) and the
-  # development bundle's home half -- both unconditional on every
-  # home-manager user, so both move to den.default.homeManager (broadcast to
-  # every user) the same way. `monolisa.package` keeps the same per-user
+  # home/modules/misc/home, bypassing activeBundles entirely) -- unconditional
+  # on every home-manager user with no gating at all, so it moves to
+  # den.default.homeManager (broadcast to every user). `monolisa.package`
+  # keeps the same per-user
   # override point the old `bundles.base.monolisaVersion` option gave nia's
   # profile (see modules/users/nia.nix).
   den.default.homeManager =
@@ -224,17 +223,6 @@
             pkgs.xsel
             pkgs.zip
             pkgs.unzip
-            # Formerly the development bundle.
-            pkgs.devenv
-            pkgs.httpie
-            pkgs.omnix
-            pkgs.clang
-            pkgs.clang-tools
-            pkgs.deno
-            pkgs.nodejs
-            pkgs.rust-bin.stable.latest.default
-            pkgs.typst
-            pkgs.zig
           ];
         };
 
@@ -247,8 +235,6 @@
           music = null;
           videos = null;
           setSessionVariables = true;
-          # Formerly the development bundle.
-          extraConfig.CODE = "${config.home.homeDirectory}/Code";
         };
 
         fonts.fontconfig = {
@@ -389,19 +375,6 @@
             };
           };
 
-          # Formerly the development bundle.
-          claude-code.mcpServers = {
-            deepwiki = {
-              type = "http";
-              url = "https://mcp.deepwiki.com/mcp";
-            };
-          };
-          difftastic.git.enable = lib.mkDefault true;
-          go = {
-            enable = true;
-            telemetry.mode = "off";
-          };
-          bun.enable = true;
         };
 
         # Formerly home/modules/themes/default.nix's shared stylix dispatch,
@@ -433,12 +406,6 @@
             # generation build.
             gtksourceview.enable = lib.mkDefault false;
           };
-        };
-
-        xdg.configFile."devenv/config.yaml".source = (pkgs.formats.yaml { }).generate "config.yaml" {
-          # yaml-language-server: $schema=https://devenv.sh/devenv.user.schema.json
-          version = 1;
-          shell.prompt_prefix = false;
         };
 
         services = {
