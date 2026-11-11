@@ -108,23 +108,11 @@
         i18n.defaultLocale = "en_US.UTF-8";
       };
 
-    # Formerly home/modules/themes/everforest + the per-profile
-    # `themes.everforest.enable`/`stylix.image` in
-    # home/configurations/gabby-at-chikyuu.nix. Host-scoped (provides.to-users)
-    # rather than user-scoped since it's a machine-appearance choice, not a
-    # personal one -- confirmed by kaiousei/meiousei sharing an identical
-    # theme+wallpaper across their (different) users. The shared stylix
-    # dispatch (enable/polarity/fonts/cursor-defaults/targets) lives in
-    # modules/defaults.nix; this is just the everforest-specific part.
-    provides.to-users.homeManager =
-      { pkgs, ... }:
-      {
-        stylix.image = ../../assets/wallpapers/stephen_njoto.png;
-        # polarity defaults to "dark" (modules/defaults.nix); everforest has
-        # no light-mode medium-flavor scheme upstream yet, so that branch
-        # would need modules/hosts/everforest-light-medium.yaml if polarity
-        # were ever overridden to "light" here.
-        stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest-dark-medium.yaml";
-      };
+    # Theme+wallpaper for whoever's logged in is their own choice now (see
+    # modules/users/gabby.nix) -- not set here. The host is still free to
+    # theme its own host-scoped surfaces (bootloader splash, display
+    # manager, etc.) completely independently via its own `nixos`-class
+    # `stylix.*` above, entirely unrelated to any user's homeManager-class
+    # theme; chikyuu just doesn't need to right now.
   };
 }

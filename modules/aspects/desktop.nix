@@ -5,7 +5,7 @@
   # qbittorrent, signal, spotify, tor-browser, vesktop, wezterm, zen-browser).
   # Included by both den.aspects.dwm and den.aspects.niri rather than
   # duplicated in each.
-  den.aspects.desktop-shared = {
+  den.aspects.desktop = {
     nixos =
       {
         config,

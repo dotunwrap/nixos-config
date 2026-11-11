@@ -1,4 +1,7 @@
 { inputs, ... }:
+let
+  themes = import ./_themes.nix;
+in
 {
   den.aspects.nia = {
     # Formerly nixos/configurations/users/nia.nix -- lands on users.users.nia
@@ -127,5 +130,17 @@
 
         stylix.targets.firefox.profileNames = [ "default" ];
       };
+
+    # Theme+wallpaper is her own choice, not her host's -- see
+    # modules/users/gabby.nix for why this lives here instead of on the host.
+    provides = {
+      meiousei.homeManager = themes.catppuccin {
+        image = ../../assets/wallpapers/anyb-girl.png;
+      };
+      suisei.homeManager = themes.everforest {
+        image = ../../assets/wallpapers/bubbles.jpg;
+        flavor = "hard";
+      };
+    };
   };
 }

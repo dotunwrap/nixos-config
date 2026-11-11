@@ -59,44 +59,9 @@
         i18n.defaultLocale = "en_US.UTF-8";
       };
 
-    # Formerly home/modules/themes/catppuccin (flavor=mocha, accent=mauve,
-    # subaccent=lavender) + the per-profile `themes.catppuccin.*`/`stylix.image`
-    # shared identically by gabby-at-meiousei and nia-at-meiousei -- confirming
-    # it's a machine choice. Same catppuccin instance as kaiousei. The shared
-    # stylix dispatch lives in modules/defaults.nix.
-    provides.to-users.homeManager =
-      {
-        config,
-        pkgs,
-        lib,
-        ...
-      }:
-      {
-        stylix = {
-          image = ../../assets/wallpapers/anyb-girl.png;
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-          override =
-            let
-              rawColors = config.stylix.base16.mkSchemeAttrs config.stylix.base16Scheme;
-            in
-            {
-              base0D = rawColors.base0E;
-              base0E = rawColors.base0D;
-            };
-          cursor = {
-            size = 24;
-            package = pkgs.catppuccin-cursors.mochaMauve;
-            name = "catppuccin-mocha-mauve-cursors";
-          };
-        };
-
-        programs.freetube.settings = lib.mkIf config.programs.freetube.enable {
-          baseTheme = "catppuccinMocha";
-          mainColor = "CatppuccinMochaMauve";
-          secColor = "CatppuccinMochaLavender";
-          sponsorBlockSponsor.color = "CatppuccinMochaGreen";
-          sponsorBlockSelfPromo.color = "CatppuccinMochaYellow";
-        };
-      };
+    # Theme+wallpaper is each user's own choice now (see
+    # modules/users/gabby.nix and modules/users/nia.nix) -- not set here.
+    # gabby and nia happen to each pick the same catppuccin instance for
+    # themselves on this host today, but that's their call, not meiousei's.
   };
 }

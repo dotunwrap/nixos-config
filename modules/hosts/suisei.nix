@@ -38,16 +38,7 @@
         };
       };
 
-    # Formerly home/modules/themes/everforest (flavor=hard) + the per-profile
-    # `themes.everforest.*`/`stylix.image` in
-    # home/configurations/nia-at-suisei.nix. The shared stylix dispatch lives
-    # in modules/defaults.nix.
-    provides.to-users.homeManager =
-      { pkgs, ... }:
-      {
-        stylix.image = ../../assets/wallpapers/bubbles.jpg;
-        # polarity defaults to "dark" (modules/defaults.nix).
-        stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest-dark-hard.yaml";
-      };
+    # Theme+wallpaper is nia's own choice now (see modules/users/nia.nix) --
+    # not set here.
   };
 }

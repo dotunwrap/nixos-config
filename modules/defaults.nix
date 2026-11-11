@@ -14,15 +14,18 @@
       system.stateVersion = lib.mkDefault "25.05";
 
       # Formerly nixos/configurations/bootloader/<host>.nix -- identical on
-      # all 5 hosts.
+      # all 5 hosts today, but mkDefault throughout (not plain assignment) so
+      # any host can cleanly override a single field with a plain assignment
+      # of its own, rather than needing lib.mkForce to fight a same-priority
+      # conflict.
       boot = {
         loader = {
-          systemd-boot.enable = true;
-          efi.canTouchEfiVariables = true;
-          timeout = 2;
+          systemd-boot.enable = lib.mkDefault true;
+          efi.canTouchEfiVariables = lib.mkDefault true;
+          timeout = lib.mkDefault 2;
         };
-        initrd.enable = true;
-        consoleLogLevel = 3;
+        initrd.enable = lib.mkDefault true;
+        consoleLogLevel = lib.mkDefault 3;
       };
 
       environment.systemPackages = [

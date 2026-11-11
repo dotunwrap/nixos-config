@@ -1,4 +1,7 @@
 { inputs, ... }:
+let
+  themes = import ./_themes.nix;
+in
 {
   den.aspects.gabby = {
     # Formerly nixos/configurations/users/gabby.nix -- lands on
@@ -86,5 +89,20 @@
           "default"
         ];
       };
+
+    # Theme+wallpaper is her own choice, not her host's -- set per host she's
+    # actually on (she doesn't use the same one everywhere), from her own
+    # file, rather than a host deciding it for whoever's logged in.
+    provides = {
+      chikyuu.homeManager = themes.everforest {
+        image = ../../assets/wallpapers/stephen_njoto.png;
+      };
+      kaiousei.homeManager = themes.catppuccin {
+        image = ../../assets/wallpapers/anyb-girl.png;
+      };
+      meiousei.homeManager = themes.catppuccin {
+        image = ../../assets/wallpapers/anyb-girl.png;
+      };
+    };
   };
 }

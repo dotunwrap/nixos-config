@@ -1,7 +1,7 @@
 { inputs, den, ... }:
 {
   den.aspects.niri = {
-    includes = [ den.aspects.desktop-shared ];
+    includes = [ den.aspects.desktop ];
 
     nixos =
       { pkgs, ... }:
