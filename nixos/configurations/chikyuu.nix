@@ -10,7 +10,6 @@ _:
     "base"
     "development"
     "dwm"
-    "gaming"
   ];
 
   fileSystems = {

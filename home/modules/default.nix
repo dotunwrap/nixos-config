@@ -4,7 +4,6 @@
     "bundles/base" = ./bundles/base;
     "bundles/development" = ./bundles/development;
     "bundles/dwm" = ./bundles/dwm;
-    "bundles/gaming" = ./bundles/gaming;
     "bundles/niri" = ./bundles/niri;
 
     "misc" = ./misc;
@@ -42,7 +41,6 @@
     "programs/trezor-suite" = ./programs/trezor-suite;
     "programs/spotify" = ./programs/spotify;
     "programs/omnix" = ./programs/omnix;
-    "programs/wowup" = ./programs/wowup;
     "programs/qbittorrent" = ./programs/qbittorrent;
     "programs/protonvpn" = ./programs/protonvpn;
     "programs/soapysdr" = ./programs/soapysdr;
@@ -51,9 +49,7 @@
     "programs/gqrx" = ./programs/gqrx;
     "programs/monero-cli" = ./programs/monero-cli;
     "programs/tor-browser" = ./programs/tor-browser;
-    "programs/mcrcon" = ./programs/mcrcon;
     "programs/httpie" = ./programs/httpie;
-    "programs/steam-tui" = ./programs/steam-tui;
     "programs/brightnessctl" = ./programs/brightnessctl;
     "programs/btop" = ./programs/btop;
     "programs/magic-wormhole" = ./programs/magic-wormhole;

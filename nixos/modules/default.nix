@@ -4,7 +4,6 @@
     "bundles/base" = ./bundles/base;
     "bundles/development" = ./bundles/development;
     "bundles/dwm" = ./bundles/dwm;
-    "bundles/gaming" = ./bundles/gaming;
     "bundles/niri" = ./bundles/niri;
 
     "core/cachix" = ./core/cachix;
@@ -19,7 +18,6 @@
     "programs" = ./programs;
     "programs/libnotify" = ./programs/libnotify;
     "programs/gnupg" = ./programs/gnupg;
-    "programs/protonup-ng" = ./programs/protonup-ng;
     "programs/usbutils" = ./programs/usbutils;
     "programs/xdg-utils" = ./programs/xdg-utils;
 

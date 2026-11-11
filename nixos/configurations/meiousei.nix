@@ -12,7 +12,6 @@ _:
     "base"
     "development"
     "dwm"
-    "gaming"
   ];
 
   hardware = {

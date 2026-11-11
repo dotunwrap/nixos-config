@@ -9,7 +9,6 @@
     "base"
     "development"
     "niri"
-    "gaming"
   ];
 
   networking = {

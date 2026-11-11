@@ -4,7 +4,6 @@ lib.recursiveUpdate {
   activeBundles = [
     "development"
     "niri"
-    "gaming"
   ];
 
   themes.everforest = {

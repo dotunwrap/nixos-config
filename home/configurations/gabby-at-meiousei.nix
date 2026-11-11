@@ -4,7 +4,6 @@ lib.recursiveUpdate {
   activeBundles = [
     "development"
     "dwm"
-    "gaming"
   ];
 
   themes.catppuccin = {
