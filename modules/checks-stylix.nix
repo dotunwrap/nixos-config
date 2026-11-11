@@ -11,8 +11,10 @@
         config.flake.nixosConfigurations.${host}.config.home-manager.users.${user};
 
       # NOTE: regression pin for c8bca61 -- stylix's x11/sxiv targets both
-      # default to enabled upstream and both write ~/.Xresources; only the
-      # dwm/X11 bundle should ever pull that in.
+      # default to enabled upstream and both write ~/.Xresources; only dwm
+      # hosts should ever pull that in. dwm/niri are now host-driven aspects
+      # rather than per-user bundle flags, so the discriminator is the same
+      # one modules/defaults.nix's stylix dispatch uses: xsession.enable.
       stylixTargetFailures =
         builtins.concatMap
           (
@@ -20,7 +22,7 @@
             let
               profile = "${user}@${host}";
               cfg = hmConfig { inherit host user; };
-              dwm = cfg.bundles.dwm.enable;
+              dwm = cfg.xsession.enable;
               x11 = cfg.stylix.targets.x11.enable;
               sxiv = cfg.stylix.targets.sxiv.enable;
             in

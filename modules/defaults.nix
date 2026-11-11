@@ -1,15 +1,32 @@
 { inputs, lib, ... }:
 {
-  # Formerly nixos/modules/bundles/base -- unconditional on every host, so it
-  # moves to den.default.nixos (broadcast to every host) rather than becoming
-  # an aspect some host would need to `includes`.
+  # Formerly nixos/modules/bundles/base, nixos/modules/core/{cachix,flake,nh,nix},
+  # nixos/configurations/bootloader/*, and the development bundle's NixOS half
+  # (hardware.flipperzero) -- every one of these was unconditional on every
+  # host (base/bootloader/core via no gating at all; development because
+  # every host's activeBundles listed it), so they all move to
+  # den.default.nixos (broadcast to every host) rather than becoming
+  # aspects some host would need to `includes`.
   den.default.nixos =
     { pkgs, ... }:
     {
       system.stateVersion = lib.mkDefault "25.05";
 
+      # Formerly nixos/configurations/bootloader/<host>.nix -- identical on
+      # all 5 hosts.
+      boot = {
+        loader = {
+          systemd-boot.enable = true;
+          efi.canTouchEfiVariables = true;
+          timeout = 2;
+        };
+        initrd.enable = true;
+        consoleLogLevel = 3;
+      };
+
       environment.systemPackages = [
         pkgs.at-spi2-atk
+        pkgs.cachix
         inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.home-manager
       ];
 
@@ -27,6 +44,8 @@
           };
         };
         enableAllFirmware = true;
+        # Formerly the development bundle.
+        flipperzero.enable = true;
       };
 
       nixpkgs.config.allowUnfree = true;
@@ -37,17 +56,21 @@
 
       programs = {
         dconf.enable = true;
-        gnupg.enable = true;
-        libnotify.enable = true;
         screen.enable = true;
-        usbutils.enable = true;
-        xdg-utils.enable = true;
         zsh.enable = true;
+
+        gnupg.agent = {
+          enable = true;
+          pinentryPackage = pkgs.pinentry-curses;
+          enableSSHSupport = true;
+        };
       };
 
       security.polkit.enable = true;
 
       services = {
+        pcscd.enable = true;
+
         dbus = {
           enable = true;
           implementation = "broker";
@@ -73,14 +96,84 @@
         udisks2.enable = true;
         upower.enable = true;
       };
+
+      # Formerly nixos/modules/core/{cachix,nh,nix,flake} -- all unconditional
+      # on every host (flake's own `nix.flakes.enable` gate was always
+      # switched on unconditionally from parts/system-configs.nix's own
+      # baseline, never actually gated).
+      programs.nh = {
+        enable = true;
+        flake = "/etc/nixos";
+        clean = {
+          enable = true;
+          dates = "weekly";
+          extraArgs = "--keep 5 --keep-since 7d";
+        };
+      };
+
+      systemd.tmpfiles.rules = [
+        "L+ /etc/nixpkgs/channels/nixpkgs     - - - - ${inputs.nixpkgs}"
+      ];
+
+      nix = {
+        package = lib.mkDefault pkgs.nix;
+        registry.nixpkgs.flake = inputs.nixpkgs;
+        nixPath = [
+          "nixpkgs=/etc/nixpkgs/channels/nixpkgs"
+          "/nix/var/nix/profiles/per-user/root/channels"
+        ];
+
+        # nh clean all already covers generation/gc cleanup on its own
+        # schedule; leaving nix.gc.automatic on too just duplicates the work
+        # and trips the warning programs.nh emits when both are enabled.
+        gc.automatic = lib.mkForce false;
+
+        optimise = {
+          automatic = lib.mkDefault true;
+          dates = lib.mkDefault [ "daily" ];
+          persistent = lib.mkDefault true;
+          randomizedDelaySec = lib.mkDefault "45min";
+        };
+
+        settings = {
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
+          substituters = [
+            "https://cache.nixos.org"
+            "https://niri-epireyn.cachix.org"
+            "https://nix-community.cachix.org"
+            "https://vicinae.cachix.org"
+            "https://yazi.cachix.org"
+          ];
+          trusted-public-keys = [
+            "niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+            "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+            "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+          ];
+          auto-optimise-store = lib.mkDefault true;
+          # Plain assignment, not mkDefault: nixpkgs' own nix.nix module sets
+          # trusted-users = [ "root" ] at normal priority, which otherwise
+          # wins outright over a weaker mkDefault and silently drops "@wheel".
+          trusted-users = [
+            "root"
+            "@wheel"
+          ];
+          min-free = lib.mkDefault (5 * (1024 * 1024 * 1024));
+          max-free = lib.mkDefault (25 * (1024 * 1024 * 1024));
+        };
+      };
     };
 
-  # Formerly home/modules/bundles/base -- unconditional on every home-manager
-  # user (it was force-enabled for every profile via home/modules/misc/home,
-  # bypassing activeBundles entirely; den.default.homeManager achieves the
-  # same "every user" broadcast natively). `monolisa.package` keeps the same
-  # per-user override point the old `bundles.base.monolisaVersion` option
-  # gave nia's profile (see home/configurations/shared/nia/default.nix).
+  # Formerly home/modules/bundles/base (force-enabled for every profile via
+  # home/modules/misc/home, bypassing activeBundles entirely) and the
+  # development bundle's home half -- both unconditional on every
+  # home-manager user, so both move to den.default.homeManager (broadcast to
+  # every user) the same way. `monolisa.package` keeps the same per-user
+  # override point the old `bundles.base.monolisaVersion` option gave nia's
+  # profile (see modules/users/nia.nix).
   den.default.homeManager =
     {
       config,
@@ -94,11 +187,55 @@
         default = inputs.monolisa.packages.${pkgs.stdenv.hostPlatform.system}.default;
       };
 
+      # Formerly home/modules/programs/nvim's own `programs.nvim.package`
+      # option -- not native, and not nested under `programs.nvim` here to
+      # avoid colliding with HM's own native `programs.neovim`-adjacent
+      # options. nia's profile overrides this the same way she overrides
+      # `monolisa.package` (see modules/users/nia.nix).
+      options.nvim.package = lib.mkOption {
+        type = lib.types.package;
+        default = inputs.determinvim.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      };
+
       config = {
         home = {
           stateVersion = lib.mkDefault "24.11";
-          packages = [ config.monolisa.package ];
           sessionVariables.EDITOR = "nvim";
+          packages = [
+            config.monolisa.package
+            # Formerly home/modules/programs/nvim -- stylix-wrapped the same
+            # way the original module did.
+            (
+              if config.stylix.enable && config.stylix.targets.nixvim.enable then
+                config.nvim.package.extend config.stylix.targets.nixvim.exportedModule
+              else
+                config.nvim.package
+            )
+            pkgs.brightnessctl
+            pkgs.cryptsetup
+            pkgs.just
+            pkgs.killall
+            pkgs.magic-wormhole
+            pkgs.mat2
+            inputs.nix-auth.packages.${pkgs.stdenv.hostPlatform.system}.default
+            pkgs.p7zip
+            pkgs.pulsemixer
+            pkgs.wget
+            pkgs.xsel
+            pkgs.zip
+            pkgs.unzip
+            # Formerly the development bundle.
+            pkgs.devenv
+            pkgs.httpie
+            pkgs.omnix
+            pkgs.clang
+            pkgs.clang-tools
+            pkgs.deno
+            pkgs.nodejs
+            pkgs.rust-bin.stable.latest.default
+            pkgs.typst
+            pkgs.zig
+          ];
         };
 
         xdg.userDirs = {
@@ -110,6 +247,8 @@
           music = null;
           videos = null;
           setSessionVariables = true;
+          # Formerly the development bundle.
+          extraConfig.CODE = "${config.home.homeDirectory}/Code";
         };
 
         fonts.fontconfig = {
@@ -119,36 +258,187 @@
 
         programs = {
           bat.enable = true;
-          brightnessctl.enable = true;
-          btop.enable = true;
-          cryptsetup.enable = true;
-          direnv.enable = true;
-          eza.enable = true;
-          fzf.enable = true;
-          git.enable = true;
           gh.enable = true;
+          git.enable = true;
           gpg.enable = true;
+          fzf.enable = true;
           home-manager.enable = true;
           jq.enable = true;
-          just_.enable = true;
-          killall.enable = true;
           macchina.enable = true;
-          magic-wormhole.enable = true;
-          mat2.enable = true;
-          nix-auth.enable = true;
           nix-index.enable = true;
-          nvim.enable = true;
-          p7zip.enable = true;
-          pulsemixer.enable = true;
           qalculate.enable = true;
           ripgrep.enable = true;
-          starship.enable = true;
           pay-respects.enable = true;
-          wget.enable = true;
-          xsel.enable = true;
-          yazi.enable = true;
-          zip.enable = true;
-          zsh.enable = true;
+          starship.enable = true;
+
+          # Formerly home/modules/programs/starship's own `.prompt` option,
+          # which just selected which settings preset to load -- "pure" is
+          # the only one that ever existed, so it's inlined directly.
+          starship.settings = lib.mkDefault {
+            format = lib.concatStrings [
+              "$username"
+              "$hostname"
+              "$directory"
+              "$git_branch"
+              "$git_state"
+              "$git_status"
+              "$cmd_duration"
+              "$line_break"
+              "$python"
+              "$character"
+            ];
+
+            directory.style = "blue";
+
+            character = {
+              success_symbol = "[❯](purple)";
+              error_symbol = "[❯](red)";
+              vimcmd_symbol = "[❮](green)";
+            };
+
+            git_branch = {
+              format = "[$branch]($style)";
+              style = "bright-black";
+            };
+
+            git_status = {
+              format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style) ";
+              style = "cyan";
+              conflicted = "​";
+              untracked = "​";
+              modified = "​";
+              staged = "​";
+              renamed = "​";
+              deleted = "​";
+              stashed = "≡";
+            };
+
+            git_state = {
+              format = "\([$state( $progress_current/$progress_total)]($style)\) ";
+              style = "bright-black";
+            };
+
+            cmd_duration = {
+              format = "[$duration]($style) ";
+              style = "yellow";
+            };
+
+            python = {
+              format = "[$virtualenv]($style) ";
+              style = "bright-black";
+              detect_extensions = [ ];
+              detect_files = [ ];
+            };
+          };
+
+          yazi = {
+            enable = true;
+            # Use the bleeding edge build from Yazi upstream.
+            package = inputs.yazi.packages.${pkgs.stdenv.hostPlatform.system}.default;
+            shellWrapperName = "y";
+          };
+
+          btop.settings = {
+            color_theme = lib.mkDefault "gruvbox_dark";
+            theme_background = lib.mkDefault false;
+            vim_keys = lib.mkDefault true;
+          };
+
+          direnv = {
+            nix-direnv.enable = lib.mkDefault true;
+            silent = lib.mkDefault true;
+            config.global.hide_env_diff = lib.mkDefault true;
+          };
+
+          eza = {
+            enableZshIntegration = lib.mkIf config.programs.zsh.enable true;
+            git = lib.mkIf config.programs.git.enable true;
+            icons = "auto";
+            extraOptions = [ "--group-directories-first" ];
+          };
+
+          zsh = {
+            enable = true;
+            autocd = lib.mkDefault true;
+            # Formerly home/modules/programs/shells/shellAliases.nix, which
+            # read `config.bundles.dwm.enable`/`config.bundles.niri.enable`
+            # directly -- dwm/niri are now host-driven aspects, not per-user
+            # bundle flags, so the discriminator is whatever a dwm host's own
+            # aspect already sets on every one of its users: `xsession.enable`.
+            shellAliases = {
+              ll = "ls -la";
+              c = if config.xsession.enable then "xsel --clipboard --input" else "wl-copy";
+            };
+            antidote = {
+              enable = true;
+              plugins = [
+                "jeffreytse/zsh-vi-mode"
+
+                "mattmc3/ez-compinit"
+
+                "getantidote/use-omz"
+                "ohmyzsh/ohmyzsh path:lib"
+                "ohmyzsh/ohmyzsh path:plugins/colored-man-pages"
+                "ohmyzsh/ohmyzsh path:plugins/sudo"
+
+                "mattmc3/zfunctions"
+                "zsh-users/zsh-autosuggestions"
+                "zdharma-continuum/fast-syntax-highlighting kind:defer"
+                "zsh-users/zsh-history-substring-search"
+              ];
+            };
+          };
+
+          # Formerly the development bundle.
+          claude-code.mcpServers = {
+            deepwiki = {
+              type = "http";
+              url = "https://mcp.deepwiki.com/mcp";
+            };
+          };
+          difftastic.git.enable = lib.mkDefault true;
+          go = {
+            enable = true;
+            telemetry.mode = "off";
+          };
+          bun.enable = true;
+        };
+
+        # Formerly home/modules/themes/default.nix's shared stylix dispatch,
+        # common to every theme (everforest/catppuccin) rather than
+        # theme-specific -- each host's own `provides.to-users.homeManager`
+        # only needs to set `stylix.image`/`stylix.base16Scheme` (+ any
+        # theme-specific cursor/freetube overrides) on top of this.
+        stylix = {
+          enable = true;
+          polarity = lib.mkDefault "dark";
+          fonts.monospace = {
+            package = lib.mkDefault config.monolisa.package;
+            name = lib.mkDefault "MonoLisa Variable";
+          };
+          cursor = {
+            size = lib.mkDefault 32;
+            package = lib.mkDefault pkgs.volantes-cursors;
+            name = lib.mkDefault "volantes_cursors";
+          };
+          targets = {
+            # x11 and sxiv targets default to enabled regardless of session
+            # type and both write to ~/.Xresources; only wire x11 up on X11
+            # (dwm) hosts, and sxiv not at all since we don't use it, so
+            # Wayland/niri hosts don't get a ~/.Xresources.
+            feh.enable = lib.mkIf config.xsession.enable true;
+            x11.enable = lib.mkDefault config.xsession.enable;
+            sxiv.enable = lib.mkDefault false;
+            # NOTE: gtksourceview target causes inkscape to rebuild every hm
+            # generation build.
+            gtksourceview.enable = lib.mkDefault false;
+          };
+        };
+
+        xdg.configFile."devenv/config.yaml".source = (pkgs.formats.yaml { }).generate "config.yaml" {
+          # yaml-language-server: $schema=https://devenv.sh/devenv.user.schema.json
+          version = 1;
+          shell.prompt_prefix = false;
         };
 
         services = {
