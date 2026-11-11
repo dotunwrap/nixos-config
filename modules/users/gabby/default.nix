@@ -1,22 +1,35 @@
-{ inputs, ... }:
-let
-  themes = import ../_themes.nix;
-in
+{ den, ... }:
 {
   den.aspects.gabby = {
+    # primary-user supplies isNormalUser + wheel/networkmanager; user-shell
+    # "zsh" (den.default.includes, modules/defaults.nix) supplies the shell
+    # -- only the extra, not-shared-by-every-user group is left to say here.
+    # Theme+wallpaper is her own choice, not her host's -- set per host
+    # she's actually on (she doesn't use the same one everywhere), from her
+    # own file, rather than a host deciding it for whoever's logged in.
+    # Theme and wallpaper are independent batteries
+    # (modules/aspects/batteries/{everforest,catppuccin,wallpaper}.nix).
+    includes = [
+      den.batteries.primary-user
+      (den.batteries.everforest { hosts = [ "chikyuu" ]; })
+      (den.batteries.catppuccin {
+        hosts = [
+          "kaiousei"
+          "meiousei"
+        ];
+      })
+      (den.batteries.wallpaper {
+        chikyuu = ../../../assets/wallpapers/stephen_njoto.png;
+        kaiousei = ../../../assets/wallpapers/anyb-girl.png;
+        meiousei = ../../../assets/wallpapers/anyb-girl.png;
+      })
+    ];
+
     # Formerly nixos/configurations/users/gabby.nix -- lands on
     # users.users.gabby on every host gabby is declared on.
-    user =
-      { pkgs, ... }:
-      {
-        isNormalUser = true;
-        shell = pkgs.zsh;
-        extraGroups = [
-          "wheel"
-          "audio"
-          "networkmanager"
-        ];
-      };
+    user = {
+      extraGroups = [ "audio" ];
+    };
 
     # Formerly home/configurations/shared/gabby/default.nix -- cross-host,
     # not tied to any one of gabby's hosts (chikyuu/kaiousei/meiousei).
@@ -25,11 +38,9 @@ in
         config,
         lib,
         pkgs,
+        inputs',
         ...
       }:
-      let
-        inherit (pkgs.stdenv.hostPlatform) system;
-      in
       {
         accounts = {
           calendar.basePath = ".local/share/calendars";
@@ -79,8 +90,8 @@ in
 
           zen-browser = lib.mkIf config.programs.zen-browser.enable (
             import ./_zen {
-              inherit (inputs) firefox-addons;
-              inherit system pkgs;
+              firefoxAddonPackages = inputs'.firefox-addons.packages;
+              inherit pkgs;
             }
           );
         };
@@ -90,19 +101,5 @@ in
         ];
       };
 
-    # Theme+wallpaper is her own choice, not her host's -- set per host she's
-    # actually on (she doesn't use the same one everywhere), from her own
-    # file, rather than a host deciding it for whoever's logged in.
-    provides = {
-      chikyuu.homeManager = themes.everforest {
-        image = ../../../assets/wallpapers/stephen_njoto.png;
-      };
-      kaiousei.homeManager = themes.catppuccin {
-        image = ../../../assets/wallpapers/anyb-girl.png;
-      };
-      meiousei.homeManager = themes.catppuccin {
-        image = ../../../assets/wallpapers/anyb-girl.png;
-      };
-    };
   };
 }

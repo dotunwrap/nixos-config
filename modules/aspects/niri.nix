@@ -49,6 +49,7 @@
         config,
         lib,
         pkgs,
+        inputs',
         ...
       }:
       let
@@ -204,7 +205,7 @@
               };
             };
             extensions =
-              with inputs.vicinae-extensions.packages.${system};
+              with inputs'.vicinae-extensions.packages;
               lib.mkDefault [
                 # NOTE: bluetooth and systemd are currently not building for
                 # nix-unstable

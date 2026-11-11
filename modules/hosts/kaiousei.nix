@@ -15,8 +15,6 @@
         ];
 
         hardware.framework.enableKmod = true;
-
-        networking.hostName = "kaiousei";
       };
 
     # Theme+wallpaper is each user's own choice now (see

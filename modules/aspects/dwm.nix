@@ -1,13 +1,10 @@
-{ inputs, den, ... }:
+{ den, ... }:
 {
   den.aspects.dwm = {
     includes = [ den.aspects.desktop ];
 
     nixos =
-      { pkgs, ... }:
-      let
-        inherit (pkgs.stdenv.hostPlatform) system;
-      in
+      { pkgs, inputs', ... }:
       {
         fonts.packages = with pkgs; [
           corefonts
@@ -29,13 +26,13 @@
           enable = true;
           windowManager.dwm = {
             enable = true;
-            package = inputs.suckless.packages.${system}.dwm;
+            package = inputs'.suckless.packages.dwm;
             extraSessionCommands = ''
               dwmblocks &
             '';
           };
         };
-        environment.systemPackages = [ inputs.suckless.packages.${system}.dwmblocks ];
+        environment.systemPackages = [ inputs'.suckless.packages.dwmblocks ];
 
         services.displayManager.defaultSession = "none+dwm";
 

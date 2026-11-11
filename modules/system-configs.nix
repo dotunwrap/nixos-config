@@ -11,7 +11,14 @@ let
   # Everything every host-integrated home-manager user needs regardless of
   # which aspects they include: the third-party HM flake modules, plus the
   # handful of tiny baseline tweaks every profile used to carry via
-  # parts/home-configs.nix.
+  # parts/home-configs.nix. Set once per host (via `home-manager.
+  # sharedModules`, HM's own native "apply to every user" option) rather
+  # than threading it through Den's `den.schema.hm-host.includes` -- that
+  # hook turned out to fire once per home-manager user on a host, not once
+  # per host, so a list-valued option like `sharedModules` got every entry
+  # duplicated for any host with more than one HM user (confirmed via a
+  # NixOS "option already declared" eval error on meiousei, which has both
+  # gabby and nia).
   homeManagerBaseline = [
     { systemd.user.startServices = "sd-switch"; }
     { news.display = "silent"; }
@@ -29,12 +36,11 @@ let
   mkHost =
     name:
     let
-      users = builtins.attrNames (config.den.hosts.x86_64-linux.${name}.users or { });
+      hasHomeManagerUsers = (config.den.hosts.x86_64-linux.${name}.users or { }) != { };
     in
     inputs.nixpkgs.lib.nixosSystem {
       modules = [
         { boot.tmp.cleanOnBoot = true; }
-        { networking.hostName = name; }
         { system.configurationRevision = self.rev or "${self.dirtyRev or "unknown"}-dirty"; }
         { documentation.man.enable = true; }
         { documentation.man.cache.enable = true; }
@@ -68,20 +74,18 @@ let
         { programs.vicinae.input-server.enable = lib.mkDefault false; }
         (config.den.hosts.x86_64-linux.${name}.mainModule or { })
       ]
-      ++ lib.optional (users != [ ]) {
-        # `home-manager.*` only exists once the `home-manager` NixOS module is
-        # actually imported (triggered by >=1 user with classes=["homeManager"]
-        # in modules/hosts.nix) -- a host with none (europa) never declares
-        # this namespace at all, so this must stay conditioned on the same
-        # `users != []` check, not applied as a blanket default to every host.
+      # `home-manager.*` only exists once the `home-manager` NixOS module is
+      # actually imported (triggered by >=1 user with classes=["homeManager"]
+      # in modules/hosts.nix) -- a host with none (europa) never declares
+      # this namespace at all, so this must stay conditioned on the same
+      # check, not applied as a blanket default to every host.
+      ++ lib.optional hasHomeManagerUsers {
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
+          sharedModules = homeManagerBaseline;
         };
-      }
-      ++ map (username: {
-        home-manager.users.${username}.imports = homeManagerBaseline;
-      }) users;
+      };
     };
 in
 {

@@ -1,4 +1,4 @@
-firefox-addons: system: with firefox-addons.packages.${system}; [
+packages: with packages; [
   bitwarden
   darkreader
   don-t-fuck-with-paste

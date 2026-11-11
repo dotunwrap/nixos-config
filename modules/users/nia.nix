@@ -1,31 +1,48 @@
-{ inputs, ... }:
-let
-  themes = import ./_themes.nix;
-in
+{ den, ... }:
 {
   den.aspects.nia = {
+    # primary-user supplies isNormalUser + wheel/networkmanager; user-shell
+    # "zsh" (den.default.includes, modules/defaults.nix) supplies the shell
+    # -- only the extra, not-shared-by-every-user groups are left to say
+    # here. insecure scopes nwjs permission to just her (betaflight-
+    # configurator's dependency), rather than the blanket default every
+    # other user also used to get.
+    # Theme+wallpaper is her own choice, not her host's -- see
+    # modules/users/gabby/default.nix for why this lives here instead of on
+    # the host. Theme and wallpaper are independent batteries
+    # (modules/aspects/batteries/{everforest,catppuccin,wallpaper}.nix).
+    includes = [
+      den.batteries.primary-user
+      (den.batteries.insecure [ "nwjs-0.102.1" ])
+      (den.batteries.catppuccin { hosts = [ "meiousei" ]; })
+      (den.batteries.everforest {
+        hosts = [ "suisei" ];
+        flavor = "hard";
+      })
+      (den.batteries.wallpaper {
+        meiousei = ../../assets/wallpapers/anyb-girl.png;
+        suisei = ../../assets/wallpapers/bubbles.jpg;
+      })
+    ];
+
     # Formerly nixos/configurations/users/nia.nix -- lands on users.users.nia
     # on every host nia is declared on.
-    user =
-      { pkgs, ... }:
-      {
-        isNormalUser = true;
-        shell = pkgs.zsh;
-        extraGroups = [
-          "wheel"
-          "audio"
-          "networkmanager"
-          "dialout"
-        ];
-      };
+    user = {
+      extraGroups = [
+        "audio"
+        "dialout"
+      ];
+    };
 
     # Formerly home/configurations/shared/nia/default.nix -- cross-host, not
     # tied to either of nia's hosts (meiousei/suisei).
     homeManager =
-      { config, pkgs, ... }:
-      let
-        inherit (pkgs.stdenv.hostPlatform) system;
-      in
+      {
+        config,
+        pkgs,
+        inputs',
+        ...
+      }:
       {
         accounts = {
           calendar.basePath = ".local/share/calendars";
@@ -36,7 +53,7 @@ in
         # "MonoLisa Variable" -- feeds modules/defaults.nix's
         # `stylix.fonts.monospace.package = mkDefault config.monolisa.package`
         # automatically; only the display name needs its own override here.
-        monolisa.package = inputs.monolisa.packages.${system}.nia;
+        monolisa.package = inputs'.monolisa.packages.nia;
         fonts.fontconfig.defaultFonts.monospace = [ "MonoLisa Nia" ];
         stylix.fonts.monospace.name = "MonoLisa Nia";
 
@@ -94,7 +111,7 @@ in
                 "services.sync.prefs.sync.browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
                 "signon.rememberSignons" = false;
               };
-              extensions.packages = with inputs.firefox-addons.packages.${system}; [
+              extensions.packages = with inputs'.firefox-addons.packages; [
                 bitwarden
                 ublock-origin
                 reddit-enhancement-suite
@@ -111,7 +128,7 @@ in
           zen-browser.enable = false;
         };
 
-        nvim.package = inputs.niavim.packages.${system}.default;
+        nvim.package = inputs'.niavim.packages.default;
 
         # Formerly home/modules/programs/winboat -- rootless podman as
         # winboat's container runtime; winboat checks for `podman compose`
@@ -131,16 +148,5 @@ in
         stylix.targets.firefox.profileNames = [ "default" ];
       };
 
-    # Theme+wallpaper is her own choice, not her host's -- see
-    # modules/users/gabby.nix for why this lives here instead of on the host.
-    provides = {
-      meiousei.homeManager = themes.catppuccin {
-        image = ../../assets/wallpapers/anyb-girl.png;
-      };
-      suisei.homeManager = themes.everforest {
-        image = ../../assets/wallpapers/bubbles.jpg;
-        flavor = "hard";
-      };
-    };
   };
 }
