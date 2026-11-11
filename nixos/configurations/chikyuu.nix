@@ -7,7 +7,6 @@ _:
 
 {
   activeBundles = [
-    "base"
     "development"
     "dwm"
   ];

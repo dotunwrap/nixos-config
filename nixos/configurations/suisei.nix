@@ -6,7 +6,6 @@
   ];
 
   activeBundles = [
-    "base"
     "development"
     "niri"
   ];

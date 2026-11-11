@@ -1,14 +1,12 @@
 {
   dotunwrap.homeManagerModules = {
     "bundles" = ./bundles;
-    "bundles/base" = ./bundles/base;
     "bundles/development" = ./bundles/development;
     "bundles/dwm" = ./bundles/dwm;
     "bundles/niri" = ./bundles/niri;
 
     "misc" = ./misc;
     "misc/dwm" = ./misc/dwm;
-    "misc/home" = ./misc/home;
     "misc/niri-config" = ./misc/niri-config;
 
     "programs" = ./programs;

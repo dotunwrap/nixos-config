@@ -9,7 +9,6 @@ _:
   # TODO: This machine will be moving towards becoming a HTPC.
   # We should build a bundle for this specifically and move away from dwm here.
   activeBundles = [
-    "base"
     "development"
     "dwm"
   ];

@@ -20,7 +20,7 @@ in
     contact.basePath = ".local/share/contacts";
   };
 
-  bundles.base.monolisaVersion = monolisa.packages.${system}.nia;
+  monolisa.package = monolisa.packages.${system}.nia;
   fonts.fontconfig.defaultFonts.monospace = [ "MonoLisa Nia" ];
   stylix.fonts.monospace = {
     package = monolisa.packages.${system}.nia;

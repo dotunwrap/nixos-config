@@ -2,7 +2,6 @@ _:
 { pkgs, ... }:
 {
   activeBundles = [
-    "base"
     "development"
     # TODO: Build and add a "server" bundle.
   ];
