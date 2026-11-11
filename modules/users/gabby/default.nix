@@ -1,6 +1,6 @@
 { inputs, ... }:
 let
-  themes = import ./_themes.nix;
+  themes = import ../_themes.nix;
 in
 {
   den.aspects.gabby = {
@@ -95,13 +95,13 @@ in
     # file, rather than a host deciding it for whoever's logged in.
     provides = {
       chikyuu.homeManager = themes.everforest {
-        image = ../../assets/wallpapers/stephen_njoto.png;
+        image = ../../../assets/wallpapers/stephen_njoto.png;
       };
       kaiousei.homeManager = themes.catppuccin {
-        image = ../../assets/wallpapers/anyb-girl.png;
+        image = ../../../assets/wallpapers/anyb-girl.png;
       };
       meiousei.homeManager = themes.catppuccin {
-        image = ../../assets/wallpapers/anyb-girl.png;
+        image = ../../../assets/wallpapers/anyb-girl.png;
       };
     };
   };
