@@ -17,21 +17,37 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Equivalent of `/login llama.cpp`. auth.json is Pi-owned (it holds other
-    # providers' credentials too), so merge the entry instead of symlinking the file.
-    home.activation.piLlamaLogin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      auth="$HOME/.pi/agent/auth.json"
-      run mkdir -p "$(dirname "$auth")"
-      [ -s "$auth" ] || echo '{}' > "$auth"
-      tmp="$(mktemp)"
-      ${lib.getExe pkgs.jq} \
-        --arg url "http://127.0.0.1:${toString port}" \
-        '."llama.cpp" = {type: "api_key", env: {LLAMA_BASE_URL: $url}}' \
-        "$auth" > "$tmp" && run install -m 600 "$tmp" "$auth"
-      rm -f "$tmp"
-    '';
-
     home = {
+      activation = {
+        # Equivalent of `/login llama.cpp`. auth.json is Pi-owned (it holds other
+        # providers' credentials too), so merge the entry instead of symlinking the file.
+        piLlamaLogin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          auth="$HOME/.pi/agent/auth.json"
+          run mkdir -p "$(dirname "$auth")"
+          [ -s "$auth" ] || echo '{}' > "$auth"
+          tmp="$(mktemp)"
+          ${lib.getExe pkgs.jq} \
+            --arg url "http://127.0.0.1:${toString port}" \
+            '."llama.cpp" = {type: "api_key", env: {LLAMA_BASE_URL: $url}}' \
+            "$auth" > "$tmp" && run install -m 600 "$tmp" "$auth"
+          rm -f "$tmp"
+        '';
+
+        # Pull tools and skills from the harness package. settings.json is Pi-owned
+        # (it also holds model and thinking choices), so add the source without
+        # replacing the file. Pi clones and reconciles the repo on startup.
+        piHarnessPackage = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          settings="$HOME/.pi/agent/settings.json"
+          run mkdir -p "$(dirname "$settings")"
+          [ -s "$settings" ] || echo '{}' > "$settings"
+          tmp="$(mktemp)"
+          ${lib.getExe pkgs.jq} \
+            '.packages = ((.packages // []) | if index("git:github.com/nyoshe/pi-harness-config") then . else . + ["git:github.com/nyoshe/pi-harness-config"] end)' \
+            "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
+          rm -f "$tmp"
+        '';
+      };
+
       packages = [ pkgs.pi-coding-agent ];
 
       # Pi's built-in llama.cpp provider discovers every model on the router and
