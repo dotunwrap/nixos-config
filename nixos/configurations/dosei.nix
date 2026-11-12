@@ -11,6 +11,7 @@ _:
     "development"
     "niri"
     "gaming"
+    "local_LLM"
   ];
 
   hardware = {
