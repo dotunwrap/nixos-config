@@ -23,6 +23,18 @@ _:
     tensorSplit = "15,12";
     vision = true;
     mmprojOffload = false;
+
+    # Abliterated Qwen3.8-27B (Heretic) with Unsloth dynamic quants. Loaded on request;
+    # only one model is resident at a time. Sampling follows the model card.
+    modelSettings."outsourc-e/Qwen3.8-27B-Unleashed-GGUF:UD-Q4_K_M" = {
+      hf-repo = "outsourc-e/Qwen3.8-27B-Unleashed-GGUF:UD-Q4_K_M";
+      spec-type = "draft-mtp";
+      spec-draft-n-max = 2;
+      reasoning-effort = "xhigh";
+      temp = 1.0;
+      top-p = 0.95;
+      top-k = 20;
+    };
   };
 
   hardware = {
