@@ -17,6 +17,10 @@ let
     "git:github.com/nyoshe/pi-harness-config"
     "npm:pi-web-access@0.47.0"
   ];
+
+  # graphify (PyPI `graphifyy`) is installed with uv against Nix's Python, since uv's
+  # own downloaded interpreters cannot run on NixOS. Pinned: bump only after review.
+  graphifyVersion = "0.9.107";
 in
 {
   options.bundles.local_LLM = {
@@ -55,9 +59,26 @@ in
             "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
           rm -f "$tmp"
         '';
+
+        # Install the graphify CLI, then its Pi skill (written to ~/.pi/agent/skills/graphify).
+        # Needs network on first run; a failure only warns so activation still succeeds.
+        graphify = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          export UV_PYTHON_DOWNLOADS=never UV_PYTHON=${lib.getExe pkgs.python3}
+          if ${lib.getExe pkgs.uv} tool install --quiet "graphifyy==${graphifyVersion}" \
+            && "$HOME/.local/bin/graphify" install --platform pi >/dev/null; then
+            :
+          else
+            echo "warning: graphify install failed; rerun home-manager switch with network" >&2
+          fi
+        '';
       };
 
-      packages = [ pkgs.pi-coding-agent ];
+      packages = [
+        pkgs.pi-coding-agent
+        pkgs.uv
+      ];
+
+      sessionPath = [ "$HOME/.local/bin" ];
 
       # Pi's built-in llama.cpp provider discovers every model on the router and
       # detects Qwen's thinking switch, so no models.json is needed.
