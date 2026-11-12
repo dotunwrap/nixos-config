@@ -11,13 +11,19 @@ let
   # The router drops the "UD-" prefix from Unsloth quants when naming models.
   modelId = builtins.replaceStrings [ ":UD-" ] [ ":" ] cfg.model;
 
+  # User-supplied per-model sections, keyed by router model id. A `UD-` prefix
+  # is stripped from the key so either spelling works.
+  extraSections = lib.mapAttrs' (
+    name: value: lib.nameValuePair (builtins.replaceStrings [ ":UD-" ] [ ":" ] name) value
+  ) cfg.modelSettings;
+
   # Router-mode presets: [*] applies to every model the router serves (including
   # ones pulled into the cache later), the model section adds MTP and sampling
   # for the default Qwen model only, since other models may have no MTP head.
   presets = pkgs.writeText "llama-presets.ini" (
     lib.generators.toINIWithGlobalSection { } {
       globalSection.version = 1;
-      sections = {
+      sections = lib.recursiveUpdate {
         "*" = {
           ctx-size = cfg.contextSize;
           n-gpu-layers = 999;
@@ -49,7 +55,7 @@ let
           top-p = 0.95;
           top-k = 20;
         };
-      };
+      } extraSections;
     }
   );
 in
@@ -74,6 +80,34 @@ in
         readOnly = true;
         default = modelId;
         description = "Model id clients use, as named by the llama-server router.";
+      };
+
+      modelSettings = lib.mkOption {
+        type = lib.types.attrsOf (
+          lib.types.attrsOf (
+            lib.types.oneOf [
+              lib.types.bool
+              lib.types.int
+              lib.types.float
+              lib.types.str
+            ]
+          )
+        );
+        default = { };
+        example = lib.literalExpression ''
+          {
+            "unsloth/Some-Model-GGUF:Q5_K_M" = {
+              ctx-size = 65536;
+              temp = 0.7;
+            };
+          }
+        '';
+        description = ''
+          Per-model preset sections, keyed by router model id. Keys are
+          `llama-server` flags without dashes and override the global defaults
+          for that model. Setting `hf-repo` makes the router download the model
+          if it is missing. The default model's section is merged with these.
+        '';
       };
 
       port = lib.mkOption {
