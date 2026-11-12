@@ -15,11 +15,13 @@ _:
   ];
 
   # Extra router models. The repo ships regular and MTP GGUFs side by side, so pin the
-  # exact file instead of relying on the quant tag. Q5_K_M (~19GB) fits at 128k;
-  # the author suggests Q5/Q6 and warns tool calling degrades below Q4_K_M.
+  # exact file instead of relying on the quant tag. Q4_K_M (18.5GB) is the largest that fits at 128k (Q5_K_M, 21GB, OOMs GPU0);
+  # the author warns tool calling degrades below Q4_K_M.
   bundles.local_LLM.modelSettings."turbo-fable-coder" = {
     hf-repo = "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF";
-    hf-file = "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q5_K_M.gguf";
+    hf-file = "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q4_K_M.gguf";
+    # Heavier than the default quant: shave GPU0, which also drives the desktop
+    tensor-split = "15,12";
     spec-type = "draft-mtp";
     spec-draft-n-max = 2;
     reasoning-effort = "xhigh";
