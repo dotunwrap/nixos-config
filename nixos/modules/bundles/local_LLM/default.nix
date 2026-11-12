@@ -34,12 +34,14 @@ let
           flash-attn = "on";
           cache-type-k = cfg.cacheType;
           cache-type-v = cfg.cacheType;
-          # Text-only: skip the vision projector and its ~1GB of VRAM
-          no-mmproj = true;
           parallel = 1;
           jinja = true;
           dedup-cache-models = true;
-        };
+        }
+        # Without vision, skip the projector and its ~1GB of VRAM. With it, the
+        # router downloads and loads the repo's mmproj file automatically.
+        // lib.optionalAttrs (!cfg.vision) { no-mmproj = true; }
+        // lib.optionalAttrs (cfg.vision && !cfg.mmprojOffload) { no-mmproj-offload = true; };
 
         ${modelId} = {
           hf-repo = cfg.model;
@@ -107,6 +109,25 @@ in
           `llama-server` flags without dashes and override the global defaults
           for that model. Setting `hf-repo` makes the router download the model
           if it is missing. The default model's section is merged with these.
+        '';
+      };
+
+      vision = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Load the multimodal projector (mmproj) so models can read images.
+          Costs roughly 1GB of VRAM plus an image-encoder buffer.
+        '';
+      };
+
+      mmprojOffload = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Keep the vision projector on the GPU. Disable to run it on the CPU, which
+          saves its VRAM (~0.9GB, all on GPU 0) at the cost of slower image encoding.
+          Only used when `vision` is enabled.
         '';
       };
 
