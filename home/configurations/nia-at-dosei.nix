@@ -5,6 +5,7 @@ lib.recursiveUpdate {
     "development"
     "niri"
     "gaming"
+    "local_LLM"
   ];
 
   themes.everforest = {
