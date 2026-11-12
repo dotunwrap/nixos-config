@@ -22,6 +22,8 @@ _:
     hf-file = "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q4_K_M.gguf";
     # Heavier than the default quant: shave GPU0, which also drives the desktop
     tensor-split = "15,12";
+    # +32k over the global 128k: ~1.1GB more KV cache, split across both GPUs
+    ctx-size = 163840;
     spec-type = "draft-mtp";
     spec-draft-n-max = 2;
     reasoning-effort = "xhigh";
