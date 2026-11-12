@@ -17,6 +17,20 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Equivalent of `/login llama.cpp`. auth.json is Pi-owned (it holds other
+    # providers' credentials too), so merge the entry instead of symlinking the file.
+    home.activation.piLlamaLogin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      auth="$HOME/.pi/agent/auth.json"
+      run mkdir -p "$(dirname "$auth")"
+      [ -s "$auth" ] || echo '{}' > "$auth"
+      tmp="$(mktemp)"
+      ${lib.getExe pkgs.jq} \
+        --arg url "http://127.0.0.1:${toString port}" \
+        '."llama.cpp" = {type: "api_key", env: {LLAMA_BASE_URL: $url}}' \
+        "$auth" > "$tmp" && run install -m 600 "$tmp" "$auth"
+      rm -f "$tmp"
+    '';
+
     home = {
       packages = [ pkgs.pi-coding-agent ];
 
