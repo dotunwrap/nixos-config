@@ -14,6 +14,22 @@ _:
     "local_LLM"
   ];
 
+  # Extra router models. The repo ships regular and MTP GGUFs side by side, so pin the
+  # exact file instead of relying on the quant tag. Q5_K_M (~19GB) fits at 128k;
+  # the author suggests Q5/Q6 and warns tool calling degrades below Q4_K_M.
+  bundles.local_LLM.modelSettings."turbo-fable-coder" = {
+    hf-repo = "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF";
+    hf-file = "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q5_K_M.gguf";
+    spec-type = "draft-mtp";
+    spec-draft-n-max = 2;
+    reasoning-effort = "xhigh";
+    # Author recommends temp 0.6-0.7 and no repetition penalty
+    temp = 0.6;
+    top-p = 0.95;
+    top-k = 20;
+    repeat-penalty = 1;
+  };
+
   hardware = {
     graphics = {
       enable = true;
