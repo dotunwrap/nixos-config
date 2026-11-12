@@ -14,24 +14,17 @@ _:
     "local_LLM"
   ];
 
-  # Extra router models. The repo ships regular and MTP GGUFs side by side, so pin the
-  # exact file instead of relying on the quant tag. Q4_K_M (18.5GB) is the largest that fits at 128k (Q5_K_M, 21GB, OOMs GPU0);
-  # the author warns tool calling degrades below Q4_K_M.
-  bundles.local_LLM.modelSettings."turbo-fable-coder" = {
-    hf-repo = "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF";
-    hf-file = "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q4_K_M.gguf";
-    # Heavier than the default quant: shave GPU0, which also drives the desktop
-    tensor-split = "15,12";
-    # +32k over the global 128k: ~1.1GB more KV cache, split across both GPUs
-    ctx-size = 163840;
-    spec-type = "draft-mtp";
-    spec-draft-n-max = 2;
-    reasoning-effort = "xhigh";
-    # Author recommends temp 0.6-0.7 and no repetition penalty
-    temp = 0.6;
-    top-p = 0.95;
-    top-k = 20;
-    repeat-penalty = 1;
+  # 256k context with vision on 28GB. Measured with this exact config: UD-Q3_K_XL (13.1GB)
+  # loads with ~850 MiB free on each card; the next quant up (IQ4_XS, 14.4GB) leaves
+  # ~230 MiB in total, and Q4_K_S and larger do not fit. The vision projector needs
+  # 888 MiB on GPU 0 alone, which does not fit, so it runs on the CPU (~2.5s per image).
+  # The split is skewed to GPU 1 because GPU 0 also drives the desktop.
+  bundles.local_LLM = {
+    model = "unsloth/Qwen3.8-27B-GGUF:UD-Q3_K_XL";
+    contextSize = 262144;
+    tensorSplit = "14,12";
+    vision = true;
+    mmprojOffload = false;
   };
 
   hardware = {
