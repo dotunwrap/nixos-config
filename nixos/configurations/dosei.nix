@@ -14,15 +14,13 @@ _:
     "local_LLM"
   ];
 
-  # 256k context with vision on 28GB. Measured with this exact config: UD-Q3_K_XL (13.1GB)
-  # loads with ~850 MiB free on each card; the next quant up (IQ4_XS, 14.4GB) leaves
-  # ~230 MiB in total, and Q4_K_S and larger do not fit. The vision projector needs
-  # 888 MiB on GPU 0 alone, which does not fit, so it runs on the CPU (~2.5s per image).
-  # The split is skewed to GPU 1 because GPU 0 also drives the desktop.
+  # 128k context with vision and MTP on 28GB. UD-Q4_K_XL plus ~5.8GB of KV cache leaves
+  # room on both cards. The vision projector runs on the CPU (~2.5s per image) to spare
+  # GPU 0, which also drives the desktop. MTP is on by default for the default model.
   bundles.local_LLM = {
-    model = "unsloth/Qwen3.8-27B-GGUF:UD-Q3_K_XL";
-    contextSize = 262144;
-    tensorSplit = "14,12";
+    model = "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL";
+    contextSize = 131072;
+    tensorSplit = "15,12";
     vision = true;
     mmprojOffload = false;
   };
