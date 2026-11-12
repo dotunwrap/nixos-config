@@ -10,6 +10,13 @@ let
   cfg = config.bundles.local_LLM;
   osCfg = osConfig.bundles.local_LLM or null;
   port = if osCfg != null then osCfg.port else 8080;
+
+  # Pi packages added to ~/.pi/agent/settings.json. npm sources are pinned: bump the
+  # version here only after reviewing the new release.
+  piPackages = [
+    "git:github.com/nyoshe/pi-harness-config"
+    "npm:pi-web-access@0.47.0"
+  ];
 in
 {
   options.bundles.local_LLM = {
@@ -33,16 +40,18 @@ in
           rm -f "$tmp"
         '';
 
-        # Pull tools and skills from the harness package. settings.json is Pi-owned
-        # (it also holds model and thinking choices), so add the source without
-        # replacing the file. Pi clones and reconciles the repo on startup.
+        # Declare Pi packages. settings.json is Pi-owned (it also holds model and
+        # thinking choices), so merge instead of replacing the file. An existing entry
+        # for the same package at another version is dropped, so a pin bump replaces it.
         piHarnessPackage = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           settings="$HOME/.pi/agent/settings.json"
           run mkdir -p "$(dirname "$settings")"
           [ -s "$settings" ] || echo '{}' > "$settings"
           tmp="$(mktemp)"
           ${lib.getExe pkgs.jq} \
-            '.packages = ((.packages // []) | if index("git:github.com/nyoshe/pi-harness-config") then . else . + ["git:github.com/nyoshe/pi-harness-config"] end)' \
+            --argjson pkgs ${lib.escapeShellArg (builtins.toJSON piPackages)} \
+            'def id: sub("@[^@/]*$"; "");
+             .packages = (((.packages // []) | map(select(id as $i | ($pkgs | map(id) | index($i)) == null))) + $pkgs)' \
             "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
           rm -f "$tmp"
         '';
