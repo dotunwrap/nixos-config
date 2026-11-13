@@ -54,10 +54,10 @@
       }:
       let
         inherit (pkgs.stdenv.hostPlatform) system;
-        # vicinae doesn't follow our nixpkgs (see flake.nix), so its glibc is
-        # older than the system's; the host Mesa fails to load inside its
-        # process (GLIBC_x.y not found). Use a Mesa from vicinae's own pin
-        # instead so the libc versions match. See TODO.md.
+        # NOTE: vicinae doesn't follow our nixpkgs (see flake.nix), so its
+        # glibc is older than the system's; the host Mesa fails to load
+        # inside its process (GLIBC_x.y not found). Use a Mesa from vicinae's
+        # own pin instead so the libc versions match. See TODO.md.
         vicinaeMesa = inputs.vicinae.inputs.nixpkgs.legacyPackages.${system}.mesa;
         vicinaeIcds =
           lib.concatMapStringsSep ":" (n: "${vicinaeMesa}/share/vulkan/icd.d/${n}_icd.x86_64.json")
@@ -125,9 +125,9 @@
                 min-height: 6px;
                 border-radius: 0;
                 border: none;
-                # base0E, not a named stylix color -- the slot catppuccin's
-                # accent override (modules/aspects/batteries/theme.nix) maps
-                # mauve onto.
+                # NOTE: base0E, not a named stylix color -- the slot
+                # catppuccin's accent override
+                # (modules/aspects/batteries/theme.nix) maps mauve onto.
                 background: ${colors.base0E};
               }
             '';
@@ -299,8 +299,9 @@
               };
             };
 
-            # mkAfter layers on top of Stylix's own waybar CSS (which defines
-            # the `@baseXX` custom properties used below) instead of replacing it.
+            # NOTE: mkAfter layers on top of Stylix's own waybar CSS (which
+            # defines the `@baseXX` custom properties used below) instead of
+            # replacing it.
             style = lib.mkAfter ''
               * {
                 border: none;
@@ -325,10 +326,8 @@
                 padding: 0 10px;
               }
 
-              /* Battery color logic */
               #battery {
                 color: @base08;
-                /* Default (discharging) */
               }
 
               #battery.charging {
@@ -343,7 +342,6 @@
                 color: @base09;
               }
 
-              /* Other module colors */
               #workspaces button {
                 padding: 0 6px;
                 color: @base09;

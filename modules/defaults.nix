@@ -58,16 +58,17 @@ in
       (den.batteries.user-shell "zsh")
     ];
 
-    # Unconditional on every host. `development` is the one exception that
-    # stays its own aspect (modules/aspects/development.nix) so a host can
-    # opt out of it.
+    # NOTE: unconditional on every host. `development` is the one exception
+    # that stays its own aspect (modules/aspects/development.nix) so a host
+    # can opt out of it.
     nixos =
       { pkgs, inputs', ... }:
       {
         system.stateVersion = lib.mkDefault "25.05";
 
-        # mkDefault throughout so a host can override one field with a plain
-        # assignment instead of fighting an equal-priority mkDefault with mkForce.
+        # NOTE: mkDefault throughout so a host can override one field with a
+        # plain assignment instead of fighting an equal-priority mkDefault
+        # with mkForce.
         boot = {
           loader = {
             systemd-boot.enable = lib.mkDefault true;
@@ -166,9 +167,10 @@ in
             "/nix/var/nix/profiles/per-user/root/channels"
           ];
 
-          # nh clean all already covers generation/gc cleanup on its own
-          # schedule; leaving nix.gc.automatic on too just duplicates the work
-          # and trips the warning programs.nh emits when both are enabled.
+          # NOTE: nh clean all already covers generation/gc cleanup on its
+          # own schedule; leaving nix.gc.automatic on too just duplicates the
+          # work and trips the warning programs.nh emits when both are
+          # enabled.
           gc.automatic = lib.mkForce false;
 
           optimise = {
@@ -186,9 +188,10 @@ in
             substituters = [ "https://cache.nixos.org" ] ++ map (c: c.url) caches;
             trusted-public-keys = map (c: c.key) caches;
             auto-optimise-store = lib.mkDefault true;
-            # Plain assignment, not mkDefault: nixpkgs' own nix.nix module sets
-            # trusted-users = [ "root" ] at normal priority, which otherwise
-            # wins outright over a weaker mkDefault and silently drops "@wheel".
+            # NOTE: plain assignment, not mkDefault: nixpkgs' own nix.nix
+            # module sets trusted-users = [ "root" ] at normal priority,
+            # which otherwise wins outright over a weaker mkDefault and
+            # silently drops "@wheel".
             trusted-users = [
               "root"
               "@wheel"
@@ -213,8 +216,8 @@ in
           default = inputs'.monolisa.packages.default;
         };
 
-        # Top-level, not nested under `programs.nvim`, to avoid colliding with
-        # HM's own native `programs.neovim`-adjacent options.
+        # NOTE: top-level, not nested under `programs.nvim`, to avoid
+        # colliding with HM's own native `programs.neovim`-adjacent options.
         options.nvim.package = lib.mkOption {
           type = lib.types.package;
           default = inputs'.determinvim.packages.default;
@@ -339,7 +342,8 @@ in
 
             yazi = {
               enable = true;
-              # Use the bleeding edge build from Yazi upstream.
+              # NOTE: uses Yazi's own flake instead of nixpkgs' package, for
+              # its bleeding-edge release.
               package = inputs'.yazi.packages.default;
               shellWrapperName = "y";
             };
@@ -365,7 +369,7 @@ in
 
             zsh = {
               autocd = lib.mkDefault true;
-              # xsession.enable is the discriminator: dwm/niri are host
+              # NOTE: xsession.enable is the discriminator: dwm/niri are host
               # aspects, not per-user flags, so this is what a dwm host sets.
               shellAliases = {
                 ll = "ls -la";
@@ -406,7 +410,7 @@ in
               name = lib.mkDefault "volantes_cursors";
             };
             targets = {
-              # x11/sxiv both default to enabled upstream and write
+              # NOTE: x11/sxiv both default to enabled upstream and write
               # ~/.Xresources regardless of session type; only x11 is wired
               # to xsession.enable, sxiv stays off (pinned by checks-stylix.nix).
               feh.enable = lib.mkIf config.xsession.enable true;

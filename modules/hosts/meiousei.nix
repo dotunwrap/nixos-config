@@ -1,7 +1,7 @@
 { den, ... }:
 {
   den.aspects.meiousei = {
-    # See TODO.md: this host is moving towards becoming an HTPC.
+    # TODO: this host is moving towards becoming an HTPC (see TODO.md).
     includes = [
       den.aspects.gaming
       den.aspects.dwm
@@ -57,7 +57,7 @@
         i18n.defaultLocale = "en_US.UTF-8";
       };
 
-    # Theme/wallpaper is each logged-in user's own choice (modules/users/*),
-    # not set here.
+    # NOTE: theme/wallpaper is each logged-in user's own choice
+    # (modules/users/*), not set here.
   };
 }

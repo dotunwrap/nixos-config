@@ -3,15 +3,16 @@
   perSystem =
     { pkgs, ... }:
     let
-      # Home Manager is NixOS-integrated: home-manager.users.<name> inside
-      # each host's own nixosSystem.
+      # NOTE: Home Manager is NixOS-integrated: home-manager.users.<name>
+      # inside each host's own nixosSystem.
       hmConfig =
         { host, user }:
         config.flake.nixosConfigurations.${host}.config.home-manager.users.${user};
 
-      # Regression pin for c8bca61: stylix's x11/sxiv targets both default to
-      # enabled upstream and write ~/.Xresources; only dwm hosts should pull
-      # that in, discriminated the same way modules/defaults.nix does: xsession.enable.
+      # NOTE: regression pin for c8bca61: stylix's x11/sxiv targets both
+      # default to enabled upstream and write ~/.Xresources; only dwm hosts
+      # should pull that in, discriminated the same way modules/defaults.nix
+      # does: xsession.enable.
       stylixTargetFailures =
         builtins.concatMap
           (

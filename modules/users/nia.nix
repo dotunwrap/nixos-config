@@ -11,7 +11,7 @@
   };
 
   den.aspects.nia = {
-    # insecure scopes the nwjs permission (betaflight-configurator's
+    # NOTE: insecure scopes the nwjs permission (betaflight-configurator's
     # dependency) to just her, not the blanket default every user used to get.
     includes = [
       den.batteries.primary-user
@@ -54,7 +54,7 @@
           contact.basePath = ".local/share/contacts";
         };
 
-        # Feeds modules/defaults.nix's `mkDefault config.monolisa.package`
+        # NOTE: feeds modules/defaults.nix's `mkDefault config.monolisa.package`
         # automatically; only the display name needs its own override here.
         monolisa.package = inputs'.monolisa.packages.nia;
         fonts.fontconfig.defaultFonts.monospace = [ "MonoLisa Nia" ];
@@ -90,7 +90,7 @@
             };
           };
 
-          # A chromium browser is required for betaflight to function properly.
+          # NOTE: a chromium browser is required for betaflight to function properly.
           chromium = {
             enable = true;
             package = pkgs.ungoogled-chromium;
@@ -133,8 +133,8 @@
 
         nvim.package = inputs'.niavim.packages.default;
 
-        # Rootless podman as winboat's container runtime; winboat checks for
-        # `podman compose` with the podman-compose provider.
+        # NOTE: rootless podman as winboat's container runtime; winboat checks
+        # for `podman compose` with the podman-compose provider.
         services.podman.enable = true;
         home.packages = [
           pkgs.fldigi

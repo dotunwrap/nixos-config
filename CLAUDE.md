@@ -6,6 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal, flake-based NixOS + Home Manager configuration (nixpkgs unstable) covering multiple hosts and users, built modularly via `flake-parts`. Real machines, real users — treat destructive rebuild/switch commands with care.
 
+## Code Quality Standards
+
+Both maintainers are experienced engineers — optimize code for a fast, low-noise read, not for explaining itself to a beginner.
+
+### Comments
+
+Default to no comments; good naming and structure should make the code self-explanatory. Only write one when it covers something the code itself genuinely can't: a non-obvious edge case, a footgun/trap, a known bug to fix later (`FIXME:`), the justification for a deliberately poor/workaround implementation, or a real warning to the next reader (`WARNING:`). When a comment is warranted, prefix it (`NOTE:`, `TODO:`, `WARNING:`, `FIXME:`) so its weight is clear at a glance.
+
+- Project/design documentation worth preserving for someone unfamiliar with the system belongs in `README.md`, the wiki, or a scoped markdown doc — not inline comments.
+- A big outstanding initiative belongs in `TODO.md`; a small `TODO:` tied to one specific line of code is fine.
+- A comment that just restates what the code already makes obvious is bloat, not documentation — remove it on sight rather than leaving it for later.
+
+### General standards
+
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
+- Releases follow [semantic versioning](https://semver.org/).
+- GPG-signed commits are strongly encouraged, not required.
+- Formatter/lint rules (treefmt, statix, deadnix — see "Commands" below) are enforced via the pre-commit/pre-push hooks; don't fight them or bypass them.
+- Use the language/tool's own docstring or help-doc convention where one exists — e.g. this repo's `justfile` relies on `just`'s convention of a `#` comment directly above a recipe (surfaced by `just --list`/`just --usage`), not a separate doc comment style.
+- Branching/release model is tag-based: `main` always reflects bleeding-edge, in-progress work; stable releases are accessed via immutable git tags, not long-lived release branches.
+
 ## Commands
 
 Use `just` (see `justfile`) for common operations:

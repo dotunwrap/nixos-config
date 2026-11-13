@@ -44,7 +44,6 @@ let
     );
 in
 {
-  # General binds
   "Mod+Q".action = close-window;
 
   "Mod+H".action = focus-column-left;
@@ -74,7 +73,6 @@ in
   "Mod+Shift+S".action.screenshot = [ ];
 }
 // {
-  # Program shortcuts
   "Mod+Return".action = spawn "wezterm";
   "Mod+Shift+Return".action = spawn "zen-twilight";
   "Mod+Space".action = spawn-sh "vicinae open";
@@ -82,7 +80,6 @@ in
   "Mod+Period".action = spawn-sh "vicinae 'vicinae://launch/core/search-emojis'";
 }
 // {
-  # FN row media controls
   "XF86AudioRaiseVolume".action = spawn-sh "swayosd-client --output-volume raise";
   "XF86AudioLowerVolume".action = spawn-sh "swayosd-client --output-volume lower";
   "XF86AudioMute".action = spawn-sh "swayosd-client --output-volume mute-toggle";

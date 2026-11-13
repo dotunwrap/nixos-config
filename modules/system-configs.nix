@@ -8,9 +8,9 @@
 let
   hostNames = builtins.attrNames (config.den.hosts.x86_64-linux or { });
 
-  # Set via `home-manager.sharedModules` (applies once per host), not Den's
-  # `den.schema.hm-host.includes` -- that hook fires once per HM user on a
-  # host, which duplicated every list entry on hosts with >1 user (confirmed
+  # NOTE: set via `home-manager.sharedModules` (applies once per host), not
+  # Den's `den.schema.hm-host.includes` -- that hook fires once per HM user on
+  # a host, which duplicated every list entry on hosts with >1 user (confirmed
   # via an "option already declared" eval error on meiousei).
   homeManagerBaseline = [
     { systemd.user.startServices = "sd-switch"; }
@@ -49,17 +49,18 @@ let
           ];
         }
         inputs.stylix.nixosModules.stylix
-        # niri-flake's own NixOS module already injects its HM module into
-        # `home-manager.sharedModules` once it detects NixOS-integrated HM --
-        # adding it again via `homeManagerBaseline` would double-declare options.
+        # NOTE: niri-flake's own NixOS module already injects its HM module
+        # into `home-manager.sharedModules` once it detects NixOS-integrated
+        # HM -- adding it again via `homeManagerBaseline` would
+        # double-declare options.
         inputs.niri-flake.nixosModules.niri
         inputs.vicinae.nixosModules.default
-        # input-server defaults to enabled upstream; off until that changes.
+        # NOTE: input-server defaults to enabled upstream; off until that changes.
         { programs.vicinae.input-server.enable = lib.mkDefault false; }
         (config.den.hosts.x86_64-linux.${name}.mainModule or { })
       ]
-      # A host with no HM users (europa) never declares `home-manager.*` at
-      # all, so this can't be a blanket default.
+      # NOTE: a host with no HM users (europa) never declares `home-manager.*`
+      # at all, so this can't be a blanket default.
       ++ lib.optional hasHomeManagerUsers {
         home-manager = {
           useGlobalPkgs = true;
@@ -72,9 +73,9 @@ in
 {
   flake-file.inputs = {
     niri-flake = {
-      # Fork of sodiboo/niri-flake; upstream is stale and broken against current
-      # nixpkgs (still requires the removed libdisplay-info_0_2), this fork
-      # tracks nixpkgs properly.
+      # NOTE: fork of sodiboo/niri-flake; upstream is stale and broken against
+      # current nixpkgs (still requires the removed libdisplay-info_0_2), this
+      # fork tracks nixpkgs properly.
       url = "github:epireyn/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -109,11 +110,12 @@ in
       };
     };
 
-    # vicinae intentionally does NOT follow our nixpkgs: it's a large Qt6/CMake/C++
-    # build, so any drift between our nixpkgs pin and vicinae's own guarantees a
-    # cache miss against vicinae.cachix.org and a from-source rebuild. We prioritize
-    # build speed (real cache hits) over lock file dedup here; see nix-auto-follow's
-    # `--ignore vicinae` in devenv.nix.
+    # NOTE: vicinae intentionally does NOT follow our nixpkgs: it's a large
+    # Qt6/CMake/C++ build, so any drift between our nixpkgs pin and vicinae's
+    # own guarantees a cache miss against vicinae.cachix.org and a
+    # from-source rebuild. We prioritize build speed (real cache hits) over
+    # lock file dedup here; see nix-auto-follow's `--ignore vicinae` in
+    # devenv.nix.
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.systems.follows = "systems";

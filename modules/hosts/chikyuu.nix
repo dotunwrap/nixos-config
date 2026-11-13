@@ -107,7 +107,7 @@
         i18n.defaultLocale = "en_US.UTF-8";
       };
 
-    # Theme/wallpaper is each logged-in user's own choice (modules/users/*),
-    # not set here.
+    # NOTE: theme/wallpaper is each logged-in user's own choice
+    # (modules/users/*), not set here.
   };
 }

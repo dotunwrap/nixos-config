@@ -27,8 +27,8 @@ let
     flamingo = "base0F";
   };
 
-  # A new family (e.g. gruvbox) needs only an entry here plus registry rows
-  # in `schemes` below -- `den.batteries.theme` itself never changes.
+  # NOTE: a new family (e.g. gruvbox) needs only an entry here plus registry
+  # rows in `schemes` below -- `den.batteries.theme` itself never changes.
   families = {
     catppuccin =
       {
@@ -88,10 +88,10 @@ let
       };
   };
 
-  # A key with no entry here falls through to whatever `stylix.base16Scheme`
-  # is already configured as (no override). Deliberately a plain attrset of
-  # the submodule type below, not a NixOS option, so it stays evaluable from
-  # inside a battery function.
+  # NOTE: a key with no entry here falls through to whatever
+  # `stylix.base16Scheme` is already configured as (no override).
+  # Deliberately a plain attrset of the submodule type below, not a NixOS
+  # option, so it stays evaluable from inside a battery function.
   schemeType = types.submodule {
     options = {
       family = mkOption {
@@ -164,7 +164,7 @@ let
   };
 in
 {
-  # One battery for every colorscheme. `scheme` is a registry key;
+  # NOTE: one battery for every colorscheme. `scheme` is a registry key;
   # `accent`/`subaccent` override the registry row's defaults when given:
   #   (den.batteries.theme { hosts = [ "kaiousei" ]; scheme = "catppuccin-mocha"; })
   den.batteries.theme =

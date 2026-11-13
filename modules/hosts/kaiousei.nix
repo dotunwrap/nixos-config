@@ -15,7 +15,7 @@
         hardware.framework.enableKmod = true;
       };
 
-    # Theme+wallpaper is each user's own choice now (see
-    # modules/users/gabby.nix) -- not set here.
+    # NOTE: theme+wallpaper is each user's own choice now (see
+    # modules/users/gabby/default.nix) -- not set here.
   };
 }

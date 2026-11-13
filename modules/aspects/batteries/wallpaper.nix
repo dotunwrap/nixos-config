@@ -1,7 +1,7 @@
 { lib, ... }:
 {
-  # Independent of theme (./theme.nix) -- same theme, different image is a
-  # real combination. One call per host, each with its own `host`/`path`
+  # NOTE: independent of theme (./theme.nix) -- same theme, different image
+  # is a real combination. One call per host, each with its own `host`/`path`
   # pair rather than a shared hostname -> path map:
   #   (den.batteries.wallpaper { host = "chikyuu"; path = ./foo.png; })
   #

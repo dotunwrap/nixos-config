@@ -6,8 +6,8 @@
   };
 
   den.aspects.gabby = {
-    # Theme/wallpaper is her own choice, not her host's -- set per host here
-    # rather than the host deciding it for whoever's logged in.
+    # NOTE: theme/wallpaper is her own choice, not her host's -- set per host
+    # here rather than the host deciding it for whoever's logged in.
     includes = [
       den.batteries.primary-user
       (den.batteries.theme {

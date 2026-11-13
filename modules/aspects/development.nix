@@ -1,5 +1,5 @@
 {
-  # Unlike base, this is NOT a den.default -- every host and every user
+  # NOTE: unlike base, this is NOT a den.default -- every host and every user
   # currently wants it, but that's today's reality, not a reason to make it
   # impossible to turn off. A normal, host-included aspect (same shape as
   # gaming/dwm/niri) so any future host can simply not include it.

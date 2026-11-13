@@ -36,7 +36,7 @@
         };
       };
 
-    # Theme+wallpaper is nia's own choice now (see modules/users/nia.nix) --
-    # not set here.
+    # NOTE: theme+wallpaper is nia's own choice now (see
+    # modules/users/nia.nix) -- not set here.
   };
 }
