@@ -17,6 +17,14 @@ let
     name: value: lib.nameValuePair (builtins.replaceStrings [ ":UD-" ] [ ":" ] name) value
   ) cfg.modelSettings;
 
+  # Qwen-Sharp-Chat-Templates (froggeric v22.5 base): terse answers, thinking
+  # retention for cache hits across turns, and effort steering. Pinned by revision.
+  # Per request, `chat_template_kwargs = { terse = false; }` turns the terseness off.
+  chatTemplate = pkgs.fetchurl {
+    url = "https://huggingface.co/peculiar-ragdoll/Qwen-Sharp-Chat-Templates/resolve/6a78b888557f8c9987f51bca98d02d8f69682044/chat_template.jinja";
+    hash = "sha256-zf85+ya2DckPqikucmZVxrIfYttJeEbgLkxLurlCqEo=";
+  };
+
   # Router-mode presets: [*] applies to every model the router serves (including
   # ones pulled into the cache later), the model section adds MTP and sampling
   # for the default Qwen model only, since other models may have no MTP head.
@@ -46,6 +54,7 @@ let
         ${modelId} = {
           hf-repo = cfg.model;
           load-on-startup = true;
+          chat-template-file = "${chatTemplate}";
           # MTP speculative decoding using the draft head embedded in the unsloth GGUFs
           spec-type = "draft-mtp";
           spec-draft-n-max = 3;
