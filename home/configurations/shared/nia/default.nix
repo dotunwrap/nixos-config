@@ -94,7 +94,12 @@ in
 
     nvim.package = niavim.packages.${system}.default;
 
-    pi.enable = true;
+    pi = {
+      enable = true;
+      # dosei serves the model; other hosts reach it over Tailscale. dosei's own
+      # local_LLM bundle overrides this with loopback.
+      llamaBaseUrl = lib.mkDefault "http://dosei:8080";
+    };
 
     qutebrowser.enable = false;
     zen-browser.enable = false;

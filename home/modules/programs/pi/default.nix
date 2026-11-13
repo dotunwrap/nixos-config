@@ -20,9 +20,35 @@ let
   graphifyVersion = "0.9.107";
 in
 {
+  options.programs.pi.llamaBaseUrl = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
+    default = null;
+    example = "http://dosei:8080";
+    description = ''
+      Base URL of a llama-server router (e.g. one reached over Tailscale) for Pi's
+      built-in llama.cpp provider. Null leaves the provider unconfigured.
+    '';
+  };
+
   config = lib.mkIf cfg.enable {
     home = {
       activation = {
+        # Equivalent of `/login llama.cpp`. auth.json is Pi-owned (it holds other
+        # providers' credentials too), so merge the entry instead of symlinking the file.
+        piLlamaLogin = lib.mkIf (cfg.llamaBaseUrl != null) (
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            auth="$HOME/.pi/agent/auth.json"
+            run mkdir -p "$(dirname "$auth")"
+            [ -s "$auth" ] || echo '{}' > "$auth"
+            tmp="$(mktemp)"
+            ${lib.getExe pkgs.jq} \
+              --arg url ${lib.escapeShellArg cfg.llamaBaseUrl} \
+              '."llama.cpp" = {type: "api_key", env: {LLAMA_BASE_URL: $url}}' \
+              "$auth" > "$tmp" && run install -m 600 "$tmp" "$auth"
+            rm -f "$tmp"
+          ''
+        );
+
         # Declare Pi packages. settings.json is Pi-owned (it also holds model and
         # thinking choices), so merge instead of replacing the file. An existing entry
         # for the same package at another version is dropped, so a pin bump replaces it.
@@ -58,6 +84,12 @@ in
       ];
 
       sessionPath = [ "$HOME/.local/bin" ];
+
+      # Pi's built-in llama.cpp provider discovers every model on the router and
+      # detects Qwen's thinking switch, so no models.json is needed.
+      sessionVariables = lib.mkIf (cfg.llamaBaseUrl != null) {
+        LLAMA_BASE_URL = cfg.llamaBaseUrl;
+      };
 
       # Appended to Pi's default system prompt (SYSTEM.md would replace it). No
       # Qwen-specific prompt is published, so this is general coding-agent guidance
