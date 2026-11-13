@@ -141,20 +141,8 @@ in
         type = lib.types.str;
         default = "127.0.0.1";
         description = ''
-          Address llama-server binds to. Anything other than loopback exposes it to the
-          network, so also set `apiKeyFile`.
-        '';
-      };
-
-      openFirewall = lib.mkEnableOption "opening `port` in the firewall";
-
-      apiKeyFile = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        description = ''
-          File holding the API key (one per line), kept out of the Nix store. It is
-          passed to the service as a systemd credential, so it only needs to be
-          readable by root. Clients must send it as a bearer token.
+          Address llama-server binds to. There is no API key, so anything other than
+          loopback relies on the firewall (only trusted interfaces such as Tailscale).
         '';
       };
 
@@ -203,16 +191,7 @@ in
         inherit (cfg) host port;
         models-preset = presets;
         models-max = 1;
-      }
-      // lib.optionalAttrs (cfg.apiKeyFile != null) {
-        api-key-file = "/run/credentials/llama-cpp.service/api-key";
       };
     };
-
-    systemd.services.llama-cpp.serviceConfig.LoadCredential = lib.mkIf (cfg.apiKeyFile != null) [
-      "api-key:${cfg.apiKeyFile}"
-    ];
-
-    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.port ];
   };
 }
