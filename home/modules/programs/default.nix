@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    pi.enable = mkEnableOption "Enable pi";
     vial.enable = mkEnableOption "Enable vial";
     bottles.enable = mkEnableOption "Enable bottles";
     winboat.enable = mkEnableOption "Enable winboat";

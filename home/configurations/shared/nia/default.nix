@@ -94,6 +94,8 @@ in
 
     nvim.package = niavim.packages.${system}.default;
 
+    pi.enable = true;
+
     qutebrowser.enable = false;
     zen-browser.enable = false;
     fldigi.enable = true;
