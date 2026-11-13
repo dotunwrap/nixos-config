@@ -1,5 +1,15 @@
 { den, ... }:
 {
+  flake-file.inputs.niavim = {
+    url = "github:nyoshe/niavim";
+    inputs = {
+      nixpkgs.follows = "nixpkgs";
+      flake-parts.follows = "flake-parts";
+      nixvim.follows = "nixvim";
+      systems.follows = "systems-future";
+    };
+  };
+
   den.aspects.nia = {
     # insecure scopes the nwjs permission (betaflight-configurator's
     # dependency) to just her, not the blanket default every user used to get.

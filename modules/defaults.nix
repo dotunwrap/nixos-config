@@ -4,7 +4,53 @@
   lib,
   ...
 }:
+let
+  caches = import ./_data/caches.nix;
+in
 {
+  flake-file.inputs = {
+    nix-auth = {
+      url = "github:numtide/nix-auth";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    determinvim = {
+      url = "github:dotunwrap/determinvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        nixvim.follows = "nixvim";
+        systems.follows = "systems-future";
+      };
+    };
+
+    yazi = {
+      url = "github:sxyazi/yazi";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+        rust-overlay.follows = "rust-overlay";
+      };
+    };
+
+    monolisa = {
+      url = "git+ssh://git@github.com/dotunwrap/monolisa-font-nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+  };
+
   den.default = {
     includes = [
       den.batteries.hostname
@@ -137,19 +183,8 @@
               "nix-command"
               "flakes"
             ];
-            substituters = [
-              "https://cache.nixos.org"
-              "https://niri-epireyn.cachix.org"
-              "https://nix-community.cachix.org"
-              "https://vicinae.cachix.org"
-              "https://yazi.cachix.org"
-            ];
-            trusted-public-keys = [
-              "niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="
-              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-              "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
-              "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
-            ];
+            substituters = [ "https://cache.nixos.org" ] ++ map (c: c.url) caches;
+            trusted-public-keys = map (c: c.key) caches;
             auto-optimise-store = lib.mkDefault true;
             # Plain assignment, not mkDefault: nixpkgs' own nix.nix module sets
             # trusted-users = [ "root" ] at normal priority, which otherwise

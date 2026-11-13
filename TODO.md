@@ -6,6 +6,9 @@ once it's empty.
 
 ## Open
 
+- **sops-nix secrets**: `sops-nix` is declared (`modules/secrets.nix`) but not
+  wired up to any host/user yet -- configure actual secrets management for
+  the project.
 - **europa**: has no real `users.users.nia` account yet, so she isn't
   declared on it in `modules/hosts.nix` (Den synthesizes a bare user stub
   for any declared entity, which fails NixOS's user assertions without a

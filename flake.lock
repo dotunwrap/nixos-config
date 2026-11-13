@@ -91,29 +91,6 @@
         "type": "github"
       }
     },
-    "claude-desktop": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1793924535,
-        "narHash": "sha256-8KeOjG/h1TcvodGWC+PE13ABv3l2EDReHvfaxQvVwak=",
-        "owner": "heytcass",
-        "repo": "claude-desktop-linux-flake",
-        "rev": "1c5b6360a6490e7006ca16adc4b2a02b6cfb3585",
-        "type": "github"
-      },
-      "original": {
-        "owner": "heytcass",
-        "repo": "claude-desktop-linux-flake",
-        "type": "github"
-      }
-    },
     "den": {
       "locked": {
         "lastModified": 1793993828,
@@ -1271,11 +1248,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793871777,
-        "narHash": "sha256-DbFyxXHjP4SJDWVVIILkgrUZxj29cDusi8ULXoQGuZ8=",
+        "lastModified": 1794425805,
+        "narHash": "sha256-4s5CRvkYX4oAJVZ+zu2bBKFH2gG2GqN6OKHEWgJr1AY=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "d645c71a58dbae3eb17ff551a07aea13a541cb1a",
+        "rev": "b6ca87f78ec5bafc4b2aef7b29803dcf419266af",
         "type": "github"
       },
       "original": {
@@ -1425,7 +1402,6 @@
     "root": {
       "inputs": {
         "claude-code-overlay": "claude-code-overlay",
-        "claude-desktop": "claude-desktop",
         "den": "den",
         "determinvim": "determinvim",
         "firefox-addons": "firefox-addons",
@@ -1547,8 +1523,7 @@
         "vicinae": "vicinae",
         "vicinae-extensions": "vicinae-extensions",
         "yazi": "yazi",
-        "zen-browser": "zen-browser",
-        "zennotes": "zennotes"
+        "zen-browser": "zen-browser"
       }
     },
     "rust-overlay": {
@@ -1918,26 +1893,6 @@
       "original": {
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "type": "github"
-      }
-    },
-    "zennotes": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1793917222,
-        "narHash": "sha256-7WDqGh25vymdCTa6MnjFhViDEpJ1VOvVEjvWF6P4jtM=",
-        "owner": "ZenNotes",
-        "repo": "zennotes",
-        "rev": "85cddae1a4ef44b93846f3adee2eeb85a6f7b685",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ZenNotes",
-        "repo": "zennotes",
         "type": "github"
       }
     }

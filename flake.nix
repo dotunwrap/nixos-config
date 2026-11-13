@@ -8,10 +8,16 @@
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://dotunwrap.cachix.org"
+      "https://niri-epireyn.cachix.org"
+      "https://vicinae.cachix.org"
+      "https://yazi.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "dotunwrap.cachix.org-1:p7ePw6DuH9OjOqpzJUg/RJor+9tl3vKtjHGBACvthW0="
+      "niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="
+      "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+      "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
     ];
   };
 
@@ -21,13 +27,6 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
-      };
-    };
-    claude-desktop = {
-      url = "github:heytcass/claude-desktop-linux-flake";
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
       };
     };
     den.url = "github:denful/den";
@@ -202,10 +201,6 @@
         home-manager.follows = "home-manager";
         nixpkgs.follows = "nixpkgs";
       };
-    };
-    zennotes = {
-      url = "github:ZenNotes/zennotes";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 }

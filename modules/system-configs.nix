@@ -70,5 +70,63 @@ let
     };
 in
 {
-  config.flake.nixosConfigurations = lib.genAttrs hostNames mkHost;
+  flake-file.inputs = {
+    niri-flake = {
+      # Fork of sodiboo/niri-flake; upstream is stale and broken against current
+      # nixpkgs (still requires the removed libdisplay-info_0_2), this fork
+      # tracks nixpkgs properly.
+      url = "github:epireyn/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    claude-code-overlay = {
+      url = "github:sadjow/claude-code-nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
+
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems-future";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+
+    # vicinae intentionally does NOT follow our nixpkgs: it's a large Qt6/CMake/C++
+    # build, so any drift between our nixpkgs pin and vicinae's own guarantees a
+    # cache miss against vicinae.cachix.org and a from-source rebuild. We prioritize
+    # build speed (real cache hits) over lock file dedup here; see nix-auto-follow's
+    # `--ignore vicinae` in devenv.nix.
+    vicinae = {
+      url = "github:vicinaehq/vicinae";
+      inputs.systems.follows = "systems";
+    };
+    vicinae-extensions = {
+      url = "github:vicinaehq/extensions";
+      inputs = {
+        nixpkgs.follows = "vicinae/nixpkgs";
+        vicinae.follows = "vicinae";
+        systems.follows = "systems";
+      };
+    };
+  };
+
+  flake.nixosConfigurations = lib.genAttrs hostNames mkHost;
 }

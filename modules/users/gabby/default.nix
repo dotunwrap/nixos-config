@@ -1,5 +1,10 @@
 { den, ... }:
 {
+  flake-file.inputs.firefox-addons = {
+    url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   den.aspects.gabby = {
     # Theme/wallpaper is her own choice, not her host's -- set per host here
     # rather than the host deciding it for whoever's logged in.

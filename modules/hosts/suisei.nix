@@ -1,18 +1,16 @@
-{ den, inputs, ... }:
+{ den, ... }:
 {
   den.aspects.suisei = {
     includes = [
       den.aspects.niri
       den.aspects.development
+      den.aspects.framework-amd-ai-300
     ];
 
     nixos =
       { config, ... }:
       {
-        imports = [
-          ./_hardware/suisei.nix
-          inputs.nixos-hardware.nixosModules.framework-amd-ai-300-series
-        ];
+        imports = [ ./_hardware/suisei.nix ];
 
         networking = {
           hostName = "suisei";
