@@ -35,42 +35,43 @@ All of the hosts in my configuration are named after planetary bodies in Japanes
 
 ### NixOS
 
-- [chikyuu](/nixos/configurations/chikyuu.nix) - _Earth_
+- [chikyuu](/modules/hosts/chikyuu.nix) - _Earth_
 
   My desktop (Ryzen 9 9950X + Radeon RX 9070 XT). Runs dwm on X11. Used for _Linux gaming_.
 
-- [europa](/nixos/configurations/europa.nix) - _Europa_
+- [europa](/modules/hosts/europa.nix) - _Europa_
 
   A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Soon to be used as a home server.
 
-- [kaiousei](/nixos/configurations/kaiousei.nix) - _Neptune_
+- [kaiousei](/modules/hosts/kaiousei.nix) - _Neptune_
 
   My Framework 13 Pro (Ryzen 9 AI HX 370). My main machine. Runs Niri on Wayland.
 
-- [meiousei](/nixos/configurations/meiousei.nix) - _Pluto_
+- [meiousei](/modules/hosts/meiousei.nix) - _Pluto_
 
   Previously my gaming desktop (Ryzen 5 5600X + NVIDIA RTX 4070 Super). Soon to be used as a home theater PC (HTPC) for casual gaming from my couch.
 
-- [suisei](/nixos/configurations/suisei.nix) - _Mercury_
+- [suisei](/modules/hosts/suisei.nix) - _Mercury_
 
   My [girlfriend's](https://github.com/nyoshe) Framework 13 (Ryzen 9 AI HX 370). Her main machine. Runs Niri on Wayland.
 
 ### Home Manager
 
-Currently none.
+Home Manager is NixOS-integrated on every host above (`home-manager.users.<name>`)
+rather than configured as a standalone profile, so there's nothing separate to list here.
 
 ## Users
 
 These are the users I have configured for my machines. This list shows the users as well as the hosts they are used on.
 
-- [gabby](/nixos/configurations/users/gabby.nix)
-  - [chikyuu](/home/configurations/gabby-at-chikyuu.nix)
-  - [kaiousei](/home/configurations/gabby-at-kaiousei.nix)
-  - [meiousei](/home/configurations/gabby-at-meiousei.nix)
+- [gabby](/modules/users/gabby/default.nix)
+  - chikyuu
+  - kaiousei
+  - meiousei
 
-- [nia](/nixos/configurations/users/nia.nix)
-  - [meiousei](/home/configurations/nia-at-meiousei.nix)
-  - [suisei](/home/configurations/nia-at-suisei.nix)
+- [nia](/modules/users/nia.nix)
+  - meiousei
+  - suisei
 
 ## Credits
 

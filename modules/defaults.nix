@@ -5,19 +5,6 @@
   ...
 }:
 {
-  # Reusable Den batteries applied everywhere rather than hand-rolled:
-  # - hostname: sets networking.hostName from each host's own name --
-  #   replaces a `networking.hostName = "<name>";` line we used to repeat in
-  #   every host file (and again in modules/system-configs.nix's baseline).
-  # - inputs': gives every nixos/homeManager-class module `inputs'` (system
-  #   pre-selected) as a module arg, replacing
-  #   `inputs.X.packages.${pkgs.stdenv.hostPlatform.system}.Y` with
-  #   `inputs'.X.packages.Y` wherever that pattern was repeated (this file,
-  #   modules/aspects/niri.nix, modules/users/*).
-  # - user-shell "zsh": sets the login shell and enables `programs.zsh` at
-  #   both the NixOS and Home Manager levels -- replaces three separate
-  #   zsh-enabling spots (nixos below, homeManager below, each user's own
-  #   `shell = pkgs.zsh;`).
   den.default = {
     includes = [
       den.batteries.hostname
@@ -25,24 +12,16 @@
       (den.batteries.user-shell "zsh")
     ];
 
-    # Formerly nixos/modules/bundles/base, nixos/modules/core/{cachix,nix},
-    # and nixos/configurations/bootloader/* -- all unconditional on every
-    # host with no gating at all, so they move to den.default.nixos
-    # (broadcast to every host) rather than becoming aspects some host would
-    # need to `includes`. (The development bundle, unlike these, stays its
-    # own aspect -- see modules/aspects/development.nix -- since it's
-    # something a host or user should be able to opt out of, even though
-    # every one currently includes it.)
+    # Unconditional on every host. `development` is the one exception that
+    # stays its own aspect (modules/aspects/development.nix) so a host can
+    # opt out of it.
     nixos =
       { pkgs, inputs', ... }:
       {
         system.stateVersion = lib.mkDefault "25.05";
 
-        # Formerly nixos/configurations/bootloader/<host>.nix -- identical on
-        # all 5 hosts today, but mkDefault throughout (not plain assignment) so
-        # any host can cleanly override a single field with a plain assignment
-        # of its own, rather than needing lib.mkForce to fight a same-priority
-        # conflict.
+        # mkDefault throughout so a host can override one field with a plain
+        # assignment instead of fighting an equal-priority mkDefault with mkForce.
         boot = {
           loader = {
             systemd-boot.enable = lib.mkDefault true;
@@ -119,10 +98,6 @@
           upower.enable = true;
         };
 
-        # Formerly nixos/modules/core/{cachix,nh,nix,flake} -- all unconditional
-        # on every host (flake's own `nix.flakes.enable` gate was always
-        # switched on unconditionally from parts/system-configs.nix's own
-        # baseline, never actually gated).
         programs.nh = {
           enable = true;
           flake = "/etc/nixos";
@@ -189,13 +164,6 @@
         };
       };
 
-    # Formerly home/modules/bundles/base (force-enabled for every profile
-    # via home/modules/misc/home, bypassing activeBundles entirely) --
-    # unconditional on every home-manager user with no gating at all, so it
-    # moves to den.default.homeManager (broadcast to every user).
-    # `monolisa.package` keeps the same per-user override point the old
-    # `bundles.base.monolisaVersion` option gave nia's profile (see
-    # modules/users/nia.nix).
     homeManager =
       {
         config,
@@ -210,11 +178,8 @@
           default = inputs'.monolisa.packages.default;
         };
 
-        # Formerly home/modules/programs/nvim's own `programs.nvim.package`
-        # option -- not native, and not nested under `programs.nvim` here to
-        # avoid colliding with HM's own native `programs.neovim`-adjacent
-        # options. nia's profile overrides this the same way she overrides
-        # `monolisa.package` (see modules/users/nia.nix).
+        # Top-level, not nested under `programs.nvim`, to avoid colliding with
+        # HM's own native `programs.neovim`-adjacent options.
         options.nvim.package = lib.mkOption {
           type = lib.types.package;
           default = inputs'.determinvim.packages.default;
@@ -226,8 +191,6 @@
             sessionVariables.EDITOR = "nvim";
             packages = [
               config.monolisa.package
-              # Formerly home/modules/programs/nvim -- stylix-wrapped the same
-              # way the original module did.
               (
                 if config.stylix.enable && config.stylix.targets.nixvim.enable then
                   config.nvim.package.extend config.stylix.targets.nixvim.exportedModule
@@ -241,6 +204,7 @@
               pkgs.magic-wormhole
               pkgs.mat2
               inputs'.nix-auth.packages.default
+              pkgs.nix-output-monitor
               pkgs.p7zip
               pkgs.pulsemixer
               pkgs.wget
@@ -281,9 +245,6 @@
             pay-respects.enable = true;
             starship.enable = true;
 
-            # Formerly home/modules/programs/starship's own `.prompt` option,
-            # which just selected which settings preset to load -- "pure" is
-            # the only one that ever existed, so it's inlined directly.
             starship.settings = lib.mkDefault {
               format = lib.concatStrings [
                 "$username"
@@ -369,11 +330,8 @@
 
             zsh = {
               autocd = lib.mkDefault true;
-              # Formerly home/modules/programs/shells/shellAliases.nix, which
-              # read `config.bundles.dwm.enable`/`config.bundles.niri.enable`
-              # directly -- dwm/niri are now host-driven aspects, not per-user
-              # bundle flags, so the discriminator is whatever a dwm host's own
-              # aspect already sets on every one of its users: `xsession.enable`.
+              # xsession.enable is the discriminator: dwm/niri are host
+              # aspects, not per-user flags, so this is what a dwm host sets.
               shellAliases = {
                 ll = "ls -la";
                 c = if config.xsession.enable then "xsel --clipboard --input" else "wl-copy";
@@ -400,11 +358,6 @@
 
           };
 
-          # Formerly home/modules/themes/default.nix's shared stylix dispatch,
-          # common to every theme (everforest/catppuccin) rather than
-          # theme-specific -- each host's own `provides.to-users.homeManager`
-          # only needs to set `stylix.image`/`stylix.base16Scheme` (+ any
-          # theme-specific cursor/freetube overrides) on top of this.
           stylix = {
             enable = true;
             polarity = lib.mkDefault "dark";
@@ -418,10 +371,9 @@
               name = lib.mkDefault "volantes_cursors";
             };
             targets = {
-              # x11 and sxiv targets default to enabled regardless of session
-              # type and both write to ~/.Xresources; only wire x11 up on X11
-              # (dwm) hosts, and sxiv not at all since we don't use it, so
-              # Wayland/niri hosts don't get a ~/.Xresources.
+              # x11/sxiv both default to enabled upstream and write
+              # ~/.Xresources regardless of session type; only x11 is wired
+              # to xsession.enable, sxiv stays off (pinned by checks-stylix.nix).
               feh.enable = lib.mkIf config.xsession.enable true;
               x11.enable = lib.mkDefault config.xsession.enable;
               sxiv.enable = lib.mkDefault false;

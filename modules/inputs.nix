@@ -11,12 +11,10 @@
     # redundant.
     den.url = "github:denful/den";
 
-    # NOTE: den's nix/lib/schema.nix prefers a consumer-provided `gen` input
-    # (via gen's own `lib.mkGenLibs`), falling back to an impure fetchTarball
-    # of a pinned rev when absent. That fallback fetch runs inside a sandboxed
-    # build (e.g. the nix-unit check), where it has no network access and
-    # fails outright -- declaring `gen` ourselves takes the real-input path
-    # instead, which resolves at normal flake-lock time, not inside a build.
+    # Den falls back to an impure fetchTarball for `gen`/`nix-effects` when
+    # neither is declared here -- that fetch has no network access inside a
+    # sandboxed build (e.g. the nix-unit check) and fails outright. Declaring
+    # both ourselves resolves them at normal flake-lock time instead.
     gen = {
       url = "github:sini/gen";
       inputs = {
@@ -25,14 +23,9 @@
       };
     };
 
-    # NOTE: same fallback-avoidance shape as `gen` above, for Den's (currently
-    # unused) FX pipeline dependency -- `nix/lib/fx.nix` does
-    # `inputs.nix-effects.lib or nfx`, where `nfx` is an impure fetchTarball
-    # fallback forced the moment `inputs.nix-effects` isn't declared. That
-    # fallback is reachable from nix-unit's sandboxed re-evaluation of Den's
-    # module surface even though this repo doesn't use the FX pipeline at all
-    # (not adopted -- see the plan's "Not adopting (yet)" list). Declaring the
-    # real input, unused otherwise, keeps the sandboxed check off that fallback.
+    # Unused by this repo directly (Den's FX pipeline isn't adopted) but
+    # reachable from nix-unit's sandboxed re-evaluation of Den's own module
+    # surface -- see the `gen` NOTE above.
     nix-effects = {
       url = "github:denful/nix-effects";
       inputs = {
@@ -41,20 +34,10 @@
       };
     };
 
-    # NOTE: nix-unit's own flake module (lib/modules/flake/system.nix) only
-    # pre-materializes whatever this repo's `modules/nix-unit.nix` hands it via
-    # `perSystem.nix-unit.inputs` (currently the whole top-level `inputs`
-    # attrset, passed through as `--override-input` flags) into the sandboxed
-    # check's build inputs -- anything NOT a top-level input of this flake is
-    # invisible to that sandbox and triggers a real (failing) network fetch the
-    # moment Den's code forces evaluation of it. `gen`'s own sub-libraries
-    # (gen-program et al, referenced directly inside gen's own `outputs`
-    # function as `inputs.gen-algebra` etc.) are exactly that: inputs of `gen`,
-    # not of us. Promoting each to a top-level `follows` here (mirroring gen's
-    # own "HUB" convergence pattern one level up) makes them real top-level
-    # inputs of this flake too, so the existing `inputs = inputs;` passthrough
-    # picks them up automatically -- same fix shape as the `gen` input itself
-    # above, just one level deeper.
+    # `gen`'s own sub-libraries are inputs of `gen`, not of us, and so are
+    # invisible to nix-unit's sandbox (same issue as the `gen` NOTE above, one
+    # level deeper). Promoting each to a top-level `follows` here makes our
+    # own `inputs = inputs;` passthrough reach them too.
     gen-algebra.follows = "gen/gen-algebra";
     gen-aspects.follows = "gen/gen-aspects";
     gen-assemble.follows = "gen/gen-assemble";

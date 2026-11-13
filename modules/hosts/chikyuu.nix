@@ -35,7 +35,6 @@
           initrd.kernelModules = [ "amdgpu" ];
         };
 
-        # Formerly drivers.ffado.
         environment.systemPackages = [ pkgs.ffado ];
 
         services = {
@@ -108,11 +107,7 @@
         i18n.defaultLocale = "en_US.UTF-8";
       };
 
-    # Theme+wallpaper for whoever's logged in is their own choice now (see
-    # modules/users/gabby.nix) -- not set here. The host is still free to
-    # theme its own host-scoped surfaces (bootloader splash, display
-    # manager, etc.) completely independently via its own `nixos`-class
-    # `stylix.*` above, entirely unrelated to any user's homeManager-class
-    # theme; chikyuu just doesn't need to right now.
+    # Theme/wallpaper is each logged-in user's own choice (modules/users/*),
+    # not set here.
   };
 }

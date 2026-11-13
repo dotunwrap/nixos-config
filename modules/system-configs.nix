@@ -8,17 +8,10 @@
 let
   hostNames = builtins.attrNames (config.den.hosts.x86_64-linux or { });
 
-  # Everything every host-integrated home-manager user needs regardless of
-  # which aspects they include: the third-party HM flake modules, plus the
-  # handful of tiny baseline tweaks every profile used to carry via
-  # parts/home-configs.nix. Set once per host (via `home-manager.
-  # sharedModules`, HM's own native "apply to every user" option) rather
-  # than threading it through Den's `den.schema.hm-host.includes` -- that
-  # hook turned out to fire once per home-manager user on a host, not once
-  # per host, so a list-valued option like `sharedModules` got every entry
-  # duplicated for any host with more than one HM user (confirmed via a
-  # NixOS "option already declared" eval error on meiousei, which has both
-  # gabby and nia).
+  # Set via `home-manager.sharedModules` (applies once per host), not Den's
+  # `den.schema.hm-host.includes` -- that hook fires once per HM user on a
+  # host, which duplicated every list entry on hosts with >1 user (confirmed
+  # via an "option already declared" eval error on meiousei).
   homeManagerBaseline = [
     { systemd.user.startServices = "sd-switch"; }
     { news.display = "silent"; }
@@ -56,29 +49,17 @@ let
           ];
         }
         inputs.stylix.nixosModules.stylix
-        # NOTE: niri-flake's own NixOS module (unconditionally in this
-        # baseline) already injects its HM module
-        # (`self.homeModules.config`/`.stylix`) into
-        # `home-manager.sharedModules` for every user the instant it detects
-        # NixOS-integrated HM (`options ? home-manager`) -- adding
-        # `inputs.niri-flake.homeModules.*` again ourselves in
-        # `homeManagerBaseline` would double-declare the same options
-        # (`programs.niri.finalConfig` etc). Confirmed by reading niri-flake's
-        # own source directly: don't re-add it.
+        # niri-flake's own NixOS module already injects its HM module into
+        # `home-manager.sharedModules` once it detects NixOS-integrated HM --
+        # adding it again via `homeManagerBaseline` would double-declare options.
         inputs.niri-flake.nixosModules.niri
         inputs.vicinae.nixosModules.default
-        # NOTE: Vicinae's NixOS module has the input-server enabled by
-        # default. Implicit actions bad. I have spoken with contributors on
-        # their Discord server, and this is something that will be changed
-        # later.
+        # input-server defaults to enabled upstream; off until that changes.
         { programs.vicinae.input-server.enable = lib.mkDefault false; }
         (config.den.hosts.x86_64-linux.${name}.mainModule or { })
       ]
-      # `home-manager.*` only exists once the `home-manager` NixOS module is
-      # actually imported (triggered by >=1 user with classes=["homeManager"]
-      # in modules/hosts.nix) -- a host with none (europa) never declares
-      # this namespace at all, so this must stay conditioned on the same
-      # check, not applied as a blanket default to every host.
+      # A host with no HM users (europa) never declares `home-manager.*` at
+      # all, so this can't be a blanket default.
       ++ lib.optional hasHomeManagerUsers {
         home-manager = {
           useGlobalPkgs = true;

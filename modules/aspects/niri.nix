@@ -54,12 +54,10 @@
       }:
       let
         inherit (pkgs.stdenv.hostPlatform) system;
-        # vicinae deliberately doesn't follow our nixpkgs (see flake.nix), so
-        # its glibc is older than the system's. The host Mesa in
-        # /run/opengl-driver then fails to load inside its process (GLIBC_x.y
-        # not found) and both EGL and Vulkan break. Use a Mesa from vicinae's
-        # own pin so the libc versions match.
-        # TODO: This should be removed when the issue #2040 is resolved
+        # vicinae doesn't follow our nixpkgs (see flake.nix), so its glibc is
+        # older than the system's; the host Mesa fails to load inside its
+        # process (GLIBC_x.y not found). Use a Mesa from vicinae's own pin
+        # instead so the libc versions match. See TODO.md.
         vicinaeMesa = inputs.vicinae.inputs.nixpkgs.legacyPackages.${system}.mesa;
         vicinaeIcds =
           lib.concatMapStringsSep ":" (n: "${vicinaeMesa}/share/vulkan/icd.d/${n}_icd.x86_64.json")
@@ -83,8 +81,6 @@
             defaultApplications."application/pdf" = lib.mkDefault "zen-twilight.desktop";
           };
 
-          # Formerly home/modules/services/swayosd's own CSS, layered on HM's
-          # native services.swayosd.
           configFile."swayosd/style.css".text =
             let
               colors = config.lib.stylix.colors.withHashtag;
@@ -129,20 +125,15 @@
                 min-height: 6px;
                 border-radius: 0;
                 border: none;
-                # Formerly `colors.mauve` -- not a real stylix color key, but
-                # this matches the base16 slot "mauve" maps to via the
-                # catppuccin accent override (modules/hosts/kaiousei.nix,
-                # modules/hosts/meiousei.nix).
+                # base0E, not a named stylix color -- the slot catppuccin's
+                # accent override (modules/aspects/batteries/theme.nix) maps
+                # mauve onto.
                 background: ${colors.base0E};
               }
             '';
         };
 
         home = {
-          # Formerly imagemagick/proton-authenticator/protonmail-desktop/vlc/
-          # wayland-utils/wl-clipboard's own custom modules -- none are native
-          # Home Manager options, each was just `home.packages = [ <package> ];`
-          # behind an enable flag.
           packages = [
             pkgs.imagemagick
             pkgs.proton-authenticator
@@ -308,13 +299,8 @@
               };
             };
 
-            # Non-floating bar: one continuous, opaque `window#waybar`
-            # background spans the full width (no margins, no per-module
-            # pills/gaps), colored via the `@baseXX` GTK custom properties
-            # Stylix defines (base16 slots) so it stays dynamic across
-            # hosts/themes. mkAfter appends after Stylix's target output
-            # (which defines those vars), layering on top rather than
-            # replacing the stylesheet outright.
+            # mkAfter layers on top of Stylix's own waybar CSS (which defines
+            # the `@baseXX` custom properties used below) instead of replacing it.
             style = lib.mkAfter ''
               * {
                 border: none;
@@ -423,8 +409,6 @@
             events.before-sleep = "";
           };
 
-          # Formerly home/modules/services/swayosd (its own custom module,
-          # layered on HM's native services.swayosd).
           swayosd.enable = true;
         };
       };

@@ -1,8 +1,7 @@
 { den, ... }:
 {
   den.aspects.meiousei = {
-    # TODO: This machine will be moving towards becoming a HTPC. We should
-    # build an aspect for this specifically and move away from dwm here.
+    # See TODO.md: this host is moving towards becoming an HTPC.
     includes = [
       den.aspects.gaming
       den.aspects.dwm
@@ -47,7 +46,6 @@
           videoDrivers = [ "nvidia" ];
         };
 
-        # Formerly drivers.ffado.
         environment.systemPackages = [ pkgs.ffado ];
 
         networking = {
@@ -59,9 +57,7 @@
         i18n.defaultLocale = "en_US.UTF-8";
       };
 
-    # Theme+wallpaper is each user's own choice now (see
-    # modules/users/gabby.nix and modules/users/nia.nix) -- not set here.
-    # gabby and nia happen to each pick the same catppuccin instance for
-    # themselves on this host today, but that's their call, not meiousei's.
+    # Theme/wallpaper is each logged-in user's own choice (modules/users/*),
+    # not set here.
   };
 }
