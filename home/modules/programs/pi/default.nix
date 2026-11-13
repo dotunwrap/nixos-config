@@ -8,11 +8,17 @@ _:
 let
   cfg = config.programs.pi;
 
-  # Pi packages added to ~/.pi/agent/settings.json. npm sources are pinned: bump the
-  # version here only after reviewing the new release.
+  # Pi packages added to ~/.pi/agent/settings.json. pi-harness-config bundles pinned
+  # pi-web-access and pi-open-tui, so they are not listed separately.
   piPackages = [
     "git:github.com/nyoshe/pi-harness-config"
-    "npm:pi-web-access@0.47.0"
+  ];
+
+  # Entries now provided by pi-harness-config; dropped from settings.json so they
+  # do not load twice.
+  bundledPiPackages = [
+    "npm:pi-web-access"
+    "npm:pi-open-tui"
   ];
 
   # graphify (PyPI `graphifyy`) is installed with uv against Nix's Python, since uv's
@@ -59,8 +65,9 @@ in
           tmp="$(mktemp)"
           ${lib.getExe pkgs.jq} \
             --argjson pkgs ${lib.escapeShellArg (builtins.toJSON piPackages)} \
+            --argjson bundled ${lib.escapeShellArg (builtins.toJSON bundledPiPackages)} \
             'def id: sub("@[^@/]*$"; "");
-             .packages = (((.packages // []) | map(select(id as $i | ($pkgs | map(id) | index($i)) == null))) + $pkgs)' \
+             .packages = (((.packages // []) | map(select(id as $i | (($pkgs + $bundled) | map(id) | index($i)) == null))) + $pkgs)' \
             "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
           rm -f "$tmp"
         '';
