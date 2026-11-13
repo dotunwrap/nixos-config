@@ -3,6 +3,7 @@ _:
 with lib;
 {
   options.programs = {
+    pi.enable = mkEnableOption "Enable pi";
     vial.enable = mkEnableOption "Enable vial";
     freecad.enable = mkEnableOption "Enable freecad";
     orca-slicer.enable = mkEnableOption "Enable orca-slicer";
