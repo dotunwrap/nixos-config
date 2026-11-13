@@ -50,6 +50,9 @@ in
     ripsecrets.enable = true;
     shellcheck.enable = true;
 
+    # FIXME: `just lint`'s `-i`/`-L` flags mirror this ignore list and
+    # noLambdaPatternNames by hand (see justfile's `_statix`/`_deadnix`) --
+    # keep both in sync if either changes.
     statix = {
       enable = true;
       settings.ignore = [

@@ -185,13 +185,16 @@ ci host=hostname *args: _track_new
 runs *args: (_need_sys 'gh' 'the baseline home-manager profile (modules/defaults.nix)')
   gh run list {{args}}
 
+# FIXME: ignore list/flags here must stay in sync by hand with devenv.nix's
+# git-hooks.hooks.statix/deadnix settings -- this recipe doesn't read that
+# config, it just mirrors it.
 [private]
 _statix: (_need_dev 'statix')
-  statix check .
+  statix check . -i 'modules/hosts/_hardware/*.nix'
 
 [private]
 _deadnix: (_need_dev 'deadnix')
-  deadnix .
+  deadnix . -L
 
 # Runs statix + deadnix directly (faster than a full `devenv test`)
 [parallel]
