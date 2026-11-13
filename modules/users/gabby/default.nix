@@ -1,38 +1,39 @@
 { den, ... }:
 {
   den.aspects.gabby = {
-    # primary-user supplies isNormalUser + wheel/networkmanager; user-shell
-    # "zsh" (den.default.includes, modules/defaults.nix) supplies the shell
-    # -- only the extra, not-shared-by-every-user group is left to say here.
-    # Theme+wallpaper is her own choice, not her host's -- set per host
-    # she's actually on (she doesn't use the same one everywhere), from her
-    # own file, rather than a host deciding it for whoever's logged in.
-    # Theme and wallpaper are independent batteries
-    # (modules/aspects/batteries/{everforest,catppuccin,wallpaper}.nix).
+    # Theme/wallpaper is her own choice, not her host's -- set per host here
+    # rather than the host deciding it for whoever's logged in.
     includes = [
       den.batteries.primary-user
-      (den.batteries.everforest { hosts = [ "chikyuu" ]; })
-      (den.batteries.catppuccin {
+      (den.batteries.theme {
+        hosts = [ "chikyuu" ];
+        scheme = "everforest-dark-medium";
+      })
+      (den.batteries.theme {
         hosts = [
           "kaiousei"
           "meiousei"
         ];
+        scheme = "catppuccin-mocha";
       })
       (den.batteries.wallpaper {
-        chikyuu = ../../../assets/wallpapers/stephen_njoto.png;
-        kaiousei = ../../../assets/wallpapers/anyb-girl.png;
-        meiousei = ../../../assets/wallpapers/anyb-girl.png;
+        host = "chikyuu";
+        path = ../../../assets/wallpapers/stephen_njoto.png;
+      })
+      (den.batteries.wallpaper {
+        host = "kaiousei";
+        path = ../../../assets/wallpapers/anyb-girl.png;
+      })
+      (den.batteries.wallpaper {
+        host = "meiousei";
+        path = ../../../assets/wallpapers/anyb-girl.png;
       })
     ];
 
-    # Formerly nixos/configurations/users/gabby.nix -- lands on
-    # users.users.gabby on every host gabby is declared on.
     user = {
       extraGroups = [ "audio" ];
     };
 
-    # Formerly home/configurations/shared/gabby/default.nix -- cross-host,
-    # not tied to any one of gabby's hosts (chikyuu/kaiousei/meiousei).
     homeManager =
       {
         config,

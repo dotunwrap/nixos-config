@@ -1,29 +1,22 @@
 { lib, ... }:
 {
-  # A theme (everforest/catppuccin, see ./everforest.nix, ./catppuccin.nix)
-  # and a wallpaper are independent choices -- same theme, different image,
-  # is a real combination a user might want, so each gets its own battery
-  # rather than one function taking both.
+  # Independent of theme (./theme.nix) -- same theme, different image is a
+  # real combination. One call per host, each with its own `host`/`path`
+  # pair rather than a shared hostname -> path map:
+  #   (den.batteries.wallpaper { host = "chikyuu"; path = ./foo.png; })
   #
-  # Unlike primary-user/user-shell (which apply identically to every host a
-  # user includes them from), a user's wallpaper differs per host -- so this
-  # takes a hostname -> image map and, per host it's resolved for, applies
-  # only the entry matching that host:
-  #
-  #   den.aspects.gabby.includes = [
-  #     (den.batteries.wallpaper { chikyuu = ./foo.png; kaiousei = ./bar.png; })
-  #   ];
-  #
-  # NOTE: must be reached via `includes`, not `provides.<hostname>.<class>`
-  # -- `den.batteries` isn't resolvable from inside a `provides` value
-  # (evaluated before batteries are merged into the fixpoint `den` arg).
+  # Must be reached via `includes`, not `provides.<hostname>.<class>` --
+  # `den.batteries` isn't resolvable from inside a `provides` value (evaluated
+  # before batteries are merged into the fixpoint `den` arg).
   den.batteries.wallpaper =
-    images:
-    { host, ... }:
+    { host, path }:
+    ctx:
     {
-      name = "wallpaper(${host.name})";
+      name = "wallpaper(${ctx.host.name})";
     }
-    // lib.optionalAttrs (builtins.hasAttr host.name images) {
-      homeManager = _: { stylix.image = images.${host.name}; };
+    // lib.optionalAttrs (ctx.host.name == host) {
+      homeManager = _: {
+        stylix.image = path;
+      };
     };
 }

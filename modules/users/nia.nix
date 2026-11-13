@@ -1,32 +1,29 @@
 { den, ... }:
 {
   den.aspects.nia = {
-    # primary-user supplies isNormalUser + wheel/networkmanager; user-shell
-    # "zsh" (den.default.includes, modules/defaults.nix) supplies the shell
-    # -- only the extra, not-shared-by-every-user groups are left to say
-    # here. insecure scopes nwjs permission to just her (betaflight-
-    # configurator's dependency), rather than the blanket default every
-    # other user also used to get.
-    # Theme+wallpaper is her own choice, not her host's -- see
-    # modules/users/gabby/default.nix for why this lives here instead of on
-    # the host. Theme and wallpaper are independent batteries
-    # (modules/aspects/batteries/{everforest,catppuccin,wallpaper}.nix).
+    # insecure scopes the nwjs permission (betaflight-configurator's
+    # dependency) to just her, not the blanket default every user used to get.
     includes = [
       den.batteries.primary-user
       (den.batteries.insecure [ "nwjs-0.102.1" ])
-      (den.batteries.catppuccin { hosts = [ "meiousei" ]; })
-      (den.batteries.everforest {
+      (den.batteries.theme {
+        hosts = [ "meiousei" ];
+        scheme = "catppuccin-mocha";
+      })
+      (den.batteries.theme {
         hosts = [ "suisei" ];
-        flavor = "hard";
+        scheme = "everforest-dark-hard";
       })
       (den.batteries.wallpaper {
-        meiousei = ../../assets/wallpapers/anyb-girl.png;
-        suisei = ../../assets/wallpapers/bubbles.jpg;
+        host = "meiousei";
+        path = ../../assets/wallpapers/anyb-girl.png;
+      })
+      (den.batteries.wallpaper {
+        host = "suisei";
+        path = ../../assets/wallpapers/bubbles.jpg;
       })
     ];
 
-    # Formerly nixos/configurations/users/nia.nix -- lands on users.users.nia
-    # on every host nia is declared on.
     user = {
       extraGroups = [
         "audio"
@@ -34,8 +31,6 @@
       ];
     };
 
-    # Formerly home/configurations/shared/nia/default.nix -- cross-host, not
-    # tied to either of nia's hosts (meiousei/suisei).
     homeManager =
       {
         config,
@@ -49,9 +44,7 @@
           contact.basePath = ".local/share/contacts";
         };
 
-        # Her own MonoLisa variant, in place of the default (gabby's)
-        # "MonoLisa Variable" -- feeds modules/defaults.nix's
-        # `stylix.fonts.monospace.package = mkDefault config.monolisa.package`
+        # Feeds modules/defaults.nix's `mkDefault config.monolisa.package`
         # automatically; only the display name needs its own override here.
         monolisa.package = inputs'.monolisa.packages.nia;
         fonts.fontconfig.defaultFonts.monospace = [ "MonoLisa Nia" ];
@@ -130,9 +123,8 @@
 
         nvim.package = inputs'.niavim.packages.default;
 
-        # Formerly home/modules/programs/winboat -- rootless podman as
-        # winboat's container runtime; winboat checks for `podman compose`
-        # with the podman-compose provider.
+        # Rootless podman as winboat's container runtime; winboat checks for
+        # `podman compose` with the podman-compose provider.
         services.podman.enable = true;
         home.packages = [
           pkgs.fldigi
