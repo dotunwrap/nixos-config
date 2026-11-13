@@ -52,6 +52,7 @@ Defined in `nixos/configurations/default.nix` and `home/configurations/default.n
 Hosts/users, from `README.md`:
 
 - `chikyuu` (gabby, desktop, dwm/X11, gaming)
+- `dosei` (nia, desktop, Niri/Wayland, dual NVIDIA GPU, gaming + local LLM serving over Tailscale)
 - `europa` (nia, ThinkPad X1 Carbon, Niri/Wayland, previously her main machine, soon a home server)
 - `kaiousei` (gabby, Framework 13 Pro, Niri/Wayland, main machine)
 - `meiousei` (gabby + nia, desktop, Niri/Wayland, previously a gaming desktop, soon an HTPC)
