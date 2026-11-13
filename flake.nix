@@ -84,6 +84,15 @@
       };
     };
 
+    pi-harness-config = {
+      url = "github:nyoshe/pi-harness-config";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        systems.follows = "systems";
+      };
+    };
+
     suckless = {
       url = "github:dotunwrap/suckless-nix";
       inputs = {

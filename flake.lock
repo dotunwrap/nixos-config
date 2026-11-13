@@ -683,6 +683,32 @@
         "type": "github"
       }
     },
+    "pi-harness-config": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794549688,
+        "narHash": "sha256-e3r4khRmjrom1RUTCe5eGHpziaUso5quV017s1JCwiY=",
+        "owner": "nyoshe",
+        "repo": "pi-harness-config",
+        "rev": "c448ac9756c941e2c773dd1552dbe7cd8cc4d2e6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyoshe",
+        "repo": "pi-harness-config",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "claude-code-overlay": "claude-code-overlay",
@@ -700,6 +726,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
+        "pi-harness-config": "pi-harness-config",
         "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",
         "stylix": "stylix",

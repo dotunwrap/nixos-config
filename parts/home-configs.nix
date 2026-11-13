@@ -119,6 +119,7 @@ in
                 inputs.niri-flake.homeModules.niri
                 inputs.niri-flake.homeModules.stylix
                 inputs.vicinae.homeManagerModules.default
+                inputs.pi-harness-config.homeManagerModules.default
               ]
               ++ config.modules
               ++ builtins.attrValues self.homeManagerModules;
