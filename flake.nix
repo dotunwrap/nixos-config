@@ -163,6 +163,11 @@
       };
     };
 
+    orca-slicer-nix = {
+      url = "github:nyoshe/orca-slicer-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     yazi = {
       url = "github:sxyazi/yazi";
       inputs = {

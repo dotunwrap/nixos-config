@@ -112,6 +112,7 @@ in
                     inputs.rust-overlay.overlays.default
                     inputs.claude-code-overlay.overlays.default
                     inputs.niri-flake.overlays.niri
+                    inputs.orca-slicer-nix.overlays.default
                   ];
                 }
                 inputs.stylix.homeModules.stylix

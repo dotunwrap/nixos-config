@@ -683,6 +683,26 @@
         "type": "github"
       }
     },
+    "orca-slicer-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794496752,
+        "narHash": "sha256-J6kVDpzeoDwzTZkJuv6aMOJgKwKPH5uDSxPnPziQIdU=",
+        "owner": "nyoshe",
+        "repo": "orca-slicer-nix",
+        "rev": "130a4b65dfe2fd6f3720eeae2902da3ababc619e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyoshe",
+        "repo": "orca-slicer-nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "claude-code-overlay": "claude-code-overlay",
@@ -700,6 +720,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
+        "orca-slicer-nix": "orca-slicer-nix",
         "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
