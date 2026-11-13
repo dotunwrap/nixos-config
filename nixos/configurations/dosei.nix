@@ -30,6 +30,7 @@ _:
       hf-repo = "outsourc-e/Qwen3.8-27B-Unleashed-GGUF:UD-Q4_K_M";
       spec-type = "draft-mtp";
       spec-draft-n-max = 2;
+      cache-reuse = 256;
       reasoning-effort = "xhigh";
       temp = 1.0;
       top-p = 0.95;
