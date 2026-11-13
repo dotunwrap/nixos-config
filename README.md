@@ -39,6 +39,10 @@ All of the hosts in my configuration are named after planetary bodies in Japanes
 
   My desktop (Ryzen 9 9950X + Radeon RX 9070 XT). Runs dwm on X11. Used for _Linux gaming_.
 
+- [dosei](/nixos/configurations/dosei.nix) - _Saturn_
+
+  My [girlfriend's](https://github.com/nyoshe) desktop (dual NVIDIA GPU: RTX 4070 Ti SUPER + RTX 4070 SUPER). Runs Niri on Wayland. Used for gaming and serves local LLMs over Tailscale for Pi.
+
 - [europa](/nixos/configurations/europa.nix) - _Europa_
 
   A 6th gen ThinkPad X1 Carbon. Previously my go-to machine. Soon to be used as a home server.
@@ -69,6 +73,7 @@ These are the users I have configured for my machines. This list shows the users
   - [meiousei](/home/configurations/gabby-at-meiousei.nix)
 
 - [nia](/nixos/configurations/users/nia.nix)
+  - [dosei](/home/configurations/nia-at-dosei.nix)
   - [meiousei](/home/configurations/nia-at-meiousei.nix)
   - [suisei](/home/configurations/nia-at-suisei.nix)
 
