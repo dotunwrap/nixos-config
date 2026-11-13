@@ -19,6 +19,9 @@ _:
   # GPU 0, which also drives the desktop. MTP is on by default for the default model.
   bundles.local_LLM = {
     model = "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL";
+    host = "0.0.0.0";
+    openFirewall = true;
+    apiKeyFile = "/home/nia/.config/llama-cpp/api-key";
     contextSize = 131072;
     tensorSplit = "15,12";
     vision = true;
