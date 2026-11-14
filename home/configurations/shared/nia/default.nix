@@ -101,7 +101,11 @@ in
       llamaBaseUrl = lib.mkDefault "http://dosei:8080";
     };
 
-    hermes.enable = true;
+    hermes = {
+      enable = true;
+      # Same server as Pi; dosei's own local_LLM bundle overrides this with loopback.
+      llamaBaseUrl = lib.mkDefault "http://dosei:8080";
+    };
 
     qutebrowser.enable = false;
     zen-browser.enable = false;

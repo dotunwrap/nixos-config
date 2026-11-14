@@ -17,6 +17,9 @@ in
 
   # The host serving the model talks to its own llama-server over loopback.
   config = lib.mkIf cfg.enable {
-    programs.pi.llamaBaseUrl = "http://127.0.0.1:${toString port}";
+    programs = {
+      pi.llamaBaseUrl = "http://127.0.0.1:${toString port}";
+      hermes.llamaBaseUrl = "http://127.0.0.1:${toString port}";
+    };
   };
 }
