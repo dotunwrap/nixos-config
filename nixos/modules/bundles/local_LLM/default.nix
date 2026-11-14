@@ -28,47 +28,83 @@ let
   # Router-mode presets: [*] applies to every model the router serves (including
   # ones pulled into the cache later), the model section adds MTP and sampling
   # for the default Qwen model only, since other models may have no MTP head.
-  presets = pkgs.writeText "llama-presets.ini" (
-    lib.generators.toINIWithGlobalSection { } {
-      globalSection.version = 1;
-      sections = lib.recursiveUpdate {
-        "*" = {
-          ctx-size = cfg.contextSize;
-          n-gpu-layers = 999;
-          # Tensor split runs both GPUs in parallel; the default layer split
-          # pipelines them and roughly halves decode speed on dual-GPU rigs.
-          split-mode = "tensor";
-          tensor-split = cfg.tensorSplit;
-          flash-attn = "on";
-          cache-type-k = cfg.cacheType;
-          cache-type-v = cfg.cacheType;
-          parallel = 1;
-          jinja = true;
-          dedup-cache-models = true;
-        }
-        # Without vision, skip the projector and its ~1GB of VRAM. With it, the
-        # router downloads and loads the repo's mmproj file automatically.
-        // lib.optionalAttrs (!cfg.vision) { no-mmproj = true; }
-        // lib.optionalAttrs (cfg.vision && !cfg.mmprojOffload) { no-mmproj-offload = true; };
+  # Built once per profile (see `headless`); the service picks one at startup.
+  mkPresets =
+    name: profile:
+    pkgs.writeText "llama-presets-${name}.ini" (
+      lib.generators.toINIWithGlobalSection { } {
+        globalSection.version = 1;
+        sections = lib.recursiveUpdate {
+          "*" = {
+            ctx-size = profile.contextSize;
+            n-gpu-layers = 999;
+            # Tensor split runs both GPUs in parallel; the default layer split
+            # pipelines them and roughly halves decode speed on dual-GPU rigs.
+            split-mode = "tensor";
+            tensor-split = profile.tensorSplit;
+            flash-attn = "on";
+            cache-type-k = cfg.cacheType;
+            cache-type-v = cfg.cacheType;
+            parallel = 1;
+            jinja = true;
+            dedup-cache-models = true;
+          }
+          # Without vision, skip the projector and its ~1GB of VRAM. With it, the
+          # router downloads and loads the repo's mmproj file automatically.
+          // lib.optionalAttrs (!cfg.vision) { no-mmproj = true; }
+          // lib.optionalAttrs (cfg.vision && !profile.mmprojOffload) { no-mmproj-offload = true; };
 
-        ${modelId} = {
-          hf-repo = cfg.model;
-          load-on-startup = true;
-          chat-template-file = "${chatTemplate}";
-          # MTP speculative decoding using the draft head embedded in the unsloth GGUFs
-          spec-type = "draft-mtp";
-          spec-draft-n-max = 3;
-          # Pi can only toggle thinking on/off for this template (it shows "medium"),
-          # so pin the template's own effort level server-side.
-          reasoning-effort = "xhigh";
-          # Qwen recommended sampling for thinking mode
-          temp = 0.6;
-          top-p = 0.95;
-          top-k = 20;
-        };
-      } extraSections;
-    }
-  );
+          ${modelId} = {
+            hf-repo = cfg.model;
+            load-on-startup = true;
+            chat-template-file = "${chatTemplate}";
+            # MTP speculative decoding using the draft head embedded in the unsloth GGUFs
+            spec-type = "draft-mtp";
+            spec-draft-n-max = 3;
+            # Pi can only toggle thinking on/off for this template (it shows "medium"),
+            # so pin the template's own effort level server-side.
+            reasoning-effort = "xhigh";
+            # Qwen recommended sampling for thinking mode
+            temp = 0.6;
+            top-p = 0.95;
+            top-k = 20;
+          };
+        } extraSections;
+      }
+    );
+
+  profiles = {
+    connected = { inherit (cfg) contextSize tensorSplit mmprojOffload; };
+    headless = { inherit (cfg.headless) contextSize tensorSplit mmprojOffload; };
+  };
+  presetFiles = lib.mapAttrs mkPresets profiles;
+
+  # A display counts as connected when any connector on an NVIDIA DRM card
+  # reports "connected". If no NVIDIA card is found (driver not loaded yet) we
+  # assume connected, the safe choice since it uses less VRAM.
+  selectPreset = pkgs.writeShellScript "llama-select-preset" ''
+    profile=connected
+    found=0
+    connected=0
+    for card in /sys/class/drm/card[0-9]*; do
+      [ -e "$card/device/driver" ] || continue
+      [ "$(basename "$(readlink -f "$card/device/driver")")" = nvidia ] || continue
+      found=1
+      for status in "$card"-*/status; do
+        [ -r "$status" ] || continue
+        if [ "$(cat "$status")" = connected ]; then
+          connected=1
+        fi
+      done
+    done
+    if [ "$found" = 1 ] && [ "$connected" = 0 ]; then
+      profile=headless
+    fi
+    echo "llama-cpp: using $profile preset"
+    cp ${presetFiles.connected} "$RUNTIME_DIRECTORY/presets-connected.ini"
+    cp ${presetFiles.headless} "$RUNTIME_DIRECTORY/presets-headless.ini"
+    ln -sf "presets-$profile.ini" "$RUNTIME_DIRECTORY/presets.ini"
+  '';
 in
 {
   options = {
@@ -181,6 +217,32 @@ in
           so device 0 is the 4070 Ti SUPER (16GB) and device 1 the 4070 SUPER (12GB).
         '';
       };
+
+      headless = {
+        contextSize = lib.mkOption {
+          type = lib.types.int;
+          default = cfg.contextSize;
+          defaultText = lib.literalExpression "config.bundles.local_LLM.contextSize";
+          description = ''
+            Context window used when no display is connected to the NVIDIA GPUs.
+            With no desktop to feed, the freed VRAM can go to the KV cache.
+          '';
+        };
+
+        tensorSplit = lib.mkOption {
+          type = lib.types.str;
+          default = cfg.tensorSplit;
+          defaultText = lib.literalExpression "config.bundles.local_LLM.tensorSplit";
+          description = "Per-GPU split ratio used when no display is connected.";
+        };
+
+        mmprojOffload = lib.mkOption {
+          type = lib.types.bool;
+          default = cfg.mmprojOffload;
+          defaultText = lib.literalExpression "config.bundles.local_LLM.mmprojOffload";
+          description = "Keep the vision projector on the GPU when no display is connected.";
+        };
+      };
     };
   };
 
@@ -198,9 +260,15 @@ in
       package = pkgs.llama-cpp.override { cudaSupport = true; };
       settings = {
         inherit (cfg) host port;
-        models-preset = presets;
+        models-preset = "/run/llama-cpp/presets.ini";
         models-max = 1;
       };
+    };
+
+    # Pick the preset set for the current display state each time the server starts.
+    systemd.services.llama-cpp.serviceConfig = {
+      RuntimeDirectory = "llama-cpp";
+      ExecStartPre = selectPreset;
     };
   };
 }

@@ -26,6 +26,14 @@ _:
     vision = true;
     mmprojOffload = false;
 
+    # Used instead when no display is connected to the NVIDIA cards (picked at server
+    # start): nothing is drawing on GPU 0, so the projector moves onto it and the
+    # context grows by 1.5x (~+2.9GB of KV cache). Untested headroom; raise cautiously.
+    headless = {
+      contextSize = 196608;
+      mmprojOffload = true;
+    };
+
     # Abliterated Qwen3.8-27B (Heretic) with Unsloth dynamic quants. Loaded on request;
     # only one model is resident at a time. Sampling follows the model card.
     modelSettings."outsourc-e/Qwen3.8-27B-Unleashed-GGUF:UD-Q4_K_M" = {
