@@ -173,7 +173,7 @@
     };
 
     hermes-config = {
-      url = "github:nyoshe/hermes-config";
+      url = "git+ssh://git@github.com/nyoshe/hermes-config";
       # hermes-agent keeps its own pinned nixpkgs (see hermes-config's flake.nix).
       inputs.hermes-agent.inputs = {
         flake-parts.follows = "flake-parts";
