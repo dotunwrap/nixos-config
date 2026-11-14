@@ -746,6 +746,32 @@
         "type": "github"
       }
     },
+    "pi-harness-config": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794590087,
+        "narHash": "sha256-52AHbR9rOsoU1O/cfdOfcgXFHvGaxYn7ChaZqw+Swuw=",
+        "owner": "nyoshe",
+        "repo": "pi-harness-config",
+        "rev": "01d88f9381aa7ae8797ce3575022beb8aa1055dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyoshe",
+        "repo": "pi-harness-config",
+        "type": "github"
+      }
+    },
     "pyproject-build-systems": {
       "inputs": {
         "nixpkgs": [
@@ -815,6 +841,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
         "orca-slicer-nix": "orca-slicer-nix",
+        "pi-harness-config": "pi-harness-config",
         "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
