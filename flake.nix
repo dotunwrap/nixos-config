@@ -163,6 +163,15 @@
       };
     };
 
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        home-manager.follows = "home-manager";
+      };
+    };
+
     orca-slicer-nix = {
       url = "github:nyoshe/orca-slicer-nix";
       inputs.nixpkgs.follows = "nixpkgs";

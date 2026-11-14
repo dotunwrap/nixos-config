@@ -101,6 +101,8 @@ in
       llamaBaseUrl = lib.mkDefault "http://dosei:8080";
     };
 
+    hermes.enable = true;
+
     qutebrowser.enable = false;
     zen-browser.enable = false;
     fldigi.enable = true;
