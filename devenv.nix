@@ -80,8 +80,9 @@ in
       let
         ignoredInputs = [
           "vicinae"
-          # Pinned to its own nixpkgs rev; see the comment on the input in flake.nix.
-          "hermes-agent"
+          # Pinned to its own nixpkgs rev; see the comment on the input in flake.nix
+          # (hermes-config does the same for hermes-agent).
+          "hermes-config"
         ];
         ignoreFlags = concatMapStringsSep " " (input: "--ignore ${input}") ignoredInputs;
       in

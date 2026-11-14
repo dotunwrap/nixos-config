@@ -326,16 +326,34 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1794628097,
-        "narHash": "sha256-xJ6dK+KrcRRt0PbOZmLqEPghL8zbtOOBJwIoyuu2nsM=",
+        "lastModified": 1794693894,
+        "narHash": "sha256-1Xwiekx0bKrJoPG+0aTBnxW07+gC3s8ZFzT7c4dtBn8=",
         "owner": "NousResearch",
         "repo": "hermes-agent",
-        "rev": "422ad1861856dd9b80b947fbad9f39d1580f6b41",
+        "rev": "8e4df2c7a66af99afdabbec4e9fd34fc42015d30",
         "type": "github"
       },
       "original": {
         "owner": "NousResearch",
         "repo": "hermes-agent",
+        "type": "github"
+      }
+    },
+    "hermes-config": {
+      "inputs": {
+        "hermes-agent": "hermes-agent"
+      },
+      "locked": {
+        "lastModified": 1794693918,
+        "narHash": "sha256-qaalZW2iP1Xxa9s3kL7wMkBOIena6kxqO+j+WkN7J0Y=",
+        "owner": "nyoshe",
+        "repo": "hermes-config",
+        "rev": "c3e5c7cfc931d32319bda14e454c4e1ab664c3e7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyoshe",
+        "repo": "hermes-config",
         "type": "github"
       }
     },
@@ -775,14 +793,17 @@
     "pyproject-build-systems": {
       "inputs": {
         "nixpkgs": [
+          "hermes-config",
           "hermes-agent",
           "nixpkgs"
         ],
         "pyproject-nix": [
+          "hermes-config",
           "hermes-agent",
           "pyproject-nix"
         ],
         "uv2nix": [
+          "hermes-config",
           "hermes-agent",
           "uv2nix"
         ]
@@ -804,6 +825,7 @@
     "pyproject-nix": {
       "inputs": {
         "nixpkgs": [
+          "hermes-config",
           "hermes-agent",
           "nixpkgs"
         ]
@@ -830,7 +852,7 @@
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
-        "hermes-agent": "hermes-agent",
+        "hermes-config": "hermes-config",
         "home-manager": "home-manager",
         "monolisa": "monolisa",
         "niavim": "niavim",
@@ -1095,10 +1117,12 @@
     "uv2nix": {
       "inputs": {
         "nixpkgs": [
+          "hermes-config",
           "hermes-agent",
           "nixpkgs"
         ],
         "pyproject-nix": [
+          "hermes-config",
           "hermes-agent",
           "pyproject-nix"
         ]
