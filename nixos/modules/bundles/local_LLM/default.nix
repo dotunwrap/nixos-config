@@ -61,6 +61,9 @@ let
             # MTP speculative decoding using the draft head embedded in the unsloth GGUFs
             spec-type = "draft-mtp";
             spec-draft-n-max = 3;
+            # Reuse cached KV for matching prompt chunks (e.g. the large agent system prompt)
+            # when only part of the prefix differs between requests.
+            cache-reuse = 256;
             # Pi can only toggle thinking on/off for this template (it shows "medium"),
             # so pin the template's own effort level server-side.
             reasoning-effort = "xhigh";
