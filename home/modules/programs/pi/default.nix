@@ -21,6 +21,9 @@ let
     "npm:pi-open-tui"
   ];
 
+  # Model Pi starts with, set only while settings.json has none so /model choices stick.
+  defaultModel = "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL";
+
   # graphify (PyPI `graphifyy`) is installed with uv against Nix's Python, since uv's
   # own downloaded interpreters cannot run on NixOS. Pinned: bump only after review.
   graphifyVersion = "0.9.107";
@@ -65,8 +68,10 @@ in
           tmp="$(mktemp)"
           ${lib.getExe pkgs.jq} \
             --argjson pkgs ${lib.escapeShellArg (builtins.toJSON piPackages)} \
+            --arg model ${lib.escapeShellArg defaultModel} \
             --argjson bundled ${lib.escapeShellArg (builtins.toJSON bundledPiPackages)} \
             'def id: sub("@[^@/]*$"; "");
+             .defaultProvider //= "llama.cpp" | .defaultModel //= $model |
              .packages = (((.packages // []) | map(select(id as $i | (($pkgs + $bundled) | map(id) | index($i)) == null))) + $pkgs)' \
             "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
           rm -f "$tmp"
