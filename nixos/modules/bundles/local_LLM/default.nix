@@ -43,6 +43,9 @@ let
             split-mode = "tensor";
             tensor-split = profile.tensorSplit;
             flash-attn = "on";
+            # Prompt tokens per GPU pass (default 512). Larger speeds up prefill at
+            # the cost of compute-buffer VRAM; batch-size must be >= this (default 2048).
+            ubatch-size = cfg.ubatchSize;
             cache-type-k = cfg.cacheType;
             cache-type-v = cfg.cacheType;
             parallel = 1;
@@ -212,6 +215,17 @@ in
         '';
       };
 
+      ubatchSize = lib.mkOption {
+        type = lib.types.int;
+        default = 512;
+        description = ''
+          Physical batch size (`--ubatch-size`): prompt tokens processed per GPU
+          pass. 1024 was benchmarked on this rig and gave no prefill or decode gain
+          (about 1150 tok/s either way) for ~0.7GB more VRAM, so the llama.cpp default
+          stays.
+        '';
+      };
+
       tensorSplit = lib.mkOption {
         type = lib.types.str;
         default = "16,12";
@@ -267,6 +281,25 @@ in
         models-max = 1;
       };
     };
+
+    # Passwordless control of just this service, so tuning and benchmarking can restart
+    # it without a terminal. Deliberately excludes nixos-rebuild, which would be root.
+    security.sudo.extraRules = [
+      {
+        users = [ "nia" ];
+        commands =
+          map
+            (action: {
+              command = "/run/current-system/sw/bin/systemctl ${action} llama-cpp.service";
+              options = [ "NOPASSWD" ];
+            })
+            [
+              "start"
+              "stop"
+              "restart"
+            ];
+      }
+    ];
 
     # Pick the preset set for the current display state each time the server starts.
     systemd.services.llama-cpp.serviceConfig = {

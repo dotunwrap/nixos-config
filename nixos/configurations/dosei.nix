@@ -14,14 +14,14 @@ _:
     "local_LLM"
   ];
 
-  # 128k context with vision and MTP on 28GB. UD-Q4_K_XL plus ~5.8GB of KV cache leaves
-  # room on both cards. The vision projector runs on the CPU (~2.5s per image) to spare
+  # 160k context with vision and MTP on 28GB. UD-Q4_K_XL plus ~7.2GB of KV cache (~45KB per
+  # token) leaves ~1GB spare per card at the default 512 ubatch. The vision projector runs on the CPU (~2.5s per image) to spare
   # GPU 0, which also drives the desktop. MTP is on by default for the default model.
   bundles.local_LLM = {
     model = "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL";
     # Reachable over Tailscale only: the firewall opens no public ports and trusts tailscale0.
     host = "0.0.0.0";
-    contextSize = 131072;
+    contextSize = 163840;
     tensorSplit = "15,12";
     vision = true;
     mmprojOffload = false;
