@@ -33,10 +33,12 @@ in
     # at runtime (`hermes config set`, /model) are kept. No gateway or backend is started.
     services.hermes-agent = {
       enable = true;
-      settings.model = lib.mkIf (cfg.llamaBaseUrl != null) {
-        provider = "custom";
-        base_url = "${cfg.llamaBaseUrl}/v1";
-        default = defaultModel;
+      settings = lib.mkIf (cfg.llamaBaseUrl != null) {
+        model = {
+          provider = "custom";
+          base_url = "${cfg.llamaBaseUrl}/v1";
+          default = defaultModel;
+        };
       };
     };
   };
