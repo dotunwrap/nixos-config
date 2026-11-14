@@ -172,6 +172,22 @@
       };
     };
 
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs = {
+        # Pinned to the rev hermes-agent locks itself: it patches nixpkgs' patchelf
+        # (0.19.2) and the patch does not apply to the 0.15.2 in newer nixos-unstable.
+        nixpkgs.url = "github:NixOS/nixpkgs/02c087f3fe673c9e317f206a627cb6b910336dbe";
+        flake-parts.follows = "flake-parts";
+        home-manager.follows = "home-manager";
+      };
+    };
+
+    orca-slicer-nix = {
+      url = "github:nyoshe/orca-slicer-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     yazi = {
       url = "github:sxyazi/yazi";
       inputs = {

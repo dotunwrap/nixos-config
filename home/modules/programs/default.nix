@@ -3,8 +3,12 @@ _:
 with lib;
 {
   options.programs = {
+    hermes.enable = mkEnableOption "Enable hermes";
     pi.enable = mkEnableOption "Enable pi";
     vial.enable = mkEnableOption "Enable vial";
+    freecad.enable = mkEnableOption "Enable freecad";
+    orca-slicer.enable = mkEnableOption "Enable orca-slicer";
+    bambu-studio.enable = mkEnableOption "Enable bambu-studio";
     bottles.enable = mkEnableOption "Enable bottles";
     winboat.enable = mkEnableOption "Enable winboat";
     # NOTE: This cannot be devenv as hm has a devenv module natively

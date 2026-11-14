@@ -94,7 +94,18 @@ in
 
     nvim.package = niavim.packages.${system}.default;
 
-    pi.enable = true;
+    pi = {
+      enable = true;
+      # dosei serves the model; other hosts reach it over Tailscale. dosei's own
+      # local_LLM bundle overrides this with loopback.
+      llamaBaseUrl = lib.mkDefault "http://dosei:8080";
+    };
+
+    hermes = {
+      enable = true;
+      # Same server as Pi; dosei's own local_LLM bundle overrides this with loopback.
+      llamaBaseUrl = lib.mkDefault "http://dosei:8080";
+    };
 
     qutebrowser.enable = false;
     zen-browser.enable = false;
@@ -104,6 +115,9 @@ in
     soapysdr.enable = true;
     winboat.enable = true;
     bottles.enable = true;
+    bambu-studio.enable = true;
+    orca-slicer.enable = true;
+    freecad.enable = true;
   };
 
   stylix.targets.firefox.profileNames = [ "default" ];
