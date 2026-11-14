@@ -27,11 +27,11 @@ _:
     mmprojOffload = false;
 
     # Used instead when no display is connected to the NVIDIA cards (picked at server
-    # start): nothing is drawing on GPU 0, so the projector moves onto it and the
-    # context grows by 1.5x (~+2.9GB of KV cache). Untested headroom; raise cautiously.
+    # start): nothing is drawing on GPU 0, so the context grows by 1.5x (~+2.9GB of KV
+    # cache). The projector stays on the CPU like the connected profile. Untested
+    # headroom; raise cautiously.
     headless = {
       contextSize = 196608;
-      mmprojOffload = true;
     };
 
     # Abliterated Qwen3.8-27B (Heretic) with Unsloth dynamic quants. Loaded on request;
