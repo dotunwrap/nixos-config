@@ -26,9 +26,6 @@ once it's empty.
   resolved upstream.
 - **zen-browser bookmarks**: `modules/users/gabby/_zen/bookmarks.nix` is
   still an empty stub.
-- **nix-auth token**: no GitHub token configured yet (`just auth status`
-  reports none). Worth setting one up (`just auth login github`) given how
-  many `github:` flake inputs this repo pulls -- real rate-limit risk.
 - **CLAUDE.md is stale**: it still documents the pre-dendritic layout
   (`parts/`, `nixos/modules`, `home/modules`, `nixos/configurations`,
   `home/configurations`, `just osadd`/`just hmadd`), none of which exist
@@ -42,8 +39,3 @@ once it's empty.
   ones). `den.lib.capture.captureFleet {}` (already part of `den`, no extra
   input) is the lighter-weight alternative if full diagram rendering isn't
   worth it.
-
-## Done (kept briefly for context, delete on next cleanup)
-
-- ~~`just commit` required `-s`/`--scope` even though it's meant to be
-  optional~~ -- fixed by giving `scope` a default of `[]`.
