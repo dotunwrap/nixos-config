@@ -6,31 +6,66 @@ once it's empty.
 
 ## Open
 
+- **Configure external monitor for kaiousei**: There are effectively two modes
+  that kaiousei is used in: laptop or docked. When docked, it is connected to a
+  Odyssey G9 G95SC monitor. However, the HDMI module connected to my laptop seemingly
+  cannot produce bandwidth for full 5120x1440. Just configure it to use auto
+  for now and expect it to be in clamshell mode whenever it's docked.
+- **Add ability to choose preferred applications for foundational applications
+  (starting with terminal and browser) per user per host.**: Users may want
+  to use a different terminal or different browser from one another, and they
+  may even want to use different ones on different machines themselves.
+  We should be able to set it and have that be respected throughout other
+  parts of the configuration where default applications, hotkeys to open
+  these applications, etc are set. Should only ever be set once--keep it DRY.
+- **Look for bloat & bugs**: An agent should scour our configuration for places
+  where any sort of code smell is still existing. Whether it's bloat, redundant
+  code, genuine bugs, anti-patterns, etc, we should document it in a report with
+  detail and recommendations for resolution.
+- **Look for more test cases we could use**: We have nix-unit and devenv test-
+  ing capabilities in this project. We should be utilizing this where is makes sense.
+- **Remove the Nix Flake's devshell output**: We are going to move towards a
+  more-opinionated solution of: developers _need_ to use devenv. There is no
+  other option.
 - **sops-nix secrets**: `sops-nix` is declared (`modules/secrets.nix`) but not
   wired up to any host/user yet -- configure actual secrets management for
-  the project.
-- **europa**: has no real `users.users.nia` account yet, so she isn't
-  declared on it in `modules/hosts.nix` (Den synthesizes a bare user stub
-  for any declared entity, which fails NixOS's user assertions without a
-  real account backing it). Add her `classes = [ "homeManager" ]` back once
-  the account exists. More broadly, europa is still just a bare host +
-  `development` aspect -- the actual home-server role (README) has no
-  aspect of its own yet.
-- **meiousei**: moving towards becoming an HTPC for couch gaming. Needs its
-  own aspect (replacing `den.aspects.dwm` in `modules/hosts/meiousei.nix`)
-  rather than reusing the desktop dwm setup.
+  the project. Reference devenv's documentation for chances to leverage the
+  secretspec capabilities.
+- **Further configure devenv**: Devenv is a powerful tool that we do not use effectively.
+  We should make sure that we properly configure a concrete linting and formatting ruleset
+  that is respected both in and outside of the devshell. All tooling in the devenv shell
+  should also have their rules respected outside of it. We should be moving to test the
+  new "Machines" feature to deploy remotely. We should further ensure that we are not missing
+  git hooks that we would benefit from. We should configure the git and mergiraf integrations.
+  We should configure any LSPs we use in this project. We should consider if we want to have
+  some other profiles for various things such as CI/CD on GitHub or when we are in a Live ISO
+  environment or something. We should ensure we are properly pushing outputs to and pulling
+  outputs from my cachix store. We should also make sure the rest of the cachix stores are
+  configured properly. We should use the changelog-merge integration and adopt a CHANGELOG.md
+  (or CHANGES.md?). Ultimately we should just be taking advantage of every thing we can from
+  this amazing tool.
+- **Revisit and modernize CI/CD pipelines**: We should ensure that our CI
+  is running all of the checks it can with proper usage of the cachix stores to cut down on
+  cache misses and source builds in GH runners. If we are doing something inefficient, fix it.
+  We should implement a CD pipeline where on merge into `main` and have successful CI it prepares
+  to deploy (using devenv?) to our remote machines (but should use GH environments or smth for each
+  output to ensure we approve of the deploy first). Will need automated rollback on failure, though.
+- **Configure weekly dependabot update PR batches**: In a single PR once per week we should have
+  dependabot update all of the inputs and write a proper commit for it. If we don't accept the PR by
+  the next week, close it when the updated one opens. Only 1 open at a time.
+- **Configure conventional commit enforcement**: Adhering to the conventional commit structure,
+  we should implement a tool to enforce this as a linting rule in CI.
+- **Add in custom ISO output**: We should be generating a custom ISO for minimal NixOS installation
+  media (no GUI--tty only) that has some basics for installing this configuration on a new machine
+  pre-installed. Shouldn't really need to do the whole "magic wormholing back and forth a new GitHub
+  SSH key for access to the monolisa font repo" anymore before we can install the OS. Don't ship with
+  everything in the image, but bring the nice to haves. Make sure we build a new release in GH as CD
+  whenever we merge into `main` with a diff in the image.
 - **niri.nix vicinae Mesa workaround**: `modules/aspects/niri.nix`'s
   `vicinaeMesa` override (vicinae's glibc is older than the system's,
   breaking EGL/Vulkan) should be removed once
   [vicinae#2040](https://github.com/vicinaehq/vicinae/issues/2040) is
   resolved upstream.
-- **zen-browser bookmarks**: `modules/users/gabby/_zen/bookmarks.nix` is
-  still an empty stub.
-- **CLAUDE.md is stale**: it still documents the pre-dendritic layout
-  (`parts/`, `nixos/modules`, `home/modules`, `nixos/configurations`,
-  `home/configurations`, `just osadd`/`just hmadd`), none of which exist
-  anymore after the migration to `den.aspects.*`/`modules/`. Needs a full
-  rewrite to match the current architecture.
 - **den-diagram**: [github:denful/den-diagram](https://github.com/denful/den-diagram)
   is a companion flake (same author as `den`) that renders per-host aspect
   DAGs, a namespace graph, and fleet-wide views via mermaid. Worth adopting
@@ -39,3 +74,17 @@ once it's empty.
   ones). `den.lib.capture.captureFleet {}` (already part of `den`, no extra
   input) is the lighter-weight alternative if full diagram rendering isn't
   worth it.
+- **Consider dynamic documentation generation**: We could consider
+  automatically generating documentation surrounding the configuration repo
+  and project as a whole.
+
+## Lastly
+
+- **README.md & CLAUDE.md are stale**: they still documents the pre-dendritic layout
+  Should be completely rewritten from scratch (both of them) but maintain general
+  design-agnostic rules in the CLAUDE.md file and host/user purpose details in
+  README.md and CLAUDE.md both at least. Also should include the diagram mermaid
+  we implemented before.
+- **Look for any new gaps in our justfile**: We may have some new recipes that would
+  be useful to add with the new additions. Look to see if you can find any and report
+  back ideas in a markdown file for me to look over.
