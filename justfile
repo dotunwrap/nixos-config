@@ -10,6 +10,7 @@ set unstable
 hostname := `hostname`
 hosts := ['chikyuu', 'europa', 'kaiousei', 'meiousei', 'suisei']
 
+# Displays this message or shows the usage if <recipe> is passed
 [group('Help')]
 [arg('recipe', help="The recipe to display the usage of")]
 help recipe='':
