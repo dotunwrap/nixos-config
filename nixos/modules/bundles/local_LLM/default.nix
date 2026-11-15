@@ -50,6 +50,8 @@ let
             cache-type-v = cfg.cacheType;
             parallel = 1;
             jinja = true;
+            # Cap thinking at 16k tokens; llama.cpp then force-closes the think block.
+            reasoning-budget = 16384;
             dedup-cache-models = true;
           }
           # Without vision, skip the projector and its ~1GB of VRAM. With it, the
