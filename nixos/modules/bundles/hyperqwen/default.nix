@@ -93,6 +93,7 @@ let
       description,
       autostart,
       others,
+      port,
     }:
     {
       inherit description;
@@ -107,7 +108,7 @@ let
         HOME = "/home/${cfg.user}";
         TMPDIR = "/var/tmp/hyperqwen";
         HOST = cfg.host;
-        PORT = toString cfg.port;
+        PORT = toString port;
         SPEC = cfg.speculation;
         CTX = cfg.contextMode;
         MAX_LEN = toString cfg.contextSize;
@@ -143,6 +144,45 @@ let
         RestartSec = "60s";
       };
     };
+  # With the router on, it owns the public port and the units sit on the next two.
+  qwenPort = cfg.port + 1;
+  swiftPort = cfg.port + 2;
+
+  # llama-swap runs this as the model's process: it starts the unit, stays alive while the
+  # unit is up (so a crash looks like one to llama-swap) and stops the unit on SIGTERM.
+  # systemctl needs no sudo here: see the polkit rule below.
+  systemctl = "${config.systemd.package}/bin/systemctl";
+  runUnit =
+    unit:
+    pkgs.writeShellScript "hyperqwen-run-${unit}" ''
+      set -u
+      trap '${systemctl} stop ${unit}.service; exit 0' TERM INT
+      ${systemctl} start ${unit}.service || exit 1
+      while ${systemctl} is-active --quiet ${unit}.service; do
+        sleep 5 &
+        wait $!
+      done
+      exit 1
+    '';
+
+  routerModel = unit: port: {
+    cmd = "${runUnit unit}";
+    proxy = "http://127.0.0.1:${toString port}";
+    checkEndpoint = "/v1/models";
+    # Both launchers serve the API name `qwen3.8-27b`, whatever name the client asked for.
+    useModelName = "qwen3.8-27b";
+    # Stays loaded until another model is requested.
+    ttl = 0;
+  };
+
+  routerConfig = (pkgs.formats.yaml { }).generate "hyperqwen-router.yaml" {
+    # A cold start compiles kernels and captures CUDA graphs: minutes.
+    healthCheckTimeout = 1500;
+    models = {
+      "qwen3.8-27b" = routerModel "hyperqwen" qwenPort;
+      "swift-1.5" = routerModel "hyperqwen-swift" swiftPort;
+    };
+  };
 in
 {
   options.bundles.hyperqwen = {
@@ -183,6 +223,12 @@ in
         deliberately. Empty leaves the checkout wherever it is.
       '';
     };
+
+    router.enable = lib.mkEnableOption ''
+      a llama-swap router on `port` that lists both models (`qwen3.8-27b` and `swift-1.5`) and
+      swaps the GPUs to whichever one a request names. The units then listen on port+1 (default
+      model) and port+2 (Swift), and the router starts at boot instead of them
+    '';
 
     host = lib.mkOption {
       type = lib.types.str;
@@ -293,7 +339,8 @@ in
       hyperqwen = mkService {
         inherit (cfg) model;
         description = "HyperQwen vLLM server";
-        inherit (cfg) autostart;
+        autostart = cfg.autostart && !cfg.router.enable;
+        port = if cfg.router.enable then qwenPort else cfg.port;
         others = [ "hyperqwen-swift.service" ];
       };
 
@@ -303,11 +350,39 @@ in
         model = "swift";
         description = "HyperQwen vLLM server (Swift 1.5)";
         autostart = false;
+        port = if cfg.router.enable then swiftPort else cfg.port;
         others = [ "hyperqwen.service" ];
+      };
+
+      hyperqwen-router = lib.mkIf cfg.router.enable {
+        description = "llama-swap router for HyperQwen";
+        wantedBy = lib.optional cfg.autostart "multi-user.target";
+        after = [ "network.target" ];
+        serviceConfig = {
+          User = cfg.user;
+          ExecStart = "${lib.getExe pkgs.llama-swap} --config ${routerConfig} --listen ${cfg.host}:${toString cfg.port}";
+          Restart = "on-failure";
+          RestartSec = "10s";
+        };
       };
 
       # llama-cpp and hyperqwen both claim the GPUs, so only one may start at boot.
       llama-cpp.wantedBy = lib.mkIf (cfg.autostart && config.services.llama-cpp.enable) (lib.mkForce [ ]);
+    };
+
+    # The router's wrapper scripts start and stop the units as the service user, not through sudo
+    # (the service has no setuid).
+    security.polkit = lib.mkIf cfg.router.enable {
+      enable = true;
+      extraConfig = ''
+        polkit.addRule(function(action, subject) {
+          if (action.id == "org.freedesktop.systemd1.manage-units" &&
+              subject.user == "${cfg.user}" &&
+              ["hyperqwen.service", "hyperqwen-swift.service"].indexOf(action.lookup("unit")) >= 0) {
+            return polkit.Result.YES;
+          }
+        });
+      '';
     };
 
     # Passwordless control of just this service, mirroring llama-cpp, so benchmarking can
