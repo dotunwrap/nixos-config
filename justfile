@@ -72,10 +72,12 @@ auth *args: (_need_sys 'nix-auth' 'the baseline home-manager profile (modules/de
 cachix *args: (_need_sys 'cachix' 'the baseline systemPackages (modules/defaults.nix)')
   cachix {{args}}
 
-# Shows the substituters and trusted keys actually in effect right now
+# Shows the trusted substituters and their signing keys actually in effect right now, one per line
 [group('Flake')]
-caches: (_need_sys 'rg' 'the baseline home-manager profile (modules/defaults.nix)')
-  nix config show | rg -i "substituters|trusted-public-keys"
+caches: (_need_sys 'jq' 'the baseline home-manager profile (modules/defaults.nix)') (_need_sys 'column' 'the base NixOS system closure')
+  nix config show --json \
+    | jq -r '.["trusted-public-keys"].value | ["host","key"], (.[] | split(":") | [.[0], (.[1:] | join(":"))]) | join("|")' \
+    | column -t -s'|' -o ' | '
 
 # Shows an option's value and declaring/defining module(s) for a host
 [group('Debug')]
