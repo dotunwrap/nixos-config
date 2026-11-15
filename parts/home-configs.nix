@@ -123,7 +123,10 @@ in
                 inputs.pi-harness-config.homeManagerModules.default
               ]
               ++ config.modules
-              ++ builtins.attrValues self.homeManagerModules;
+              ++ builtins.attrValues (
+                # hermes-config is private; only nia's SSH key can fetch it.
+                removeAttrs self.homeManagerModules (lib.optional (config.username != "nia") "programs/hermes")
+              );
 
               packageName = "home/config/${name}";
               finalPackage = config.finalHome.activationPackage;

@@ -1,6 +1,7 @@
 _:
 {
   config,
+  options,
   lib,
   osConfig ? null,
   ...
@@ -19,7 +20,9 @@ in
   config = lib.mkIf cfg.enable {
     programs = {
       pi.llamaBaseUrl = "http://127.0.0.1:${toString port}";
-      hermes.llamaBaseUrl = "http://127.0.0.1:${toString port}";
+      hermes = lib.optionalAttrs (options.programs.hermes ? llamaBaseUrl) {
+        llamaBaseUrl = "http://127.0.0.1:${toString port}";
+      };
     };
   };
 }

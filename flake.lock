@@ -344,17 +344,17 @@
         "hermes-agent": "hermes-agent"
       },
       "locked": {
-        "lastModified": 1794693918,
-        "narHash": "sha256-qaalZW2iP1Xxa9s3kL7wMkBOIena6kxqO+j+WkN7J0Y=",
-        "owner": "nyoshe",
-        "repo": "hermes-config",
-        "rev": "c3e5c7cfc931d32319bda14e454c4e1ab664c3e7",
-        "type": "github"
+        "lastModified": 1794695367,
+        "narHash": "sha256-NA1nd2nkTQL/vWpZghqqEGEtzqi+E1CBGSDAhNz9GkU=",
+        "ref": "refs/heads/main",
+        "rev": "d14079904181e949ab7d6088d7504445f12418bb",
+        "revCount": 3,
+        "type": "git",
+        "url": "ssh://git@github.com/nyoshe/hermes-config"
       },
       "original": {
-        "owner": "nyoshe",
-        "repo": "hermes-config",
-        "type": "github"
+        "type": "git",
+        "url": "ssh://git@github.com/nyoshe/hermes-config"
       }
     },
     "home-manager": {

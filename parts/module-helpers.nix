@@ -43,7 +43,8 @@ let
 
           extraArgs = lib.mkOption {
             type = lib.types.nullOr (lib.types.attrsOf lib.types.unspecified);
-            default = inputs;
+            # Forcing any input fetches it, and hermes-config is private (nia's SSH key only).
+            default = removeAttrs inputs [ "hermes-config" ];
           };
 
           wrappedModule = lib.mkOption {
