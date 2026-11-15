@@ -165,7 +165,7 @@ clean *args: (_need_sys 'nh' 'the programs.nh NixOS module')
 rollback *args: (_need_sys 'nh' 'the programs.nh NixOS module')
   nh os rollback --ask {{args}}
 
-# Lists available system generations (nixos-rebuild, not `nh os info` -- nh 4.4.2's date column reads the store path's own mtime, which Nix normalizes to the epoch; the profile symlink nixos-rebuild reads has the real one)
+# Lists available system generations
 [group('System')]
 gens:
   nixos-rebuild list-generations
