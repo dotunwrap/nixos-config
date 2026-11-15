@@ -79,6 +79,9 @@ in
       let
         ignoredInputs = [
           "vicinae"
+          # devenv's own transitive deps (e.g. flake-compat) pin against its
+          # own cache; forcing them to follow ours would bust that cache hit.
+          "devenv"
         ];
         ignoreFlags = concatMapStringsSep " " (input: "--ignore ${input}") ignoredInputs;
       in

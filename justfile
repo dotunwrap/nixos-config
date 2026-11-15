@@ -25,7 +25,7 @@ _need_dev tool:
     } else if which('devenv') != [] {
       error(tool + ' is not on PATH. Run `devenv shell` to enter the dev environment, which provides it.')
     } else {
-      error(tool + ' is not on PATH, and `devenv` is not installed. devenv is the preferred dev environment for this repo (https://devenv.sh); `nix develop` gives the plain Nix devShell with the same tools.')
+      error(tool + ' is not on PATH, and `devenv` is not installed. devenv is the preferred dev environment for this repo (https://devenv.sh); `nix develop --no-pure-eval` builds the same shell straight from devenv.nix, no CLI required.')
     }
   }}
 
