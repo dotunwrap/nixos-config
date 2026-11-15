@@ -55,10 +55,6 @@ jobs:
         with:
           nix-version: ${{ needs.checks-matrix.outputs.nix-version }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Install cachix
-        uses: cachix/cachix-action@v16
-        with:
-          name: devenv
       - name: Install devenv
         run: nix profile add nixpkgs#devenv
       - name: Build the devenv shell and run all git hooks

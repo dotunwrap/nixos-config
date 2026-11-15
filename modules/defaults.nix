@@ -181,7 +181,7 @@ in
               "nix-command"
               "flakes"
             ];
-            substituters = [ "https://cache.nixos.org" ] ++ map (c: c.url) caches;
+            substituters = map (c: c.url) caches;
             trusted-public-keys = map (c: c.key) caches;
             auto-optimise-store = lib.mkDefault true;
             # NOTE: plain assignment, not mkDefault: nixpkgs' nix.nix sets

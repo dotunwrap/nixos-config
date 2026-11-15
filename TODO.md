@@ -47,6 +47,12 @@ once it's empty.
 - **Revisit and modernize CI/CD pipelines**: We should ensure that our CI
   is running all of the checks it can with proper usage of the cachix stores to cut down on
   cache misses and source builds in GH runners. If we are doing something inefficient, fix it.
+  `modules/_data/caches.nix` is now the single source of truth for cache definitions (NixOS
+  substituters, devenv's `cachix.pull`, and CI's `setup-nix` composite action all derive from
+  it), but the rest of `.github/workflows/ci.yml` is still jankier than it should be -- steps
+  get redefined per-job instead of once. Lean harder into `nix-github-actions`
+  (`modules/github-actions.nix`) to generate more of the workflow itself rather than hand-writing
+  duplicated YAML steps across jobs.
   We should implement a CD pipeline where on merge into `main` and have successful CI it prepares
   to deploy (using devenv?) to our remote machines (but should use GH environments or smth for each
   output to ensure we approve of the deploy first). Will need automated rollback on failure, though.

@@ -19,11 +19,21 @@ runs:
           auto-optimise-store = true
           experimental-features = nix-command flakes
         install_url: https://releases.nixos.org/nix/nix-${{ inputs.nix-version }}/install
+    - name: Resolve cachix caches from modules/_data/caches.nix
+      id: caches
+      shell: bash
+      run: |
+        mapfile -t names < <(nix eval --json --file ./modules/_data/caches.nix \
+          --apply 'caches: map (c: c.name) (builtins.filter (c: c.cachix) caches)' | jq -r '.[]')
+        {
+          echo "primary=${names[0]}"
+          echo "extra=$(IFS=,; echo "${names[*]:1}")"
+        } >> "$GITHUB_OUTPUT"
     - name: Setup cachix caches
-      uses: cachix/cachix-action@v16
+      uses: cachix/cachix-action@v17
       with:
-        name: nix-community
-        extraPullNames: vicinae,yazi,niri-epireyn
+        name: ${{ steps.caches.outputs.primary }}
+        extraPullNames: ${{ steps.caches.outputs.extra }}
     - name: Setup SSH
       shell: bash
       run: |

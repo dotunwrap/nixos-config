@@ -12,15 +12,10 @@ let
 
   autoFollow = inputs.nix-auto-follow.packages.${system}.default;
   treefmt = import ./treefmt.nix { inherit pkgs; };
+  caches = import ./modules/_data/caches.nix;
 in
 {
-  cachix.pull = [
-    "devenv"
-    "niri-epireyn"
-    "vicinae"
-    "nix-community"
-    "yazi"
-  ];
+  cachix.pull = map (c: c.name) (builtins.filter (c: c.cachix) caches);
 
   packages = [
     autoFollow

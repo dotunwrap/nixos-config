@@ -6,20 +6,24 @@
   nixConfig = {
     commit-lock-file-summary = "chore: Update flake.lock";
     extra-substituters = [
+      "https://cache.nixos.org"
       "https://devenv.cachix.org"
       "https://nix-community.cachix.org"
       "https://dotunwrap.cachix.org"
       "https://niri-epireyn.cachix.org"
       "https://vicinae.cachix.org"
       "https://yazi.cachix.org"
+      "https://nix-auto-follow.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "dotunwrap.cachix.org-1:p7ePw6DuH9OjOqpzJUg/RJor+9tl3vKtjHGBACvthW0="
       "niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="
       "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
       "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+      "nix-auto-follow.cachix.org-1:o+3n4N5W2vOAHfSzlmy61lOsQK9Ok8SkYJ3ztOBS21M="
     ];
   };
 
