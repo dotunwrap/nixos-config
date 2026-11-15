@@ -55,8 +55,6 @@ _:
   # (one image per request).
   bundles.hyperqwen = {
     vision = true;
-    # Swift 1.5 fine-tune; weights come from `HQ_STEPS=+swift hyperqwen-setup`.
-    model = "swift";
     # Reachable over Tailscale only, like llama-cpp: the firewall opens no public ports and
     # trusts tailscale0. There is no API key.
     host = "0.0.0.0";
