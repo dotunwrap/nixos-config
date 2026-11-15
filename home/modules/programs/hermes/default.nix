@@ -7,24 +7,36 @@
 }:
 let
   cfg = config.programs.hermes;
-
-  # Model Hermes starts with; same one Pi defaults to. The llama-server router loads
-  # it on demand.
-  defaultModel = "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL";
 in
 {
   # Upstream's Home Manager module provides programs/services.hermes-agent; this
   # module enables it and points it at the local server.
   imports = [ hermes-agent.homeManagerModules.default ];
 
-  options.programs.hermes.llamaBaseUrl = lib.mkOption {
-    type = lib.types.nullOr lib.types.str;
-    default = null;
-    example = "http://dosei:8080";
-    description = ''
-      Base URL of a llama-server router (e.g. one reached over Tailscale), used as
-      Hermes' custom OpenAI-compatible endpoint. Null leaves the model unconfigured.
-    '';
+  options.programs.hermes = {
+    llamaBaseUrl = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      example = "http://dosei:8080";
+      description = ''
+        Base URL of a llama-server router (e.g. one reached over Tailscale), used as
+        Hermes' custom OpenAI-compatible endpoint. Null leaves the model unconfigured.
+      '';
+    };
+
+    defaultModel = lib.mkOption {
+      type = lib.types.str;
+      # Same one Pi defaults to. The llama-server router loads it on demand.
+      default = "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL";
+      example = "qwen3.8-27b";
+      description = "Model name Hermes sends. It must match what the server calls its model.";
+    };
+
+    supportsVision = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether the server loads a vision projector. Turn off for a language-model-only server.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -48,11 +60,11 @@ in
           model = {
             provider = "custom";
             base_url = "${cfg.llamaBaseUrl}/v1";
-            default = defaultModel;
-            # Hermes can't tell a custom endpoint's model has vision, so without this
-            # vision_analyze detours through an aux call with a 120s timeout, which a
-            # high-reasoning model can exceed. The server loads the mmproj (see local_LLM).
-            supports_vision = true;
+            default = cfg.defaultModel;
+            # Hermes can't tell a custom endpoint's model has vision, so with this on, a server
+            # that loads the mmproj (see local_LLM) skips the vision_analyze detour through an aux
+            # call with a 120s timeout, which a high-reasoning model can exceed. Off for HyperQwen.
+            supports_vision = cfg.supportsVision;
           };
         }
         // {

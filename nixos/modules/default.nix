@@ -5,6 +5,7 @@
     "bundles/development" = ./bundles/development;
     "bundles/dwm" = ./bundles/dwm;
     "bundles/gaming" = ./bundles/gaming;
+    "bundles/hyperqwen" = ./bundles/hyperqwen;
     "bundles/local_LLM" = ./bundles/local_LLM;
     "bundles/niri" = ./bundles/niri;
 

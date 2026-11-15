@@ -103,8 +103,11 @@ in
 
     hermes = {
       enable = true;
-      # Same server as Pi; dosei's own local_LLM bundle overrides this with loopback.
-      llamaBaseUrl = lib.mkDefault "http://dosei:8080";
+      # dosei serves HyperQwen (see its hyperqwen bundle); its own local_LLM bundle
+      # overrides this with loopback. Pi stays on llama-server's router API.
+      llamaBaseUrl = lib.mkDefault "http://dosei:18020";
+      defaultModel = lib.mkDefault "qwen3.8-27b";
+      supportsVision = lib.mkDefault false;
     };
 
     qutebrowser.enable = false;

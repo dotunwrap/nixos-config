@@ -12,6 +12,7 @@ _:
     "niri"
     "gaming"
     "local_LLM"
+    "hyperqwen"
   ];
 
   # 160k context with vision and MTP on 28GB. UD-Q4_K_XL plus ~7.2GB of KV cache (~45KB per
@@ -45,6 +46,16 @@ _:
       top-p = 0.95;
       top-k = 20;
     };
+  };
+
+  # HyperQwen (patched vLLM) serves the same Qwen3.8-27B at about 100 tok/s decode with MTP and
+  # a 150k context on this pair, against about 83 tok/s from llama.cpp's MTP. It starts at boot
+  # and takes llama-cpp's place; llama-cpp stays defined and `systemctl start llama-cpp` swaps back.
+  # Language model only: no vision, unlike the llama.cpp setup above.
+  bundles.hyperqwen = {
+    # Reachable over Tailscale only, like llama-cpp: the firewall opens no public ports and
+    # trusts tailscale0. There is no API key.
+    host = "0.0.0.0";
   };
 
   hardware = {
