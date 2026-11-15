@@ -27,6 +27,49 @@ let
     runScript = "bash";
   };
 
+  # Bigger env for hyperqwen-setup only: adds the build tools the install scripts call (patch for
+  # the vLLM series, cmake/ninja for xgrammar, uv for the venv) so the service's closure stays small.
+  setupFhs = pkgs.buildFHSEnv {
+    name = "hyperqwen-setup-fhs";
+    targetPkgs =
+      p: with p; [
+        gcc15
+        git
+        openssl
+        zlib
+        stdenv.cc.cc.lib
+        numactl
+        bash
+        coreutils
+        uv
+        patch
+        diffutils
+        findutils
+        gnugrep
+        gnused
+        gawk
+        gnumake
+        cmake
+        ninja
+        pkg-config
+        which
+        curl
+      ];
+    runScript = "bash";
+  };
+
+  # `hyperqwen-setup` builds or updates the environment the service runs from. The gcc-ar and
+  # gcc-ranlib paths are the unwrapped gcc 15's: see the xgrammar step in setup.sh.
+  setup = pkgs.writeShellScriptBin "hyperqwen-setup" ''
+    export HQ_REPO="''${HQ_REPO:-${cfg.repoPath}}"
+    export HQ_REV="''${HQ_REV-${cfg.repoRev}}"
+    export HQ_GCC_AR=${pkgs.gcc15.cc}/bin/gcc-ar
+    export HQ_GCC_RANLIB=${pkgs.gcc15.cc}/bin/gcc-ranlib
+    # The FHS env replaces /etc, so bwrap can't start from a cwd under it (e.g. /etc/nixos).
+    cd "''${HOME:-/}"
+    exec ${setupFhs}/bin/hyperqwen-setup-fhs ${./setup.sh} "$@"
+  '';
+
   start = pkgs.writeShellScript "hyperqwen-start" ''
     set -eu
     mkdir -p "$TMPDIR"
@@ -59,10 +102,19 @@ in
       type = lib.types.str;
       default = "/home/nia/Projects/HyperQwen";
       description = ''
-        Checkout of syv-ai/HyperQwen with its venv and `models/` already set up. The venv, the
-        requantized model and the vLLM patches are installed by hand and are not managed by Nix.
-        The venv is not rebuilt here, so a nixpkgs bump that changes the FHS env's gcc or glibc
-        can break it. Reinstall the venv if that happens.
+        Checkout of syv-ai/HyperQwen with its venv and `models/`. Nix doesn't build these: run
+        `hyperqwen-setup` once to create them, and again after a nixpkgs bump that changes the FHS
+        env's gcc or glibc (it skips whatever is already done).
+      '';
+    };
+
+    repoRev = lib.mkOption {
+      type = lib.types.str;
+      default = "3d6c9543292efc17372b824071ef8d9f33366b21";
+      description = ''
+        HyperQwen commit that `hyperqwen-setup` checks out. The vLLM patch series, the pinned
+        pthfa and xgrammar sources and the launcher all come from this checkout, so bump it
+        deliberately. Empty leaves the checkout wherever it is.
       '';
     };
 
@@ -146,6 +198,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = [ setup ];
+
     systemd.services.hyperqwen = {
       description = "HyperQwen vLLM server";
       wantedBy = lib.optional cfg.autostart "multi-user.target";
