@@ -52,6 +52,10 @@ let
             jinja = true;
             # Cap thinking at 16k tokens; llama.cpp then force-closes the think block.
             reasoning-budget = 16384;
+            # Host-RAM prompt cache (default 8192MiB). A ~55k-token agent conversation is
+            # ~11GB of state; above the limit the save is skipped, so any other request
+            # evicts it and the next turn re-prefills from scratch.
+            cache-ram = 12288;
             dedup-cache-models = true;
           }
           # Without vision, skip the projector and its ~1GB of VRAM. With it, the
