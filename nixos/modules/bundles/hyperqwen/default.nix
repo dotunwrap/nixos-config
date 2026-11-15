@@ -84,6 +84,65 @@ let
     cd ${lib.escapeShellArg cfg.repoPath}
     exec bash single-user/start_qwen.sh
   '';
+
+  # One unit per model: they share the port and the GPUs, so each conflicts with the others
+  # (and llama-cpp) and starting one stops the rest.
+  mkService =
+    {
+      model,
+      description,
+      autostart,
+      others,
+    }:
+    {
+      inherit description;
+      wantedBy = lib.optional autostart "multi-user.target";
+      after = [
+        "network.target"
+        "llama-cpp.service"
+      ];
+      conflicts = [ "llama-cpp.service" ] ++ others;
+
+      environment = {
+        HOME = "/home/${cfg.user}";
+        TMPDIR = "/var/tmp/hyperqwen";
+        HOST = cfg.host;
+        PORT = toString cfg.port;
+        SPEC = cfg.speculation;
+        CTX = cfg.contextMode;
+        MAX_LEN = toString cfg.contextSize;
+        GPU_UTIL = cfg.gpuMemoryUtilization;
+        MAX_SEQS = toString cfg.maxSeqs;
+        PREFIX_CACHE = "1";
+        # Numbers CUDA devices by PCI bus so device order matches nvidia-smi on mixed cards.
+        CUDA_DEVICE_ORDER = "PCI_BUS_ID";
+        # Without peer-to-peer, the LL protocol recovered part of tensor parallelism's loss.
+        NCCL_PROTO = "LL";
+        EXTRA_ARGS = "--tensor-parallel-size ${toString cfg.tensorParallelSize}";
+      }
+      // lib.optionalAttrs (cfg.contextMode == "long" && cfg.speculation == "mtp") { PTH_FA = "1"; }
+      // lib.optionalAttrs (cfg.contextMode == "long" && cfg.speculation == "dflash2") {
+        FA2_FP8KV = "0";
+      }
+      // lib.optionalAttrs cfg.vision {
+        VISION = "1";
+        VISION_OFFLOAD = "1";
+      }
+      // lib.optionalAttrs (modelDirs.${model} != null) {
+        MODEL = "${cfg.repoPath}/models/${modelDirs.${model}}";
+      }
+      // cfg.extraEnvironment;
+
+      serviceConfig = {
+        User = cfg.user;
+        ExecStart = "${fhs}/bin/hyperqwen-fhs ${start}";
+        # First start compiles kernels and captures CUDA graphs; a cold cache takes minutes.
+        TimeoutStartSec = "20min";
+        TimeoutStopSec = "60s";
+        Restart = "on-failure";
+        RestartSec = "60s";
+      };
+    };
 in
 {
   options.bundles.hyperqwen = {
@@ -230,60 +289,26 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ setup ];
 
-    systemd.services.hyperqwen = {
-      description = "HyperQwen vLLM server";
-      wantedBy = lib.optional cfg.autostart "multi-user.target";
-      after = [
-        "network.target"
-        "llama-cpp.service"
-      ];
-      conflicts = [ "llama-cpp.service" ];
-
-      environment = {
-        HOME = "/home/${cfg.user}";
-        TMPDIR = "/var/tmp/hyperqwen";
-        HOST = cfg.host;
-        PORT = toString cfg.port;
-        SPEC = cfg.speculation;
-        CTX = cfg.contextMode;
-        MAX_LEN = toString cfg.contextSize;
-        GPU_UTIL = cfg.gpuMemoryUtilization;
-        MAX_SEQS = toString cfg.maxSeqs;
-        PREFIX_CACHE = "1";
-        # Numbers CUDA devices by PCI bus so device order matches nvidia-smi on mixed cards.
-        CUDA_DEVICE_ORDER = "PCI_BUS_ID";
-        # Without peer-to-peer, the LL protocol recovered part of tensor parallelism's loss.
-        NCCL_PROTO = "LL";
-        EXTRA_ARGS = "--tensor-parallel-size ${toString cfg.tensorParallelSize}";
-      }
-      // lib.optionalAttrs (cfg.contextMode == "long" && cfg.speculation == "mtp") { PTH_FA = "1"; }
-      // lib.optionalAttrs (cfg.contextMode == "long" && cfg.speculation == "dflash2") {
-        FA2_FP8KV = "0";
-      }
-      // lib.optionalAttrs cfg.vision {
-        VISION = "1";
-        VISION_OFFLOAD = "1";
-      }
-      // lib.optionalAttrs (modelDirs.${cfg.model} != null) {
-        MODEL = "${cfg.repoPath}/models/${modelDirs.${cfg.model}}";
-      }
-      // cfg.extraEnvironment;
-
-      serviceConfig = {
-        User = cfg.user;
-        ExecStart = "${fhs}/bin/hyperqwen-fhs ${start}";
-        # First start compiles kernels and captures CUDA graphs; a cold cache takes minutes.
-        TimeoutStartSec = "20min";
-        TimeoutStopSec = "60s";
-        Restart = "on-failure";
-        RestartSec = "60s";
+    systemd.services = {
+      hyperqwen = mkService {
+        inherit (cfg) model;
+        description = "HyperQwen vLLM server";
+        inherit (cfg) autostart;
+        others = [ "hyperqwen-swift.service" ];
       };
-    };
 
-    # llama-cpp and hyperqwen both claim the GPUs, so only one may start at boot.
-    systemd.services.llama-cpp.wantedBy = lib.mkIf (cfg.autostart && config.services.llama-cpp.enable) (
-      lib.mkForce [ ]
-    );
+      # Swift 1.5 beside the default model: started by hand, replacing hyperqwen.service until
+      # that is started again. Both serve the API name `qwen3.8-27b`, so Hermes needs no change.
+      hyperqwen-swift = mkService {
+        model = "swift";
+        description = "HyperQwen vLLM server (Swift 1.5)";
+        autostart = false;
+        others = [ "hyperqwen.service" ];
+      };
+
+      # llama-cpp and hyperqwen both claim the GPUs, so only one may start at boot.
+      llama-cpp.wantedBy = lib.mkIf (cfg.autostart && config.services.llama-cpp.enable) (lib.mkForce [ ]);
+    };
 
     # Passwordless control of just this service, mirroring llama-cpp, so benchmarking can
     # restart it without a terminal. Deliberately excludes nixos-rebuild.
@@ -292,15 +317,25 @@ in
         users = [ cfg.user ];
         commands =
           map
-            (action: {
-              command = "/run/current-system/sw/bin/systemctl ${action} hyperqwen.service";
+            (cmd: {
+              command = "/run/current-system/sw/bin/systemctl ${cmd}";
               options = [ "NOPASSWD" ];
             })
-            [
-              "start"
-              "stop"
-              "restart"
-            ];
+            (
+              lib.concatMap
+                (
+                  action:
+                  map (unit: "${action} ${unit}.service") [
+                    "hyperqwen"
+                    "hyperqwen-swift"
+                  ]
+                )
+                [
+                  "start"
+                  "stop"
+                  "restart"
+                ]
+            );
       }
     ];
   };
