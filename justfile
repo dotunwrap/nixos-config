@@ -8,6 +8,7 @@ set quiet
 set unstable
 
 hostname := `hostname`
+# FIXME: Make this list generate dynamically based off of the nixosConfiguration outputs in the flake
 hosts := ['chikyuu', 'europa', 'kaiousei', 'meiousei', 'suisei']
 
 # Displays this message or shows the usage if <recipe> is passed
