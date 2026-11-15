@@ -5,7 +5,7 @@ Layout:
 - flake.nix declares inputs; parts/ holds flake-parts wiring (system-configs.nix, home-configs.nix, nixos-modules.nix, home-modules.nix).
 - nixos/configurations/<host>.nix are the hosts: chikyuu, dosei, europa, kaiousei, meiousei, suisei. Check `hostname` to see which one you are on.
 - nixos/modules/ (bundles, core, drivers, programs) are NixOS modules; home/modules/ (bundles, misc, programs, services, themes) are Home Manager modules; home/configurations/ has per-user configs.
-- The local LLM server on dosei is HyperQwen (patched vLLM, model `qwen3.8-27b`, language only, no vision): nixos/modules/bundles/hyperqwen/default.nix, unit hyperqwen.service, other hosts reach it at http://dosei:18020. It conflicts with llama-cpp.service over the GPUs, so starting one stops the other. The older llama.cpp router is nixos/modules/bundles/local_LLM/default.nix (http://dosei:8080, presets generated from it; per-model overrides in nixos/configurations/dosei.nix).
+- The local LLM server on dosei is HyperQwen (patched vLLM, model `qwen3.8-27b`, with vision: one image per request, the vision tower's weights in host RAM): nixos/modules/bundles/hyperqwen/default.nix, unit hyperqwen.service, other hosts reach it at http://dosei:18020. It conflicts with llama-cpp.service over the GPUs, so starting one stops the other. The older llama.cpp router is nixos/modules/bundles/local_LLM/default.nix (http://dosei:8080, presets generated from it; per-model overrides in nixos/configurations/dosei.nix).
 - Hermes (you) is configured in home/modules/programs/hermes/default.nix; this text is loaded from nix-context.md beside it.
 
 Rules of thumb:

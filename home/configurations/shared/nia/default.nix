@@ -107,7 +107,7 @@ in
       # overrides this with loopback. Pi stays on llama-server's router API.
       llamaBaseUrl = lib.mkDefault "http://dosei:18020";
       defaultModel = lib.mkDefault "qwen3.8-27b";
-      supportsVision = lib.mkDefault false;
+      supportsVision = lib.mkDefault true;
     };
 
     qutebrowser.enable = false;

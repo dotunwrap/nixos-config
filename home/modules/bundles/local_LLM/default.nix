@@ -25,7 +25,8 @@ in
       description = ''
         Server this host talks to over loopback. It must match whichever of the host's NixOS
         bundles starts at boot (they conflict over the GPUs). HyperQwen serves the model as
-        `qwen3.8-27b` with no vision projector; llama-cpp is the router with vision.
+        `qwen3.8-27b` with vision (the host's bundles.hyperqwen.vision must be on); llama-cpp is
+        the router with its own vision projector.
       '';
     };
   };
@@ -40,7 +41,7 @@ in
           {
             llamaBaseUrl = "http://127.0.0.1:${toString hyperqwenPort}";
             defaultModel = "qwen3.8-27b";
-            supportsVision = false;
+            supportsVision = true;
           }
         else
           {

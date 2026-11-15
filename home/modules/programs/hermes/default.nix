@@ -63,7 +63,7 @@ in
             default = cfg.defaultModel;
             # Hermes can't tell a custom endpoint's model has vision, so with this on, a server
             # that loads the mmproj (see local_LLM) skips the vision_analyze detour through an aux
-            # call with a 120s timeout, which a high-reasoning model can exceed. Off for HyperQwen.
+            # call with a 120s timeout, which a high-reasoning model can exceed.
             supports_vision = cfg.supportsVision;
           };
         }

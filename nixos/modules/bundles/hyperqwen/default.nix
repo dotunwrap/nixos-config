@@ -187,6 +187,17 @@ in
       description = "GPUs the model is split over. The model does not fit on either card alone.";
     };
 
+    vision = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Serve images. The vision tower is only 0.86 GiB, and its weights stay in pinned host RAM
+        (VISION_OFFLOAD), copied to the GPU for each image, so it costs about 1GiB of RAM and
+        about 1% of the KV pool. Requests are limited to one image of at most ~2048 image tokens.
+        Off by default: the server runs language-model-only, and images are rejected.
+      '';
+    };
+
     extraEnvironment = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
@@ -229,6 +240,10 @@ in
       // lib.optionalAttrs (cfg.contextMode == "long" && cfg.speculation == "mtp") { PTH_FA = "1"; }
       // lib.optionalAttrs (cfg.contextMode == "long" && cfg.speculation == "dflash2") {
         FA2_FP8KV = "0";
+      }
+      // lib.optionalAttrs cfg.vision {
+        VISION = "1";
+        VISION_OFFLOAD = "1";
       }
       // cfg.extraEnvironment;
 
