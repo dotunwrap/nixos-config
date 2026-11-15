@@ -6,6 +6,7 @@
   nixConfig = {
     commit-lock-file-summary = "chore: Update flake.lock";
     extra-substituters = [
+      "https://devenv.cachix.org"
       "https://nix-community.cachix.org"
       "https://dotunwrap.cachix.org"
       "https://niri-epireyn.cachix.org"
@@ -13,6 +14,7 @@
       "https://yazi.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "dotunwrap.cachix.org-1:p7ePw6DuH9OjOqpzJUg/RJor+9tl3vKtjHGBACvthW0="
       "niri-epireyn.cachix.org-1:tlVyFN7CtsDT+ZcLPS+ekFWeT1X6X4OqvWqbBMyIzFA="
