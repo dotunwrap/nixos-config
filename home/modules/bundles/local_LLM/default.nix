@@ -41,6 +41,7 @@ in
           {
             llamaBaseUrl = "http://127.0.0.1:${toString hyperqwenPort}";
             defaultModel = "qwen3.8-27b";
+            models = [ "swift-1.5" ];
             supportsVision = true;
           }
         else

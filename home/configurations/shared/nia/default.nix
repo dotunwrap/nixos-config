@@ -107,6 +107,8 @@ in
       # overrides this with loopback. Pi stays on llama-server's router API.
       llamaBaseUrl = lib.mkDefault "http://dosei:18020";
       defaultModel = lib.mkDefault "qwen3.8-27b";
+      # The llama-swap router on dosei lists both.
+      models = lib.mkDefault [ "swift-1.5" ];
       supportsVision = lib.mkDefault true;
     };
 

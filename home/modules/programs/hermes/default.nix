@@ -32,6 +32,20 @@ in
       description = "Model name Hermes sends. It must match what the server calls its model.";
     };
 
+    models = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [
+        "qwen3.8-27b"
+        "swift-1.5"
+      ];
+      description = ''
+        Models /model offers for the endpoint, besides defaultModel. Hermes only lists what a bare
+        `custom` model block names, so a server with several models (the llama-swap router) needs
+        them here.
+      '';
+    };
+
     supportsVision = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -65,6 +79,16 @@ in
             # that loads the mmproj (see local_LLM) skips the vision_analyze detour through an aux
             # call with a 120s timeout, which a high-reasoning model can exceed.
             supports_vision = cfg.supportsVision;
+          };
+        }
+        // lib.optionalAttrs (cfg.llamaBaseUrl != null) {
+          # A named provider gives /model a list to pick from; the `model` block above stays the
+          # default selection and Hermes matches it to this entry by endpoint.
+          providers.local = {
+            name = "local";
+            api = "${cfg.llamaBaseUrl}/v1";
+            default_model = cfg.defaultModel;
+            models = lib.unique ([ cfg.defaultModel ] ++ cfg.models);
           };
         }
         // {
