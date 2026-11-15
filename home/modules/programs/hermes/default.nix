@@ -46,6 +46,17 @@ in
       '';
     };
 
+    contextLength = lib.mkOption {
+      type = lib.types.nullOr lib.types.int;
+      default = null;
+      example = 150000;
+      description = ''
+        Context window of the endpoint's models. Hermes reads it from the server's /v1/models when
+        that reports one (vLLM's `max_model_len`); a router in front, like llama-swap, doesn't pass
+        it on, and Hermes then assumes 128K. Null leaves detection to Hermes.
+      '';
+    };
+
     supportsVision = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -89,6 +100,9 @@ in
             api = "${cfg.llamaBaseUrl}/v1";
             default_model = cfg.defaultModel;
             models = lib.unique ([ cfg.defaultModel ] ++ cfg.models);
+          }
+          // lib.optionalAttrs (cfg.contextLength != null) {
+            context_length = cfg.contextLength;
           };
         }
         // {

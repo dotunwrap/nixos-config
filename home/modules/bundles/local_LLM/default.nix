@@ -11,6 +11,8 @@ let
   port = if osCfg != null then osCfg.port else 8080;
   # Home Manager is standalone here, so osConfig is usually null and the defaults apply.
   hyperqwenPort = osConfig.bundles.hyperqwen.port or 18020;
+  # The router doesn't relay vLLM's max_model_len, so Hermes is told the window directly.
+  hyperqwenContext = osConfig.bundles.hyperqwen.contextSize or 150000;
 in
 {
   options.bundles.local_LLM = {
@@ -42,6 +44,7 @@ in
             llamaBaseUrl = "http://127.0.0.1:${toString hyperqwenPort}";
             defaultModel = "qwen3.8-27b";
             models = [ "swift-1.5" ];
+            contextLength = hyperqwenContext;
             supportsVision = true;
           }
         else

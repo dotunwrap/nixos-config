@@ -109,6 +109,7 @@ in
       defaultModel = lib.mkDefault "qwen3.8-27b";
       # The llama-swap router on dosei lists both.
       models = lib.mkDefault [ "swift-1.5" ];
+      contextLength = lib.mkDefault 150000;
       supportsVision = lib.mkDefault true;
     };
 
