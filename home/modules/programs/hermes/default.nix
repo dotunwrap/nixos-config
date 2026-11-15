@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -36,6 +37,12 @@ in
     # YAML, so an mkIf wrapper would leak `_type: if` into config.yaml.
     services.hermes-agent = {
       enable = true;
+
+      # NixOS has no python3 on PATH, and Hermes' own `hermes pm install` binaries
+      # (chromium included) are generic-Linux builds that can't run here. Provide both
+      # from nixpkgs; the browser tool is pointed at this chromium below.
+      extraPackages = [ pkgs.python3 ];
+
       settings =
         lib.optionalAttrs (cfg.llamaBaseUrl != null) {
           model = {
@@ -49,6 +56,8 @@ in
           };
         }
         // {
+          browser.executable_path = lib.getExe pkgs.chromium;
+
           # Session system-prompt overlay sent with every request: explains this Nix
           # config to the model. Ignored while a display.personality is selected.
           agent.system_prompt = builtins.readFile ./nix-context.md;
