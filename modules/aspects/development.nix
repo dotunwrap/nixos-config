@@ -1,8 +1,6 @@
 {
-  # NOTE: unlike base, this is NOT a den.default -- every host and every user
-  # currently wants it, but that's today's reality, not a reason to make it
-  # impossible to turn off. A normal, host-included aspect (same shape as
-  # gaming/dwm/niri) so any future host can simply not include it.
+  # NOTE: not a den.default; every host wants it today, but a normal
+  # host-included aspect lets a future host opt out.
   den.aspects.development = {
     nixos = _: {
       hardware.flipperzero.enable = true;

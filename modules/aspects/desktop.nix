@@ -21,11 +21,8 @@
           };
         };
 
-        # NOTE: ly inherits `login`'s PAM ordering (pam_fprintd before
-        # pam_unix, both "sufficient"), so Enter after a correct password
-        # still blocks on a fingerprint read first (nixpkgs#171136). Reorder
-        # `login` itself so the typed password is tried first; tty logins
-        # get the same fix for free since they share the `login` PAM service.
+        # NOTE: ly inherits `login`'s PAM order, so Enter still blocks on a
+        # fingerprint read first (nixpkgs#171136); reorder `login` itself.
         security.pam.services.login.rules.auth.fprintd.order = lib.mkIf config.services.fprintd.enable (
           config.security.pam.services.login.rules.auth.unix.order + 50
         );

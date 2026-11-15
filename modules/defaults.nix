@@ -58,17 +58,15 @@ in
       (den.batteries.user-shell "zsh")
     ];
 
-    # NOTE: unconditional on every host. `development` is the one exception
-    # that stays its own aspect (modules/aspects/development.nix) so a host
-    # can opt out of it.
+    # NOTE: unconditional on every host; `development` stays its own aspect
+    # so a host can opt out.
     nixos =
       { pkgs, inputs', ... }:
       {
         system.stateVersion = lib.mkDefault "25.05";
 
-        # NOTE: mkDefault throughout so a host can override one field with a
-        # plain assignment instead of fighting an equal-priority mkDefault
-        # with mkForce.
+        # NOTE: mkDefault throughout so a host can override a field with a
+        # plain assignment instead of needing mkForce.
         boot = {
           loader = {
             systemd-boot.enable = lib.mkDefault true;
@@ -167,10 +165,8 @@ in
             "/nix/var/nix/profiles/per-user/root/channels"
           ];
 
-          # NOTE: nh clean all already covers generation/gc cleanup on its
-          # own schedule; leaving nix.gc.automatic on too just duplicates the
-          # work and trips the warning programs.nh emits when both are
-          # enabled.
+          # NOTE: nh clean all already covers this; leaving it on too just
+          # duplicates the work and trips programs.nh's warning.
           gc.automatic = lib.mkForce false;
 
           optimise = {
@@ -188,10 +184,8 @@ in
             substituters = [ "https://cache.nixos.org" ] ++ map (c: c.url) caches;
             trusted-public-keys = map (c: c.key) caches;
             auto-optimise-store = lib.mkDefault true;
-            # NOTE: plain assignment, not mkDefault: nixpkgs' own nix.nix
-            # module sets trusted-users = [ "root" ] at normal priority,
-            # which otherwise wins outright over a weaker mkDefault and
-            # silently drops "@wheel".
+            # NOTE: plain assignment, not mkDefault: nixpkgs' nix.nix sets
+            # this at normal priority, which would silently drop "@wheel".
             trusted-users = [
               "root"
               "@wheel"
@@ -410,9 +404,8 @@ in
               name = lib.mkDefault "volantes_cursors";
             };
             targets = {
-              # NOTE: x11/sxiv both default to enabled upstream and write
-              # ~/.Xresources regardless of session type; only x11 is wired
-              # to xsession.enable, sxiv stays off (pinned by checks-stylix.nix).
+              # NOTE: x11/sxiv both default to enabled upstream; only x11 is
+              # wired to xsession.enable, sxiv stays off (checks-stylix.nix).
               feh.enable = lib.mkIf config.xsession.enable true;
               x11.enable = lib.mkDefault config.xsession.enable;
               sxiv.enable = lib.mkDefault false;

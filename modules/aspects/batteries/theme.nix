@@ -27,8 +27,8 @@ let
     flamingo = "base0F";
   };
 
-  # NOTE: a new family (e.g. gruvbox) needs only an entry here plus registry
-  # rows in `schemes` below -- `den.batteries.theme` itself never changes.
+  # NOTE: a new family needs only an entry here plus registry rows below;
+  # `den.batteries.theme` itself never changes.
   families = {
     catppuccin =
       {
@@ -82,16 +82,14 @@ let
           if polarity == "dark" then
             "${pkgs.base16-schemes}/share/themes/everforest-dark-${flavor}.yaml"
           else
-            # NOTE: light variants haven't been upstreamed for every flavor --
-            # only "medium" has one here (./everforest-light-medium.yaml).
+            # NOTE: light variants aren't upstreamed for every flavor; only
+            # "medium" has one here.
             ./everforest-light-${flavor}.yaml;
       };
   };
 
-  # NOTE: a key with no entry here falls through to whatever
-  # `stylix.base16Scheme` is already configured as (no override).
-  # Deliberately a plain attrset of the submodule type below, not a NixOS
-  # option, so it stays evaluable from inside a battery function.
+  # NOTE: an unmatched key falls through to the existing base16Scheme.
+  # Plain attrset, not a NixOS option, so it's evaluable in a battery function.
   schemeType = types.submodule {
     options = {
       family = mkOption {
@@ -164,8 +162,7 @@ let
   };
 in
 {
-  # NOTE: one battery for every colorscheme. `scheme` is a registry key;
-  # `accent`/`subaccent` override the registry row's defaults when given:
+  # NOTE: `scheme` is a registry key; `accent`/`subaccent` override its row:
   #   (den.batteries.theme { hosts = [ "kaiousei" ]; scheme = "catppuccin-mocha"; })
   den.batteries.theme =
     {

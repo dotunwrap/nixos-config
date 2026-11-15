@@ -4,10 +4,8 @@
     # NOTE: overrides denful/flake-file's modules/dendritic/nixpkgs.nix mkDefault.
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # NOTE: must be declared here, not left to denful/den's own dendritic.nix
-    # mkDefault -- that default only takes effect once `inputs.den` already
-    # resolves, which requires this declaration to exist first. Bootstrap, not
-    # redundant.
+    # NOTE: must be declared here; den's own mkDefault only takes effect
+    # once `inputs.den` already resolves, which needs this first.
     den.url = "github:denful/den";
   };
 

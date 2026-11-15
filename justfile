@@ -17,7 +17,7 @@ help recipe='':
   just {{ if recipe == '' { '--list --unsorted' } else { f'--usage {{recipe}}' }}}
 
 # statix/deadnix/jq/treefmt only ever come from the dev shell, never a
-# system/profile install -- point at devenv (or its nix-native fallback).
+# system/profile install; point at devenv or its nix-native fallback.
 [private]
 _need_dev tool:
   {{
@@ -29,16 +29,14 @@ _need_dev tool:
     }
   }}
 
-# nh/nixos-option/rg/jq/tailscale/gh/cachix/nix-auth are meant to be present
-# on every one of this flake's hosts already -- if one is missing, say where
-# it should have come from.
+# These tools are meant to be present on every host already; if one is
+# missing, say where it should have come from.
 [private]
 _need_sys tool source:
   {{ if which(tool) != [] { '' } else { error(tool + ' is not on PATH, but should ship via ' + source + '. If it is missing, the last switch may not have applied cleanly.') } }}
 
-# A brand-new file is invisible to `nix eval`/`nix build` until git knows
-# about it at all -- `-N` registers its path without staging real content,
-# so it never bleeds into an unrelated commit.
+# `nix eval`/`nix build` can't see a file git doesn't know about yet;
+# `-N` registers its path without staging real content.
 [private]
 _track_new:
   git add -N -A
@@ -63,7 +61,7 @@ update *inputs:
 genflake: _track_new
   nix run .#write-flake
 
-# Wraps nix-auth (status/login/logout) -- avoids flake-fetch rate limits on the many github: inputs here
+# Wraps nix-auth (status/login/logout); avoids flake-fetch rate limits on github: inputs
 [group('Flake')]
 auth *args: (_need_sys 'nix-auth' 'the baseline home-manager profile (modules/defaults.nix)')
   nix-auth {{args}}
@@ -78,7 +76,7 @@ cachix *args: (_need_sys 'cachix' 'the baseline systemPackages (modules/defaults
 caches: (_need_sys 'rg' 'the baseline home-manager profile (modules/defaults.nix)')
   nix config show | rg -i "substituters|trusted-public-keys"
 
-# Shows an option's value, declaring module, and defining module(s) for a host (incl. nested home-manager.users.<name>.* paths)
+# Shows an option's value and declaring/defining module(s) for a host
 [group('Debug')]
 [arg('host', pattern=hosts)]
 opt $option host=hostname *args: _track_new (_need_sys 'nixos-option' 'the base NixOS system closure')
@@ -120,7 +118,7 @@ size host=hostname: _track_new
 diffhosts host1 host2: _track_new
   set -- $(nix build ".#nixosConfigurations.{{host1}}.config.system.build.toplevel" ".#nixosConfigurations.{{host2}}.config.system.build.toplevel" --no-link --print-out-paths); nix store diff-closures "$1" "$2"
 
-# Previews a switch for a host -- what would change, with zero side effects
+# Previews a switch for a host, with zero side effects
 [group('Debug')]
 [arg('host', pattern=hosts)]
 dry host=hostname *args: _track_new (_need_sys 'nh' 'the programs.nh NixOS module')
@@ -148,7 +146,7 @@ switch *args: _track_new (_need_sys 'nh' 'the programs.nh NixOS module')
 build host=hostname *args: _track_new (_need_sys 'nh' 'the programs.nh NixOS module')
   nh os build -H {{host}} --diff always {{args}}
 
-# Wraps tailscale -- `just ts status` alone already surveys the whole fleet
+# Wraps tailscale; `just ts status` alone already surveys the whole fleet
 [group('System')]
 ts *args: (_need_sys 'tailscale' 'services.tailscale.enable (modules/defaults.nix)')
   tailscale {{args}}
@@ -186,9 +184,8 @@ ci host=hostname *args: _track_new
 runs *args: (_need_sys 'gh' 'the baseline home-manager profile (modules/defaults.nix)')
   gh run list {{args}}
 
-# FIXME: ignore list/flags here must stay in sync by hand with devenv.nix's
-# git-hooks.hooks.statix/deadnix settings -- this recipe doesn't read that
-# config, it just mirrors it.
+# FIXME: ignore list/flags must stay in sync by hand with devenv.nix's
+# git-hooks.hooks.statix/deadnix settings; this recipe just mirrors them.
 [private]
 _statix: (_need_dev 'statix')
   statix check . -i 'modules/hosts/_hardware/*.nix'
@@ -224,7 +221,7 @@ commit type subject breaking scope=[] body nostage:
 log *args:
   git log --oneline --graph --decorate -20 {{args}}
 
-# Stages everything (unless --nostage) and amends it into the most recent commit (rewrites local history)
+# Stages everything (unless --nostage) and amends the most recent commit
 [confirm]
 [group('Version Control')]
 [arg('nostage', long, flag, help='Skip auto-staging; amend using only what is already staged')]

@@ -54,10 +54,8 @@
       }:
       let
         inherit (pkgs.stdenv.hostPlatform) system;
-        # NOTE: vicinae doesn't follow our nixpkgs (see flake.nix), so its
-        # glibc is older than the system's; the host Mesa fails to load
-        # inside its process (GLIBC_x.y not found). Use a Mesa from vicinae's
-        # own pin instead so the libc versions match. See TODO.md.
+        # NOTE: vicinae's older glibc can't load the host Mesa (GLIBC_x.y
+        # not found); use vicinae's own Mesa pin instead. See TODO.md.
         vicinaeMesa = inputs.vicinae.inputs.nixpkgs.legacyPackages.${system}.mesa;
         vicinaeIcds =
           lib.concatMapStringsSep ":" (n: "${vicinaeMesa}/share/vulkan/icd.d/${n}_icd.x86_64.json")
@@ -125,9 +123,8 @@
                 min-height: 6px;
                 border-radius: 0;
                 border: none;
-                # NOTE: base0E, not a named stylix color -- the slot
-                # catppuccin's accent override
-                # (modules/aspects/batteries/theme.nix) maps mauve onto.
+                # NOTE: base0E is the slot theme.nix's accent override
+                # maps mauve onto, not a named stylix color.
                 background: ${colors.base0E};
               }
             '';
@@ -198,8 +195,7 @@
             extensions =
               with inputs'.vicinae-extensions.packages;
               lib.mkDefault [
-                # NOTE: bluetooth and systemd are currently not building for
-                # nix-unstable
+                # NOTE: bluetooth/systemd don't build on nix-unstable yet
                 # https://github.com/vicinaehq/extensions/blob/ca74eede9a778a9373c8f5fd221b0a5026dcd1ef/flake.nix#L65
                 # bluetooth
                 # systemd
@@ -299,9 +295,8 @@
               };
             };
 
-            # NOTE: mkAfter layers on top of Stylix's own waybar CSS (which
-            # defines the `@baseXX` custom properties used below) instead of
-            # replacing it.
+            # NOTE: mkAfter layers on top of Stylix's waybar CSS (defines
+            # the `@baseXX` properties used below) instead of replacing it.
             style = lib.mkAfter ''
               * {
                 border: none;

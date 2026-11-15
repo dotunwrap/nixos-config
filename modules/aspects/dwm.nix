@@ -76,11 +76,8 @@
         xsession.enable = true;
         xdg.userDirs.extraConfig.SCREENSHOTS = "${config.home.homeDirectory}/Pictures/Screenshots";
 
-        # NOTE: formerly dmenu/lxsession/st's own custom modules -- none are
-        # native Home Manager options, each was just
-        # `home.packages = [ <package> ];` behind an enable flag. (feh's own
-        # custom module had an empty body -- enabling it currently does
-        # nothing, so it's dropped rather than ported as a no-op.)
+        # NOTE: formerly custom modules that were each just a packages list
+        # behind an enable flag; feh's had an empty body, so it's dropped.
         home.packages = [
           pkgs.dmenu
           pkgs.lxsession

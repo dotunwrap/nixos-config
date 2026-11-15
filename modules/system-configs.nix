@@ -8,18 +8,13 @@
 let
   hostNames = builtins.attrNames (config.den.hosts.x86_64-linux or { });
 
-  # NOTE: set via `home-manager.sharedModules` (applies once per host), not
-  # Den's `den.schema.hm-host.includes` -- that hook fires once per HM user on
-  # a host, which duplicated every list entry on hosts with >1 user (confirmed
-  # via an "option already declared" eval error on meiousei).
+  # NOTE: not Den's `den.schema.hm-host.includes`; that fires once per HM
+  # user, duplicating every entry on multi-user hosts (saw it on meiousei).
   homeManagerBaseline = [
     { systemd.user.startServices = "sd-switch"; }
     { news.display = "silent"; }
-    # NOTE: stylix's HM module unconditionally re-applies its own per-target
-    # overlays via `nixpkgs.overlays` (stylix.overlays.enable defaults true)
-    # -- forbidden under useGlobalPkgs, and redundant anyway since the
-    # NixOS-side stylix module (below) already applies the same overlays to
-    # the one shared `pkgs` instance.
+    # NOTE: stylix's HM overlays are forbidden under useGlobalPkgs, and
+    # redundant anyway: the NixOS-side module already applies them.
     { stylix.overlays.enable = false; }
     inputs.stylix.homeModules.stylix
     inputs.zen-browser.homeModules.twilight
@@ -41,18 +36,15 @@ let
         {
           nixpkgs.overlays = [
             inputs.rust-overlay.overlays.default
-            # NOTE: also needed here, not just on the Home Manager side --
-            # useGlobalPkgs means every migrated user's `pkgs` IS this shared
-            # instance, so a per-user `nixpkgs.overlays` is a no-op.
+            # NOTE: needed here too; useGlobalPkgs makes a per-user
+            # `nixpkgs.overlays` a no-op.
             inputs.claude-code-overlay.overlays.default
             inputs.niri-flake.overlays.niri
           ];
         }
         inputs.stylix.nixosModules.stylix
-        # NOTE: niri-flake's own NixOS module already injects its HM module
-        # into `home-manager.sharedModules` once it detects NixOS-integrated
-        # HM -- adding it again via `homeManagerBaseline` would
-        # double-declare options.
+        # NOTE: niri-flake's NixOS module already injects its HM module via
+        # sharedModules; re-adding it via homeManagerBaseline would double-declare options.
         inputs.niri-flake.nixosModules.niri
         inputs.vicinae.nixosModules.default
         # NOTE: input-server defaults to enabled upstream; off until that changes.
@@ -73,9 +65,8 @@ in
 {
   flake-file.inputs = {
     niri-flake = {
-      # NOTE: fork of sodiboo/niri-flake; upstream is stale and broken against
-      # current nixpkgs (still requires the removed libdisplay-info_0_2), this
-      # fork tracks nixpkgs properly.
+      # NOTE: fork of sodiboo/niri-flake; upstream is stale and broken
+      # against current nixpkgs (still needs removed libdisplay-info_0_2).
       url = "github:epireyn/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -110,12 +101,8 @@ in
       };
     };
 
-    # NOTE: vicinae intentionally does NOT follow our nixpkgs: it's a large
-    # Qt6/CMake/C++ build, so any drift between our nixpkgs pin and vicinae's
-    # own guarantees a cache miss against vicinae.cachix.org and a
-    # from-source rebuild. We prioritize build speed (real cache hits) over
-    # lock file dedup here; see nix-auto-follow's `--ignore vicinae` in
-    # devenv.nix.
+    # NOTE: vicinae intentionally doesn't follow our nixpkgs; a large
+    # Qt6/C++ build, any drift busts its cachix cache. See devenv.nix.
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.systems.follows = "systems";

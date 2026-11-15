@@ -1,13 +1,10 @@
 { lib, ... }:
 {
-  # NOTE: independent of theme (./theme.nix) -- same theme, different image
-  # is a real combination. One call per host, each with its own `host`/`path`
-  # pair rather than a shared hostname -> path map:
+  # NOTE: independent of theme.nix; one call per host, e.g.
   #   (den.batteries.wallpaper { host = "chikyuu"; path = ./foo.png; })
   #
-  # Must be reached via `includes`, not `provides.<hostname>.<class>` --
-  # `den.batteries` isn't resolvable from inside a `provides` value (evaluated
-  # before batteries are merged into the fixpoint `den` arg).
+  # NOTE: must be reached via `includes`, not `provides`: `den.batteries`
+  # isn't resolvable from a `provides` value (evaluated before the fixpoint).
   den.batteries.wallpaper =
     { host, path }:
     ctx:

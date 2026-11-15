@@ -32,10 +32,8 @@ in
     shell.enable = true;
   };
 
-  # NOTE: `devenv test` runs git-hooks against the whole repo before
-  # enterTest, so treefmt/statix/deadnix are exercised there already -- no
-  # need to re-invoke them here (and doing so would mean maintaining their
-  # settings twice).
+  # NOTE: `devenv test` runs git-hooks (incl. treefmt/statix/deadnix)
+  # before enterTest already; re-invoking them here would just double-maintain settings.
   git-hooks.hooks = {
     action-validator.enable = true;
     actionlint.enable = true;
@@ -50,9 +48,8 @@ in
     ripsecrets.enable = true;
     shellcheck.enable = true;
 
-    # FIXME: `just lint`'s `-i`/`-L` flags mirror this ignore list and
-    # noLambdaPatternNames by hand (see justfile's `_statix`/`_deadnix`) --
-    # keep both in sync if either changes.
+    # FIXME: `just lint`'s `-i`/`-L` flags mirror this ignore list by hand
+    # (see justfile's `_statix`/`_deadnix`); keep both in sync.
     statix = {
       enable = true;
       settings.ignore = [
@@ -61,10 +58,8 @@ in
       ];
     };
 
-    # NOTE: NixOS/home-manager modules and flake-parts perSystem are called by
-    # a framework with a fixed argument set, so unused module args are
-    # expected and shouldn't be flagged as dead code (same reasoning as
-    # nixpkgs callPackage).
+    # NOTE: module/perSystem args come from a fixed framework signature,
+    # so unused ones are expected (same reasoning as nixpkgs callPackage).
     deadnix = {
       enable = true;
       settings.noLambdaPatternNames = true;

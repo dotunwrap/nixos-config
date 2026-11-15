@@ -9,10 +9,8 @@
         { host, user }:
         config.flake.nixosConfigurations.${host}.config.home-manager.users.${user};
 
-      # NOTE: regression pin for c8bca61: stylix's x11/sxiv targets both
-      # default to enabled upstream and write ~/.Xresources; only dwm hosts
-      # should pull that in, discriminated the same way modules/defaults.nix
-      # does: xsession.enable.
+      # NOTE: regression pin for c8bca61. Only dwm hosts (xsession.enable)
+      # should pull in stylix's x11/sxiv ~/.Xresources targets.
       stylixTargetFailures =
         builtins.concatMap
           (

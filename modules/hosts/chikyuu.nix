@@ -64,7 +64,7 @@
                 y = 1440;
               }
             ];
-            # WARNING: This will BREAK the display server entirely if the Odyssey G9 is out of game mode for some reason.
+            # WARNING: breaks the display server if the Odyssey G9 is out of game mode.
             monitorSection = ''
               Option "PreferredMode" "5120x1440"
               Option "TargetRefresh" "240"
