@@ -36,13 +36,19 @@ in
     # YAML, so an mkIf wrapper would leak `_type: if` into config.yaml.
     services.hermes-agent = {
       enable = true;
-      settings = lib.optionalAttrs (cfg.llamaBaseUrl != null) {
-        model = {
-          provider = "custom";
-          base_url = "${cfg.llamaBaseUrl}/v1";
-          default = defaultModel;
+      settings =
+        lib.optionalAttrs (cfg.llamaBaseUrl != null) {
+          model = {
+            provider = "custom";
+            base_url = "${cfg.llamaBaseUrl}/v1";
+            default = defaultModel;
+          };
+        }
+        // {
+          # Session system-prompt overlay sent with every request: explains this Nix
+          # config to the model. Ignored while a display.personality is selected.
+          agent.system_prompt = builtins.readFile ./nix-context.md;
         };
-      };
     };
   };
 }
