@@ -42,6 +42,10 @@ in
             provider = "custom";
             base_url = "${cfg.llamaBaseUrl}/v1";
             default = defaultModel;
+            # Hermes can't tell a custom endpoint's model has vision, so without this
+            # vision_analyze detours through an aux call with a 120s timeout, which a
+            # high-reasoning model can exceed. The server loads the mmproj (see local_LLM).
+            supports_vision = true;
           };
         }
         // {
