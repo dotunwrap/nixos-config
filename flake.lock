@@ -339,24 +339,6 @@
         "type": "github"
       }
     },
-    "hermes-config": {
-      "inputs": {
-        "hermes-agent": "hermes-agent"
-      },
-      "locked": {
-        "lastModified": 1794695367,
-        "narHash": "sha256-NA1nd2nkTQL/vWpZghqqEGEtzqi+E1CBGSDAhNz9GkU=",
-        "ref": "refs/heads/main",
-        "rev": "d14079904181e949ab7d6088d7504445f12418bb",
-        "revCount": 3,
-        "type": "git",
-        "url": "ssh://git@github.com/nyoshe/hermes-config"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/nyoshe/hermes-config"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -793,17 +775,14 @@
     "pyproject-build-systems": {
       "inputs": {
         "nixpkgs": [
-          "hermes-config",
           "hermes-agent",
           "nixpkgs"
         ],
         "pyproject-nix": [
-          "hermes-config",
           "hermes-agent",
           "pyproject-nix"
         ],
         "uv2nix": [
-          "hermes-config",
           "hermes-agent",
           "uv2nix"
         ]
@@ -825,7 +804,6 @@
     "pyproject-nix": {
       "inputs": {
         "nixpkgs": [
-          "hermes-config",
           "hermes-agent",
           "nixpkgs"
         ]
@@ -852,7 +830,7 @@
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
-        "hermes-config": "hermes-config",
+        "hermes-agent": "hermes-agent",
         "home-manager": "home-manager",
         "monolisa": "monolisa",
         "niavim": "niavim",
@@ -1117,12 +1095,10 @@
     "uv2nix": {
       "inputs": {
         "nixpkgs": [
-          "hermes-config",
           "hermes-agent",
           "nixpkgs"
         ],
         "pyproject-nix": [
-          "hermes-config",
           "hermes-agent",
           "pyproject-nix"
         ]
