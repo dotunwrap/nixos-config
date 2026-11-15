@@ -153,10 +153,11 @@ ts *args: (_need_sys 'tailscale' 'services.tailscale.enable (modules/defaults.ni
   tailscale {{args}}
 
 alias gc := clean
-# Garbage collects all but the 3 latest profiles
+# Garbage collects all but the 3 latest profiles, plus stale devenv shell generations
 [group('System')]
-clean *args: (_need_sys 'nh' 'the programs.nh NixOS module')
+clean *args: (_need_sys 'nh' 'the programs.nh NixOS module') (_need_sys 'devenv' 'modules/aspects/development.nix')
   nh clean all --keep 3 --ask {{args}}
+  devenv gc
 
 # Rolls back the local system to a previous generation
 [confirm]
