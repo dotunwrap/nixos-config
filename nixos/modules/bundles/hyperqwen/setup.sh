@@ -8,12 +8,15 @@
 #   HQ_REV      commit to check out (empty: leave the checkout alone)
 #   HQ_GCC_AR, HQ_GCC_RANLIB   unwrapped gcc 15 binutils wrappers (see the xgrammar step)
 # env (optional):
-#   HQ_STEPS    comma list from: repo venv deps header model patches pthfa xgrammar dflash kvarn verify
-#               (default: everything except dflash and kvarn)
+#   HQ_STEPS    comma list from: repo venv deps header model patches pthfa xgrammar dflash swift kvarn verify
+#               (default: everything except dflash, swift and kvarn; a leading + adds to the default)
 set -euo pipefail
 
 : "${HQ_REPO:?}"
-STEPS=${HQ_STEPS:-repo,venv,deps,header,model,patches,pthfa,xgrammar,verify}
+DEFAULT_STEPS=repo,venv,deps,header,model,patches,pthfa,xgrammar,verify
+STEPS=${HQ_STEPS:-$DEFAULT_STEPS}
+# A leading + adds to the defaults instead of replacing them, e.g. HQ_STEPS=+swift
+case $STEPS in +*) STEPS=$DEFAULT_STEPS,${STEPS#+} ;; esac
 want() { case ",$STEPS," in *",$1,"*) return 0 ;; *) return 1 ;; esac }
 say() { printf '\n== %s\n' "$*"; }
 
@@ -135,6 +138,19 @@ fi
 if want dflash; then
   say "DFlash2 drafter"
   "$PY" prepare/fetch_dflash2.py
+fi
+
+if want swift; then
+  say "Swift 1.5 model"
+  S=models/Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4
+  # Already converted for HyperQwen (int4 heads, MTP and draft shortlist): never run prepare/ on it.
+  if [ -f "$S/model.safetensors.index.json" ] && [ -f "$S/model_extra_tensors.safetensors" ]; then
+    echo "$S already downloaded"
+  else
+    HF_XET_HIGH_PERFORMANCE=1 "$HQ_REPO/venv/bin/hf" download \
+      daavidhauser/Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4 \
+      --revision 64515d381e36084182e4e2abfa20050b75f29889 --local-dir "$S"
+  fi
 fi
 
 if want kvarn; then

@@ -70,6 +70,13 @@ let
     exec ${setupFhs}/bin/hyperqwen-setup-fhs ${./setup.sh} "$@"
   '';
 
+  # Directories under `repoPath/models`. Null leaves the choice to the launcher, which serves
+  # the Qwen fast variant that `hyperqwen-setup` builds. `hyperqwen-setup` fetches swift too.
+  modelDirs = {
+    qwen = null;
+    swift = "Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4";
+  };
+
   start = pkgs.writeShellScript "hyperqwen-start" ''
     set -eu
     mkdir -p "$TMPDIR"
@@ -132,6 +139,18 @@ in
       type = lib.types.port;
       default = 18020;
       description = "Port the server listens on.";
+    };
+
+    model = lib.mkOption {
+      type = lib.types.enum (builtins.attrNames modelDirs);
+      default = "qwen";
+      description = ''
+        Model to serve, always under the API name `qwen3.8-27b`. `qwen` is the W4A16 AutoRound
+        quant with the repo's int4 head and drafter. `swift` is Swift 1.5 (UkisAI's
+        efficient-reasoning fine-tune of Qwen3.8-27B, under the Swift Open License) with int4
+        heads, prepared for HyperQwen by daavidhauser. Switching needs the model on disk:
+        `HQ_STEPS=+swift hyperqwen-setup` downloads swift (about 18GB).
+      '';
     };
 
     speculation = lib.mkOption {
@@ -244,6 +263,9 @@ in
       // lib.optionalAttrs cfg.vision {
         VISION = "1";
         VISION_OFFLOAD = "1";
+      }
+      // lib.optionalAttrs (modelDirs.${cfg.model} != null) {
+        MODEL = "${cfg.repoPath}/models/${modelDirs.${cfg.model}}";
       }
       // cfg.extraEnvironment;
 
