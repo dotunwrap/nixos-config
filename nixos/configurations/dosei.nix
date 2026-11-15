@@ -57,6 +57,7 @@ _:
     vision = true;
     # Hermes picks between the base model and Swift 1.5 through llama-swap on :18020.
     router.enable = true;
+    gpuMemoryUtilization = "0.95";
     # Reachable over Tailscale only, like llama-cpp: the firewall opens no public ports and
     # trusts tailscale0. There is no API key.
     host = "0.0.0.0";
