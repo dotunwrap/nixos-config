@@ -96,6 +96,14 @@ once it's empty.
   use instead. Make sure we're using them effectively.
 - **Find if we can remove our scripts/\* from then project**: We have a script remaining after the refactor
   and it would be really nice if we could avoid this. Audit its use in CI and see if there's a better solution.
+- **Consider combining our checks modules**: We should try to cut down on our multiple modules that define
+  outputs for `checks`.
+- **Look for opportunities to clean up root directory**: There's a lot of files sitting in the root
+  of the repository. Some of these files can reside in organizational subdirectories (e.g. git-
+  related files, documentation, etc) I believe.
+- **Consider breaking justfile into modules**: Our justfile is getting somewhat large in size. We
+  may be at the point where we should break it up into submodules and just organize or orchestrate
+  them all in the root justfile.
 
 ## Lastly
 
