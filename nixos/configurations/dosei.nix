@@ -61,6 +61,14 @@ _:
     # Reachable over Tailscale only, like llama-cpp: the firewall opens no public ports and
     # trusts tailscale0. There is no API key.
     host = "0.0.0.0";
+    # The launcher caps images at one per prompt with VISION=1. EXTRA_ARGS comes last on the
+    # vLLM command line, so this raises it to four. It replaces the module's own EXTRA_ARGS, so
+    # the tensor-parallel flag is repeated. The JSON must have no spaces: the launcher word-splits
+    # EXTRA_ARGS. vLLM profiles the encoder at the largest accepted request, so a higher count
+    # shrinks the KV pool. --chat-template replaces the model directory's template with the Qwen
+    # Sharp one (froggeric v22.4 plus a terseness prompt, off per request with
+    # chat_template_kwargs {"terse": false}); the file lives in the HyperQwen checkout.
+    extraEnvironment.EXTRA_ARGS = "--tensor-parallel-size ${toString config.bundles.hyperqwen.tensorParallelSize} --limit-mm-per-prompt {\"image\":{\"count\":4}} --chat-template ${config.bundles.hyperqwen.repoPath}/templates/sharp/chat_template.jinja";
   };
 
   hardware = {
