@@ -42,7 +42,7 @@ _need_sys tool source:
 _track_new:
   git add -N -A
 
-# Prints the full tree of flake outputs (hosts, checks, devShells, ...)
+# Prints the full tree of flake outputs (hosts, checks, packages, ...)
 [group('Flake')]
 show *args: _track_new
   nix flake show {{args}}
@@ -52,9 +52,15 @@ show *args: _track_new
 hostlist: _track_new (_need_sys 'jq' 'the baseline home-manager profile (modules/defaults.nix)')
   nix eval --json .#nixosConfigurations --apply builtins.attrNames | jq -r '.[]'
 
-# Updates the flake inputs (defaults to all inputs) and commits the lock file
+# Updates devenv's own locked inputs (nixpkgs, git-hooks, nix-auto-follow) and commits the lock file
 [group('Flake')]
-update *inputs:
+devenv-update: (_need_sys 'devenv' 'modules/aspects/development.nix')
+  devenv update
+  git diff --quiet -- devenv.lock || git commit devenv.lock -m 'chore: update devenv.lock'
+
+# Updates the flake inputs (defaults to all inputs) and devenv's own inputs, each committing its own lock file
+[group('Flake')]
+update *inputs: devenv-update
   nix flake update --commit-lock-file {{inputs}}
 
 # Regenerates flake.nix from the flake-file.inputs/nixConfig/outputs declared across modules/
