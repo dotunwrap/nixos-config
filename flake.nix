@@ -196,6 +196,11 @@
         rust-overlay.follows = "rust-overlay";
       };
     };
+
+    nix-auto-follow = {
+      url = "github:fzakaria/nix-auto-follow";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

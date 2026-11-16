@@ -520,6 +520,26 @@
         "type": "github"
       }
     },
+    "nix-auto-follow": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792864253,
+        "narHash": "sha256-OSCik/GdfMNIUEExmiu/+kXbC7dQNSesDJLvvvuksvk=",
+        "owner": "fzakaria",
+        "repo": "nix-auto-follow",
+        "rev": "862934da03ba4d2167038c374a9ad7220cde2829",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fzakaria",
+        "repo": "nix-auto-follow",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "inputs": {
         "nixpkgs": [
@@ -837,6 +857,7 @@
         "niri-flake": "niri-flake",
         "nix": "nix",
         "nix-auth": "nix-auth",
+        "nix-auto-follow": "nix-auto-follow",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",

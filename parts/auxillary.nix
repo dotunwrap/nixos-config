@@ -1,4 +1,4 @@
-{ self, ... }:
+{ inputs, self, ... }:
 {
   perSystem =
     {
@@ -18,7 +18,7 @@
       formatter = treefmt;
 
       devShells.default = mkShell {
-        packages = import "${self}/shell-pkgs.nix" { inherit pkgs; };
+        packages = import "${self}/shell-pkgs.nix" { inherit inputs pkgs; };
       };
 
       checks = {

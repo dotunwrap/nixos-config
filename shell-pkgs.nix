@@ -1,7 +1,9 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 let
   inherit (builtins) attrValues;
+  inherit (pkgs.stdenv.hostPlatform) system;
 
+  autoFollow = inputs.nix-auto-follow.packages.${system}.default;
   treefmt = import ./treefmt.nix { inherit pkgs; };
 in
 attrValues {
@@ -16,5 +18,5 @@ attrValues {
     sops
     statix
     ;
-  inherit treefmt;
+  inherit treefmt autoFollow;
 }
