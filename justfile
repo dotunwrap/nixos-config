@@ -58,10 +58,12 @@ devenv-update: (_need_sys 'devenv' 'modules/aspects/development.nix')
   devenv update
   git diff --quiet -- devenv.lock || git commit devenv.lock -m 'chore: update devenv.lock'
 
-# Updates the flake inputs (defaults to all inputs) and devenv's own inputs, each committing its own lock file
+# Updates the flake's and/or devenv's locked inputs (defaults to both) and commits each changed lock file
 [group('Flake')]
-update *inputs: devenv-update
-  nix flake update --commit-lock-file {{inputs}}
+[arg('lockfile', long, pattern=['both', 'flake', 'devenv'], help='Which lock file to update')]
+update lockfile='both' *inputs:
+  {{ if lockfile == 'devenv' { '' } else { f'nix flake update --commit-lock-file {{inputs}}' } }}
+  {{ if lockfile == 'flake' { '' } else { 'just devenv-update' } }}
 
 # Regenerates flake.nix from the flake-file.inputs/nixConfig/outputs declared across modules/
 [group('Flake')]
