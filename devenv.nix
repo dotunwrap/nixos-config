@@ -183,6 +183,7 @@ in
       let
         ignoredInputs = [
           "vicinae"
+          "hermes-agent"
         ];
         ignoreFlags = concatMapStringsSep " " (input: "--ignore ${input}") ignoredInputs;
       in
