@@ -108,6 +108,18 @@ in
         // {
           browser.executable_path = lib.getExe pkgs.chromium;
 
+          # FreeCAD MCP server. Needs the FreeCADMCP addon's RPC server running in FreeCAD.
+          # Absolute uvx path: Hermes' own staged uv can't run on NixOS. Text-only feedback
+          # keeps a screenshot off every tool result, since the local server takes one image
+          # per request; the agent can still ask for one with get_view.
+          mcp_servers.freecad = {
+            command = lib.getExe' pkgs.uv "uvx";
+            args = [
+              "freecad-mcp"
+              "--only-text-feedback"
+            ];
+          };
+
           # Session system-prompt overlay sent with every request: explains this Nix
           # config to the model. Ignored while a display.personality is selected.
           agent.system_prompt = builtins.readFile ./nix-context.md;
