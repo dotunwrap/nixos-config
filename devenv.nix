@@ -33,26 +33,30 @@ let
   # NOTE: hand-maintained, like justfile's own `hosts` list (see its FIXME) --
   # these are display stats for the welcome banner, not read from the flake
   # itself, so a stale entry here is cosmetic rather than a correctness bug.
+  # WARNING: keep every field plain ASCII. `pad`/*W below size columns off
+  # `lib.stringLength`, which counts UTF-8 bytes, not display columns -- a
+  # multi-byte char (e.g. an em dash or middle dot) pads short and visibly
+  # misaligns that row's remaining columns.
   fleet = [
     {
       name = "chikyuu";
       planet = "Earth";
       users = [ "gabby" ];
-      wm = "dwm · X11";
+      wm = "dwm (X11)";
       note = "Ryzen 9 9950X + RX 9070 XT -- gaming desktop";
     }
     {
       name = "europa";
       planet = "Europa";
       users = [ ];
-      wm = "–";
+      wm = "-";
       note = "ThinkPad X1 Carbon -- becoming a home server";
     }
     {
       name = "kaiousei";
       planet = "Neptune";
       users = [ "gabby" ];
-      wm = "Niri · Wayland";
+      wm = "Niri (Wayland)";
       note = "Framework 13 Pro -- main machine";
     }
     {
@@ -62,14 +66,14 @@ let
         "gabby"
         "nia"
       ];
-      wm = "dwm · X11";
+      wm = "dwm (X11)";
       note = "Ryzen 5 5600X + RTX 4070 Super -- becoming an HTPC";
     }
     {
       name = "suisei";
       planet = "Mercury";
       users = [ "nia" ];
-      wm = "Niri · Wayland";
+      wm = "Niri (Wayland)";
       note = "Framework 13 -- nia's main machine";
     }
   ];
@@ -92,7 +96,7 @@ let
   fleetRows = lib.concatMapStringsSep "\n" (
     h:
     let
-      usersStr = if h.users == [ ] then "–" else lib.concatStringsSep ", " h.users;
+      usersStr = if h.users == [ ] then "-" else lib.concatStringsSep ", " h.users;
       row = "\\033[1;36m${pad nameW h.name}\\033[0m  \\033[33m${pad planetW h.planet}\\033[0m  \\033[32m${pad usersW usersStr}\\033[0m  \\033[35m${pad wmW h.wm}\\033[0m  \\033[2m${h.note}\\033[0m";
       highlighted = "\\033[1;32m→ ${row}";
     in
