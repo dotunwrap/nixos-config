@@ -112,6 +112,19 @@ in
           # which with live tool images can pass the vLLM per-prompt image limit (HTTP 400).
           vision.replay_recent_images = 1;
 
+          # Open the TUI by default (a bare `hermes`; `--cli` still forces the classic one) and
+          # show the rolling output tokens/second in its status bar.
+          display = {
+            interface = "tui";
+            tui_statusbar = "top";
+            status_bar.fields = [
+              "model"
+              "context_pct"
+              "tps"
+            ];
+            platforms.cli.show_reasoning = true;
+          };
+
           # FreeCAD MCP server. Needs the FreeCADMCP addon's RPC server running in FreeCAD.
           # Absolute uvx path: Hermes' own staged uv can't run on NixOS. Text-only feedback
           # keeps a screenshot off every tool result, since the local server takes a limited number of images
