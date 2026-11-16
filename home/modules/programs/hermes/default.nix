@@ -108,9 +108,13 @@ in
         // {
           browser.executable_path = lib.getExe pkgs.chromium;
 
+          # Replay only the newest user image from state.db. The default (3) lets 3 to 5 replay,
+          # which with live tool images can pass the vLLM per-prompt image limit (HTTP 400).
+          vision.replay_recent_images = 1;
+
           # FreeCAD MCP server. Needs the FreeCADMCP addon's RPC server running in FreeCAD.
           # Absolute uvx path: Hermes' own staged uv can't run on NixOS. Text-only feedback
-          # keeps a screenshot off every tool result, since the local server takes one image
+          # keeps a screenshot off every tool result, since the local server takes a limited number of images
           # per request; the agent can still ask for one with get_view.
           mcp_servers.freecad = {
             command = lib.getExe' pkgs.uv "uvx";
