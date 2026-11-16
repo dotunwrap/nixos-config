@@ -82,7 +82,6 @@
     "programs/p7zip" = ./programs/p7zip;
     "programs/pavucontrol" = ./programs/pavucontrol;
     "programs/pulsemixer" = ./programs/pulsemixer;
-    "programs/qutebrowser" = ./programs/qutebrowser;
     "programs/rofi" = ./programs/rofi;
     "programs/signal" = ./programs/signal;
     "programs/slack" = ./programs/slack;

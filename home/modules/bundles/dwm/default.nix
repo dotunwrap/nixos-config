@@ -35,7 +35,6 @@ in
       pavucontrol.enable = lib.mkDefault true;
       protonvpn.enable = lib.mkDefault true;
       qbittorrent.enable = lib.mkDefault true;
-      qutebrowser.enable = lib.mkDefault true;
       signal.enable = lib.mkDefault true;
       spotify.enable = lib.mkDefault true;
       spotify-player.enable = lib.mkDefault true;
@@ -43,14 +42,9 @@ in
       tor-browser.enable = lib.mkDefault true;
       vesktop.enable = lib.mkDefault true;
       wezterm.enable = lib.mkDefault true;
-      zen-browser.enable = lib.mkDefault true;
-    };
-
-    xdg.mimeApps = {
-      enable = true;
-      defaultApplications = {
-        "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
-        "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+      zen-browser = {
+        enable = lib.mkDefault true;
+        setAsDefaultBrowser = lib.mkDefault true;
       };
     };
 
@@ -67,7 +61,6 @@ in
         activeOpacity = 0.9;
         opacityRules = [
           "100:class_g = 'firefox'"
-          "100:class_g = 'qutebrowser'"
           "100:fullscreen"
         ];
         settings = {

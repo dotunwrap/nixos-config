@@ -113,7 +113,6 @@ in
       supportsVision = lib.mkDefault true;
     };
 
-    qutebrowser.enable = false;
     zen-browser.enable = false;
     fldigi.enable = true;
     sdrpp.enable = true;

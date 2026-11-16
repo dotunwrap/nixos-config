@@ -8,7 +8,6 @@
 
     initrd = {
       enable = true;
-      systemd.enable = true;
     };
 
     consoleLogLevel = 3;
