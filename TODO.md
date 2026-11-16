@@ -84,6 +84,18 @@ once it's empty.
 - **Create a CONTRIBUTING.md**: Make a brief CONTRIBUTING.md outlining the
   guidelines and tools and general information surrounding how to contribute
   to the repository.
+- **Dedupe the host definitions across repo**: We have multiple places where
+  the list of hosts and their users are repeated across the repo (justfile, devenv, hosts.nix, etc)
+  See if we can define a central location for the hosts list with the appropriate metadata in order to
+  avoid needing to update so many locations when we deploy this configuration on a new host.
+- **Remove nix-auth from actual config:** nix-auth only needs to be ran a handful of times, so we can
+  probably remove that from the actually installed packages and just install it in devenv instead.\
+  Make sure that we warn in the devenv shell if we detect a lack of auth token configured
+- **Audit lack of use of primary user battery**: We for some reason define the homeManager group on
+  users over and over in hosts.nix when I believe den has some useful user-related batteries we can
+  use instead. Make sure we're using them effectively.
+- **Find if we can remove our scripts/\* from then project**: We have a script remaining after the refactor
+  and it would be really nice if we could avoid this. Audit its use in CI and see if there's a better solution.
 
 ## Lastly
 
