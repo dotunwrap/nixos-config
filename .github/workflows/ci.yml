@@ -39,7 +39,10 @@ jobs:
       - name: Compute build matrix
         id: set-matrix
         run: |
-          packages=$(nix eval .#packages.x86_64-linux --apply builtins.attrNames --json)
+          # TEMPORARY: skip nia's home configs and dosei; they build the local
+          # AI stack from scratch and time out. Remove this filter to restore.
+          packages=$(nix eval .#packages.x86_64-linux --apply builtins.attrNames --json \
+            | jq -c 'map(select(startswith("home/config/nia@") or . == "nixos/config/dosei" | not))')
           echo "packages=$packages" >> "$GITHUB_OUTPUT"
 
   devenv_test:
