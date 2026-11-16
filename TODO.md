@@ -27,7 +27,8 @@ once it's empty.
 - **sops-nix secrets**: `sops-nix` is declared (`modules/secrets.nix`) but not
   wired up to any host/user yet -- configure actual secrets management for
   the project. Reference devenv's documentation for chances to leverage the
-  secretspec capabilities.
+  secretspec capabilities. Ensure to properly mark the sops-nix related files as
+  expected in .gitattributes
 - **Further configure devenv**: Devenv is a powerful tool that we do not use effectively.
   We should make sure that we properly configure a concrete linting and formatting ruleset
   that is respected both in and outside of the devshell. All tooling in the devenv shell
@@ -80,6 +81,9 @@ once it's empty.
 - **Consider dynamic documentation generation**: We could consider
   automatically generating documentation surrounding the configuration repo
   and project as a whole.
+- **Create a CONTRIBUTING.md**: Make a brief CONTRIBUTING.md outlining the
+  guidelines and tools and general information surrounding how to contribute
+  to the repository.
 
 ## Lastly
 
