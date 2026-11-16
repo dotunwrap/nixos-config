@@ -24,9 +24,6 @@ once it's empty.
   detail and recommendations for resolution.
 - **Look for more test cases we could use**: We have nix-unit and devenv test-
   ing capabilities in this project. We should be utilizing this where is makes sense.
-- **Remove the Nix Flake's devshell output**: We are going to move towards a
-  more-opinionated solution of: developers _need_ to use devenv. There is no
-  other option.
 - **sops-nix secrets**: `sops-nix` is declared (`modules/secrets.nix`) but not
   wired up to any host/user yet -- configure actual secrets management for
   the project. Reference devenv's documentation for chances to leverage the

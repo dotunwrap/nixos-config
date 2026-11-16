@@ -1,10 +1,13 @@
 { self, ... }:
+let
+  treefmt = import ./_data/treefmt.nix;
+in
 {
   perSystem =
     { pkgs, ... }:
     {
-      formatter = import "${self}/treefmt.nix" { inherit pkgs; };
+      formatter = treefmt { inherit pkgs; };
 
-      checks.treefmt = (import "${self}/treefmt.nix" { inherit pkgs; }).check self;
+      checks.treefmt = (treefmt { inherit pkgs; }).check self;
     };
 }

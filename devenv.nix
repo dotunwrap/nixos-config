@@ -11,7 +11,7 @@ let
   inherit (config.secretspec) secrets;
 
   autoFollow = inputs.nix-auto-follow.packages.${system}.default;
-  treefmt = import ./treefmt.nix { inherit pkgs; };
+  treefmt = import ./modules/_data/treefmt.nix { inherit pkgs; };
   caches = import ./modules/_data/caches.nix;
 in
 {
@@ -19,8 +19,19 @@ in
 
   packages = [
     autoFollow
+    treefmt
   ]
-  ++ import ./shell-pkgs.nix { inherit pkgs; };
+  ++ (with pkgs; [
+    age
+    deadnix
+    git
+    jq
+    just
+    nh
+    nil
+    sops
+    statix
+  ]);
 
   languages = {
     nix.enable = true;
@@ -69,9 +80,6 @@ in
       let
         ignoredInputs = [
           "vicinae"
-          # devenv's own transitive deps (e.g. flake-compat) pin against its
-          # own cache; forcing them to follow ours would bust that cache hit.
-          "devenv"
         ];
         ignoreFlags = concatMapStringsSep " " (input: "--ignore ${input}") ignoredInputs;
       in
