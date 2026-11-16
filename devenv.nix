@@ -130,7 +130,7 @@ let
     ${fleetRows}
     printf '\n'
     printf '  \033[1;33mProject\033[0m\n'
-    printf '    Multi-host, multi-user, flake-parts + dendritic ("den") NixOS/HM config.\n'
+    printf '    Multi-host, multi-user, flake-parts + dendritic NixOS/HM config.\n'
     printf '    Docs: \033[36mREADME.md\033[0m · \033[36mCLAUDE.md\033[0m · \033[36mTODO.md\033[0m\n'
     printf '\n'
     printf '  \033[1;33mTools in this shell\033[0m\n'
