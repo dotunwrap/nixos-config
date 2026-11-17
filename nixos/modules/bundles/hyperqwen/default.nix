@@ -134,8 +134,9 @@ let
         PREFIX_CACHE = "1";
         # Numbers CUDA devices by PCI bus so device order matches nvidia-smi on mixed cards.
         CUDA_DEVICE_ORDER = "PCI_BUS_ID";
-        # Without peer-to-peer, the LL protocol recovered part of tensor parallelism's loss.
-        NCCL_PROTO = "LL";
+        # NCCL_PROTO is deliberately not set. It was LL, which suits small messages, but on this
+        # pair (no peer-to-peer, all-reduce through host memory) it held prefill at about 930 tok/s;
+        # letting NCCL choose (or Simple) gave about 1,320, with decode unchanged within noise.
         EXTRA_ARGS = "--tensor-parallel-size ${toString cfg.tensorParallelSize}";
       }
       // lib.optionalAttrs (cfg.contextMode == "long" && cfg.speculation == "mtp") { PTH_FA = "1"; }
