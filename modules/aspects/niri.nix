@@ -1,4 +1,4 @@
-{ inputs, den, ... }:
+{ den, ... }:
 {
   den.aspects.niri = {
     includes = [ den.aspects.desktop ];
@@ -53,18 +53,6 @@
         ...
       }:
       let
-        inherit (pkgs.stdenv.hostPlatform) system;
-        # NOTE: vicinae's older glibc can't load the host Mesa (GLIBC_x.y
-        # not found); use vicinae's own Mesa pin instead. See TODO.md.
-        vicinaeMesa = inputs.vicinae.inputs.nixpkgs.legacyPackages.${system}.mesa;
-        vicinaeIcds =
-          lib.concatMapStringsSep ":" (n: "${vicinaeMesa}/share/vulkan/icd.d/${n}_icd.x86_64.json")
-            [
-              "intel"
-              "radeon"
-              "nouveau"
-            ];
-
         setWallpaper = pkgs.writeShellScript "set-wallpaper" ''
           until ${pkgs.awww}/bin/awww query >/dev/null 2>&1; do sleep 0.2; done
           exec ${pkgs.awww}/bin/awww img ${config.stylix.image}
@@ -178,7 +166,6 @@
               environment = {
                 USE_LAYER_SHELL = lib.mkDefault 1;
                 QSG_RHI_BACKEND = lib.mkDefault "vulkan";
-                VK_DRIVER_FILES = lib.mkDefault vicinaeIcds;
               };
             };
             settings = {

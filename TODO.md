@@ -51,11 +51,6 @@ once it's empty.
   SSH key for access to the monolisa font repo" anymore before we can install the OS. Don't ship with
   everything in the image, but bring the nice to haves. Make sure we build a new release in GH as CD
   whenever we merge into `main` with a diff in the image.
-- **niri.nix vicinae Mesa workaround**: `modules/aspects/niri.nix`'s
-  `vicinaeMesa` override (vicinae's glibc is older than the system's,
-  breaking EGL/Vulkan) should be removed once
-  [vicinae#2040](https://github.com/vicinaehq/vicinae/issues/2040) is
-  resolved upstream.
 - **den-diagram**: [github:denful/den-diagram](https://github.com/denful/den-diagram)
   is a companion flake (same author as `den`) that renders per-host aspect
   DAGs, a namespace graph, and fleet-wide views via mermaid. Worth adopting
