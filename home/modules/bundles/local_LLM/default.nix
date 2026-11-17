@@ -46,6 +46,7 @@ in
             models = [
               "qwen3.8-27b"
               "swift-1.5-english"
+              "swift-uncensored"
             ];
             contextLength = hyperqwenContext;
             supportsVision = true;
