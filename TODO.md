@@ -84,9 +84,6 @@ once it's empty.
   cleanup.
 - **Consider combining our checks modules**: We should try to cut down on our multiple modules that define
   outputs for `checks`.
-- **Look for opportunities to clean up root directory**: There's a lot of files sitting in the root
-  of the repository. Some of these files can reside in organizational subdirectories (e.g. git-
-  related files, documentation, etc) I believe.
 - **Consider breaking justfile into modules**: Our justfile is getting somewhat large in size. We
   may be at the point where we should break it up into submodules and just organize or orchestrate
   them all in the root justfile.

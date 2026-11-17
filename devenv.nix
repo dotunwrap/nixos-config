@@ -156,6 +156,8 @@ in
   packages = shellTools ++ [ welcomeScript ];
 
   enterShell = ''
+    git config --local blame.ignoreRevsFile .git-blame-ignore-revs
+
     if [ -t 1 ]; then
       devenv-welcome
     fi
