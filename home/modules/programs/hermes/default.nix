@@ -112,16 +112,10 @@ in
           # which with live tool images can pass the vLLM per-prompt image limit (HTTP 400).
           vision.replay_recent_images = 1;
 
-          # Open the TUI by default (a bare `hermes`; `--cli` still forces the classic one) and
-          # show the rolling output tokens/second in its status bar.
+          # Open the TUI by default (a bare `hermes`; `--cli` still forces the classic one).
           display = {
             interface = "tui";
             tui_statusbar = "top";
-            status_bar.fields = [
-              "model"
-              "context_pct"
-              "tps"
-            ];
             platforms.cli.show_reasoning = true;
           };
 
