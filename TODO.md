@@ -6,11 +6,6 @@ once it's empty.
 
 ## Open
 
-- **Configure external monitor for kaiousei**: There are effectively two modes
-  that kaiousei is used in: laptop or docked. When docked, it is connected to a
-  Odyssey G9 G95SC monitor. However, the HDMI module connected to my laptop seemingly
-  cannot produce bandwidth for full 5120x1440. Just configure it to use auto
-  for now and expect it to be in clamshell mode whenever it's docked.
 - **Add ability to choose preferred applications for foundational applications
   (starting with terminal and browser) per user per host.**: Users may want
   to use a different terminal or different browser from one another, and they
