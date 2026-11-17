@@ -180,6 +180,7 @@ in
     check-symlinks.enable = true;
     check-toml.enable = true;
     check-yaml.enable = true;
+    commitizen.enable = true;
     nil.enable = true;
     ripsecrets.enable = true;
     shellcheck.enable = true;

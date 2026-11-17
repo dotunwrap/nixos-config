@@ -45,8 +45,6 @@ once it's empty.
   We should implement a CD pipeline where on merge into `main` and have successful CI it prepares
   to deploy (using devenv?) to our remote machines (but should use GH environments or smth for each
   output to ensure we approve of the deploy first). Will need automated rollback on failure, though.
-- **Configure conventional commit enforcement**: Adhering to the conventional commit structure,
-  we should implement a tool to enforce this as a linting rule in CI.
 - **Add in custom ISO output**: We should be generating a custom ISO for minimal NixOS installation
   media (no GUI--tty only) that has some basics for installing this configuration on a new machine
   pre-installed. Shouldn't really need to do the whole "magic wormholing back and forth a new GitHub
