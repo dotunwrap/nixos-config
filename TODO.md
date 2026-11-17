@@ -81,9 +81,6 @@ once it's empty.
 - **Consider dynamic documentation generation**: We could consider
   automatically generating documentation surrounding the configuration repo
   and project as a whole.
-- **Create a CONTRIBUTING.md**: Make a brief CONTRIBUTING.md outlining the
-  guidelines and tools and general information surrounding how to contribute
-  to the repository.
 - **Dedupe the host definitions across repo**: We have multiple places where
   the list of hosts and their users are repeated across the repo (justfile, devenv, hosts.nix, etc)
   See if we can define a central location for the hosts list with the appropriate metadata in order to
