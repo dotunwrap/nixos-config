@@ -79,9 +79,6 @@ once it's empty.
 - **Remove nix-auth from actual config:** nix-auth only needs to be ran a handful of times, so we can
   probably remove that from the actually installed packages and just install it in devenv instead.\
   Make sure that we warn in the devenv shell if we detect a lack of auth token configured
-- **Audit lack of use of primary user battery**: We for some reason define the homeManager group on
-  users over and over in hosts.nix when I believe den has some useful user-related batteries we can
-  use instead. Make sure we're using them effectively.
 - **Find if we can remove our scripts/\* from then project**: Audited — `scripts/resolve-nix-version.sh`
   is still needed. It resolves a matching `nixVersions.stable` version from `flake.lock`'s pinned nixpkgs
   rev in `ci.yml`'s `checks-matrix` job, which runs _before_ Nix is installed on the runner, so it can't
