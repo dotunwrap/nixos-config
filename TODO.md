@@ -13,10 +13,6 @@ once it's empty.
   We should be able to set it and have that be respected throughout other
   parts of the configuration where default applications, hotkeys to open
   these applications, etc are set. Should only ever be set once--keep it DRY.
-- **Look for bloat & bugs**: An agent should scour our configuration for places
-  where any sort of code smell is still existing. Whether it's bloat, redundant
-  code, genuine bugs, anti-patterns, etc, we should document it in a report with
-  detail and recommendations for resolution.
 - **Look for more test cases we could use**: We have nix-unit and devenv test-
   ing capabilities in this project. We should be utilizing this where is makes sense.
 - **sops-nix secrets**: `sops-nix` is declared (`modules/secrets.nix`) but not
