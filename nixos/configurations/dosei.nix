@@ -62,9 +62,16 @@ _:
     # trusts tailscale0. There is no API key.
     host = "0.0.0.0";
     extraEnvironment = {
-      # int8 activations (W4A8 Marlin) for faster prefill. Costs transient memory: on this 12 GB card
-      # it OOMed at GPU_UTIL 0.93 under a prompt_logprobs request and fit at 0.90 (pool 150,000 tokens).
+      # int8 activations (W4A8 Marlin) for faster prefill, on every linear layer (the launcher's own
+      # default for INT8_LAYERS, written out here so a launcher change cannot alter it). Decode is
+      # unchanged. Prefill at 16k went 1,320 to 1,766 tok/s (+34%) with NCCL_PROTO unset, and 930 to
+      # 1,140 (+22%) with the old NCCL_PROTO=LL.
+      # Quality cost: it raises perplexity. On Swift it measured 8.27 to 8.37 (+1.2%; code 3.82 to 3.87).
+      # The docs measured +3.7% to +4.1% on the base checkpoint, and fewer layers cost less (gate/up
+      # only +0.9%, whole MLP +2.2%; INT8_LAYERS=gate_up or mlp). Tool calls (10/10) and 100k needles
+      # were unaffected. A coding pass/fail eval was not run.
       INT8_ACT = "int8";
+      INT8_LAYERS = "mlp|linear_attn|self_attn";
       # Keeps the quantized token embedding in pinned host RAM instead of VRAM. On this pair it freed
       # about 0.6 GiB per rank (KV pool 169,306 to 201,980 tokens at 0.93) with identical ms per pass.
       # The 12 GB card sets the pool size, so it gains the most. Costs host RAM and boot time.
