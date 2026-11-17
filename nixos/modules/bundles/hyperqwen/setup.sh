@@ -8,8 +8,8 @@
 #   HQ_REV      commit to check out (empty: leave the checkout alone)
 #   HQ_GCC_AR, HQ_GCC_RANLIB   unwrapped gcc 15 binutils wrappers (see the xgrammar step)
 # env (optional):
-#   HQ_STEPS    comma list from: repo venv deps header model patches pthfa xgrammar dflash swift kvarn verify
-#               (default: everything except dflash, swift and kvarn; a leading + adds to the default)
+#   HQ_STEPS    comma list from: repo venv deps header model patches pthfa xgrammar dflash swift uncensored kvarn verify
+#               (default: everything except dflash, swift, uncensored and kvarn; a leading + adds to the default)
 set -euo pipefail
 
 : "${HQ_REPO:?}"
@@ -150,6 +150,19 @@ if want swift; then
     HF_XET_HIGH_PERFORMANCE=1 "$HQ_REPO/venv/bin/hf" download \
       daavidhauser/Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4 \
       --revision 64515d381e36084182e4e2abfa20050b75f29889 --local-dir "$S"
+  fi
+fi
+
+if want uncensored; then
+  say "Swift uncensored model"
+  U=models/Swift-Qwen3.8-27B-Uncensored-W4A16-AutoRound
+  # Ships with int4 heads, MTP and the draft shortlist already: never run prepare/ on it.
+  if [ -f "$U/model.safetensors.index.json" ] && [ -f "$U/model_extra_tensors.safetensors" ]; then
+    echo "$U already downloaded"
+  else
+    HF_XET_HIGH_PERFORMANCE=1 "$HQ_REPO/venv/bin/hf" download \
+      ultimaterex/Swift-Qwen3.8-27B-Uncensored-W4A16-AutoRound \
+      --revision fc10fe71940f22d01169685358f1a5e82422ac2a --local-dir "$U"
   fi
 fi
 

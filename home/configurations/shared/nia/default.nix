@@ -111,6 +111,7 @@ in
       models = lib.mkDefault [
         "qwen3.8-27b"
         "swift-1.5-english"
+        "swift-uncensored"
       ];
       contextLength = lib.mkDefault 150000;
       supportsVision = lib.mkDefault true;
