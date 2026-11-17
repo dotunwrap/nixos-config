@@ -82,8 +82,12 @@ once it's empty.
 - **Audit lack of use of primary user battery**: We for some reason define the homeManager group on
   users over and over in hosts.nix when I believe den has some useful user-related batteries we can
   use instead. Make sure we're using them effectively.
-- **Find if we can remove our scripts/\* from then project**: We have a script remaining after the refactor
-  and it would be really nice if we could avoid this. Audit its use in CI and see if there's a better solution.
+- **Find if we can remove our scripts/\* from then project**: Audited — `scripts/resolve-nix-version.sh`
+  is still needed. It resolves a matching `nixVersions.stable` version from `flake.lock`'s pinned nixpkgs
+  rev in `ci.yml`'s `checks-matrix` job, which runs _before_ Nix is installed on the runner, so it can't
+  `nix eval` the way the later cachix-resolution step in `.github/actions/setup-nix/action.yml` can. Removing
+  it would mean rethinking the CI bootstrap approach entirely — left as the owner's call, not mechanical
+  cleanup.
 - **Consider combining our checks modules**: We should try to cut down on our multiple modules that define
   outputs for `checks`.
 - **Look for opportunities to clean up root directory**: There's a lot of files sitting in the root
