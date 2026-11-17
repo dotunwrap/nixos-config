@@ -45,9 +45,6 @@ once it's empty.
   We should implement a CD pipeline where on merge into `main` and have successful CI it prepares
   to deploy (using devenv?) to our remote machines (but should use GH environments or smth for each
   output to ensure we approve of the deploy first). Will need automated rollback on failure, though.
-- **Configure weekly dependabot update PR batches**: In a single PR once per week we should have
-  dependabot update all of the inputs and write a proper commit for it. If we don't accept the PR by
-  the next week, close it when the updated one opens. Only 1 open at a time.
 - **Configure conventional commit enforcement**: Adhering to the conventional commit structure,
   we should implement a tool to enforce this as a linting rule in CI.
 - **Add in custom ISO output**: We should be generating a custom ISO for minimal NixOS installation

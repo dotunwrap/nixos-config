@@ -1,0 +1,47 @@
+name: flake-update
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-flake-inputs:
+    name: update flake inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v5
+      - name: Resolve nix version from flake.lock's nixpkgs pin
+        id: nix-version
+        run: echo "version=$(scripts/resolve-nix-version.sh)" >> "$GITHUB_OUTPUT"
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+        with:
+          nix-version: ${{ steps.nix-version.outputs.version }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Update flake inputs
+        run: nix flake update
+      - name: Open or update pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: flake.lock
+          commit-message: "chore(deps): update flake inputs"
+          title: "chore(deps): update flake inputs"
+          body: >
+            Automated weekly update of all flake inputs (`nix flake update`).
+
+
+            Pushing to this same branch supersedes any previous unmerged
+            update PR, so only one stays open at a time.
+          branch: chore/update-flake-inputs
+          delete-branch: true
