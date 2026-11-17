@@ -106,9 +106,9 @@ in
       # dosei serves HyperQwen (see its hyperqwen bundle); its own local_LLM bundle
       # overrides this with loopback. Pi stays on llama-server's router API.
       llamaBaseUrl = lib.mkDefault "http://dosei:18020";
-      defaultModel = lib.mkDefault "qwen3.8-27b";
+      defaultModel = lib.mkDefault "swift-1.5";
       # The llama-swap router on dosei lists both.
-      models = lib.mkDefault [ "swift-1.5" ];
+      models = lib.mkDefault [ "qwen3.8-27b" ];
       contextLength = lib.mkDefault 150000;
       supportsVision = lib.mkDefault true;
     };

@@ -139,7 +139,11 @@ in
 
           # Session system-prompt overlay sent with every request: explains this Nix
           # config to the model. Ignored while a display.personality is selected.
-          agent.system_prompt = builtins.readFile ./nix-context.md;
+          agent = {
+            system_prompt = builtins.readFile ./nix-context.md;
+            # Default reasoning effort; `/reasoning` still changes it per session.
+            reasoning_effort = "medium";
+          };
         };
     };
   };

@@ -42,8 +42,8 @@ in
         if cfg.backend == "hyperqwen" then
           {
             llamaBaseUrl = "http://127.0.0.1:${toString hyperqwenPort}";
-            defaultModel = "qwen3.8-27b";
-            models = [ "swift-1.5" ];
+            defaultModel = "swift-1.5";
+            models = [ "qwen3.8-27b" ];
             contextLength = hyperqwenContext;
             supportsVision = true;
           }
