@@ -61,17 +61,23 @@ _:
     # Reachable over Tailscale only, like llama-cpp: the firewall opens no public ports and
     # trusts tailscale0. There is no API key.
     host = "0.0.0.0";
-    # The launcher caps images at one per prompt with VISION=1. EXTRA_ARGS comes last on the
-    # vLLM command line, so this raises it to eight. It replaces the module's own EXTRA_ARGS, so
-    # the tensor-parallel flag is repeated. The JSON must have no spaces: the launcher word-splits
-    # EXTRA_ARGS. vLLM profiles the encoder at the largest accepted request, so a higher count
-    # shrinks the KV pool. --chat-template replaces the model directory's template with the Qwen
-    # Sharp one (froggeric v22.4 plus a terseness prompt, off per request with
-    # chat_template_kwargs {"terse": false}); the file lives in the HyperQwen checkout.
-    # int8 activations (W4A8 Marlin) for faster prefill. Costs transient memory: on this 12 GB card it
-    # OOMed at GPU_UTIL 0.93 under a prompt_logprobs request and fit at 0.90 (pool 150,000 tokens).
-    extraEnvironment.INT8_ACT = "int8";
-    extraEnvironment.EXTRA_ARGS = "--tensor-parallel-size ${toString config.bundles.hyperqwen.tensorParallelSize} --limit-mm-per-prompt {\"image\":{\"count\":8}} --chat-template ${config.bundles.hyperqwen.repoPath}/templates/sharp/chat_template.jinja";
+    extraEnvironment = {
+      # int8 activations (W4A8 Marlin) for faster prefill. Costs transient memory: on this 12 GB card
+      # it OOMed at GPU_UTIL 0.93 under a prompt_logprobs request and fit at 0.90 (pool 150,000 tokens).
+      INT8_ACT = "int8";
+      # Keeps the quantized token embedding in pinned host RAM instead of VRAM. On this pair it freed
+      # about 0.6 GiB per rank (KV pool 169,306 to 201,980 tokens at 0.93) with identical ms per pass.
+      # The 12 GB card sets the pool size, so it gains the most. Costs host RAM and boot time.
+      EMBED_UVA = "1";
+      # The launcher caps images at one per prompt with VISION=1. EXTRA_ARGS comes last on the
+      # vLLM command line, so this raises it to eight. It replaces the module's own EXTRA_ARGS, so
+      # the tensor-parallel flag is repeated. The JSON must have no spaces: the launcher word-splits
+      # EXTRA_ARGS. vLLM profiles the encoder at the largest accepted request, so a higher count
+      # shrinks the KV pool. --chat-template replaces the model directory's template with the Qwen
+      # Sharp one (froggeric v22.4 plus a terseness prompt, off per request with
+      # chat_template_kwargs {"terse": false}); the file lives in the HyperQwen checkout.
+      EXTRA_ARGS = "--tensor-parallel-size ${toString config.bundles.hyperqwen.tensorParallelSize} --limit-mm-per-prompt {\"image\":{\"count\":8}} --chat-template ${config.bundles.hyperqwen.repoPath}/templates/sharp/chat_template.jinja";
+    };
   };
 
   hardware = {
