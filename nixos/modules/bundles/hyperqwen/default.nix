@@ -75,6 +75,8 @@ let
   modelDirs = {
     qwen = null;
     swift = "Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4";
+    # The same Swift 1.5 checkpoint with the CJK tokens removed, so it answers in English only.
+    swiftEnglish = "Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4-noCJK";
   };
 
   start = pkgs.writeShellScript "hyperqwen-start" ''
@@ -83,6 +85,21 @@ let
     export CC=gcc CXX=g++
     cd ${lib.escapeShellArg cfg.repoPath}
     exec bash single-user/start_qwen.sh
+  '';
+
+  # vLLM profiles free VRAM once, at startup. Switching models stops one unit and starts another
+  # while the first is still releasing its memory, and a start in that window sizes a KV pool
+  # about 40% too small without any error. So each unit waits until every card is nearly empty
+  # (under 1 GB used, up to two minutes) before it starts. Checks all cards, not just the first.
+  waitGpuFree = pkgs.writeShellScript "hyperqwen-wait-gpu-free" ''
+    smi=${config.hardware.nvidia.package.bin}/bin/nvidia-smi
+    for _ in $(${pkgs.coreutils}/bin/seq 1 60); do
+      busiest=$($smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null \
+        | ${pkgs.coreutils}/bin/sort -n | ${pkgs.coreutils}/bin/tail -n 1)
+      [ "''${busiest:-0}" -lt 1000 ] && exit 0
+      ${pkgs.coreutils}/bin/sleep 2
+    done
+    echo "hyperqwen: GPU memory still in use after 120s, starting anyway" >&2
   '';
 
   # One unit per model: they share the port and the GPUs, so each conflicts with the others
@@ -136,6 +153,7 @@ let
 
       serviceConfig = {
         User = cfg.user;
+        ExecStartPre = "${waitGpuFree}";
         ExecStart = "${fhs}/bin/hyperqwen-fhs ${start}";
         # First start compiles kernels and captures CUDA graphs; a cold cache takes minutes.
         TimeoutStartSec = "20min";
@@ -144,9 +162,10 @@ let
         RestartSec = "60s";
       };
     };
-  # With the router on, it owns the public port and the units sit on the next two.
+  # With the router on, it owns the public port and the units sit on the next three.
   qwenPort = cfg.port + 1;
   swiftPort = cfg.port + 2;
+  swiftEnglishPort = cfg.port + 3;
 
   # llama-swap runs this as the model's process: it starts the unit, stays alive while the
   # unit is up (so a crash looks like one to llama-swap) and stops the unit on SIGTERM.
@@ -181,6 +200,7 @@ let
     models = {
       "qwen3.8-27b" = routerModel "hyperqwen" qwenPort;
       "swift-1.5" = routerModel "hyperqwen-swift" swiftPort;
+      "swift-1.5-english" = routerModel "hyperqwen-swift-english" swiftEnglishPort;
     };
   };
 in
@@ -225,9 +245,10 @@ in
     };
 
     router.enable = lib.mkEnableOption ''
-      a llama-swap router on `port` that lists both models (`qwen3.8-27b` and `swift-1.5`) and
-      swaps the GPUs to whichever one a request names. The units then listen on port+1 (default
-      model) and port+2 (Swift), and the router starts at boot instead of them
+      a llama-swap router on `port` that lists the models (`qwen3.8-27b`, `swift-1.5` and
+      `swift-1.5-english`) and swaps the GPUs to whichever one a request names. The units then
+      listen on port+1 (default model), port+2 (Swift) and port+3 (Swift, English only), and the
+      router starts at boot instead of them
     '';
 
     host = lib.mkOption {
@@ -341,7 +362,10 @@ in
         description = "HyperQwen vLLM server";
         autostart = cfg.autostart && !cfg.router.enable;
         port = if cfg.router.enable then qwenPort else cfg.port;
-        others = [ "hyperqwen-swift.service" ];
+        others = [
+          "hyperqwen-swift.service"
+          "hyperqwen-swift-english.service"
+        ];
       };
 
       # Swift 1.5 beside the default model: started by hand, replacing hyperqwen.service until
@@ -351,7 +375,23 @@ in
         description = "HyperQwen vLLM server (Swift 1.5)";
         autostart = false;
         port = if cfg.router.enable then swiftPort else cfg.port;
-        others = [ "hyperqwen.service" ];
+        others = [
+          "hyperqwen.service"
+          "hyperqwen-swift-english.service"
+        ];
+      };
+
+      # The English-only Swift 1.5 (noCJK) as its own unit and, behind the router, its own model id,
+      # `swift-1.5-english`. Same as the others: started on demand, and it replaces whichever is up.
+      hyperqwen-swift-english = mkService {
+        model = "swiftEnglish";
+        description = "HyperQwen vLLM server (Swift 1.5, English only)";
+        autostart = false;
+        port = if cfg.router.enable then swiftEnglishPort else cfg.port;
+        others = [
+          "hyperqwen.service"
+          "hyperqwen-swift.service"
+        ];
       };
 
       hyperqwen-router = lib.mkIf cfg.router.enable {
@@ -378,7 +418,7 @@ in
         polkit.addRule(function(action, subject) {
           if (action.id == "org.freedesktop.systemd1.manage-units" &&
               subject.user == "${cfg.user}" &&
-              ["hyperqwen.service", "hyperqwen-swift.service"].indexOf(action.lookup("unit")) >= 0) {
+              ["hyperqwen.service", "hyperqwen-swift.service", "hyperqwen-swift-english.service"].indexOf(action.lookup("unit")) >= 0) {
             return polkit.Result.YES;
           }
         });
@@ -403,6 +443,7 @@ in
                   map (unit: "${action} ${unit}.service") [
                     "hyperqwen"
                     "hyperqwen-swift"
+                    "hyperqwen-swift-english"
                   ]
                 )
                 [
