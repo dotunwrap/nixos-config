@@ -7,7 +7,6 @@ in
     { pkgs, ... }:
     {
       formatter = treefmt { inherit pkgs; };
-
       checks.treefmt = (treefmt { inherit pkgs; }).check self;
     };
 }

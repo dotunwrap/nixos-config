@@ -166,11 +166,9 @@ alias gc := clean
 # Garbage collects all but the 3 latest profiles, plus stale devenv shell generations
 [group('System')]
 clean *args: (_need_sys 'nh' 'the programs.nh NixOS module') (_need_sys 'devenv' 'modules/aspects/development.nix')
-  nh clean all --keep 3 --ask {{args}}
-  devenv gc
+  nh clean all --keep 3 --ask {{args}} && devenv gc
 
 # Rolls back the local system to a previous generation
-[confirm]
 [group('System')]
 rollback *args: (_need_sys 'nh' 'the programs.nh NixOS module')
   nh os rollback --ask {{args}}
@@ -216,17 +214,11 @@ lint: _statix _deadnix
 fmt *args:
   nix fmt -- {{args}}
 
+# TODO: Deleting this to use meteor or koji or smth else
 # Stages all changes in the worktree (unless --nostage) and creates a new conventional commit
 [group('Version Control')]
-[arg('type', pattern=['feat', 'fix', 'chore', 'ci', 'docs', 'refactor', 'revert', 'perf', 'build', 'style', 'test'], help='The type of the commit')]
-[arg('scope', short, multiple, help='Scope that this commit affects')]
-[arg('breaking', short='!', long, flag, help='Flag this commit as a breaking change')]
-[arg('nostage', long, flag, help='Skip auto-staging; commit only what is already staged')]
-[arg('subject', help='The subject of the commit')]
-[arg('body', help='The body of the commit')]
-commit type subject breaking scope=[] body nostage:
-  {{ if nostage { '' } else { 'git add -A' } }}
-  git commit -m '{{type}}{{if !scope { '' } else { f'({{join_list(scope, ',')}})'}}}{{if breaking { '!' } else { '' }}}: {{lowercase(subject)}}' -m '{{body}}'
+_commit:
+  exit 1
 
 # Shows recent commit history as a graph
 [group('Version Control')]
