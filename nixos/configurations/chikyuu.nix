@@ -75,6 +75,7 @@ _:
         Option "TargetRefresh" "240"
       '';
       deviceSection = ''
+        BusID "PCI:3:0:0"
         Option "TearFree" "false"
         Option "VariableRefresh" "true"
       '';
