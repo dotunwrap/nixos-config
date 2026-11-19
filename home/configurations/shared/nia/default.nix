@@ -110,7 +110,6 @@ in
       # The llama-swap router on dosei lists these.
       models = lib.mkDefault [
         "qwen3.8-27b"
-        "swift-1.5-english"
         "swift-uncensored"
       ];
       contextLength = lib.mkDefault 150000;
