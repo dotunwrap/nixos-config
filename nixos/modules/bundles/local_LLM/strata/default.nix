@@ -50,6 +50,7 @@ let
       pack = "${home}/packs/iq3_xxs";
       profile = "expert-profile.bin";
       # 47 GB of experts do not fit in RAM, so they are read through the OS file cache.
+      kv = "int8";
       experts = "--mmap-experts";
       extra = [ ];
       # The tuned `strata launch` preset's dflash2 drafter. Strata has none for the Coder.
@@ -80,12 +81,17 @@ let
       profile = "expert-profile-coder.bin";
       # The 25 GB of experts are held in RAM (what the Strata monitor counts as its RAM tier);
       # the GPU expert cache (--expert-cache auto) still fills the free VRAM first.
+      kv = "int8";
       experts = "--resident-experts";
       # Leave 300 MiB per card instead of the default 700, so the GPU expert cache gets the rest
       # (cards at about 95-97% instead of 91-94%).
+      # --kv-resident keeps 32768 cells of K/V per layer in VRAM and the rest in pinned RAM, which
+      # frees VRAM for expert slots (about 3.6 GB of RAM at 256K context with int8).
       extra = [
         "--vram-reserve-mib"
         "300"
+        "--kv-resident"
+        "32768"
       ];
       # The Coder's MTP draft layer, fetched once by `strata launch --family coder --model iq1_m
       # --mtp on --model-path ~/models/coder-iq1m` into ~/mtp/rt. A native (IQ) pack needs --spec
@@ -121,7 +127,7 @@ let
         "--max-context"
         (toString cfg.contextSize)
         "--kv"
-        "int8"
+        v.kv
         v.experts
       ]
       ++ v.draft
