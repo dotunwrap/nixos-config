@@ -100,6 +100,14 @@ let
       # EXL3_MOE_ARENA_HUGE only does anything with the pinned arena.
       cpu_moe_pinned_arena = true;
     };
+    # TabbyAPI reads only the stop tokens from the model's generation_config.json, and with no
+    # fallbacks a request that omits these runs at temperature 1.0 over the whole vocabulary
+    # (top_k 0, top_p 1.0): stray low-probability tokens on a 2-bit quant. These are the values
+    # the model ships, applied only when the client sends none.
+    sampling = lib.mapAttrs (_: value: {
+      override = value;
+      force = false;
+    }) cfg.sampling;
     draft_model = {
       draft_mode = cfg.draftMode;
       # Strata's `--spec 3 --spec-min-p 0.5`: draft up to 3 tokens, stop early once the chance
@@ -233,6 +241,19 @@ in
         2 MiB huge pages to reserve for the arena (12288 is 24 GiB). It must cover every expert
         kept on the CPU, or the load fails: the 2.68 bpw quant at the default `cpuExperts` needs
         about 23 GiB, and the model's MTP head a little more.
+      '';
+    };
+
+    sampling = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.int lib.types.float);
+      default = {
+        temperature = 1.0;
+        top_k = 20;
+        top_p = 0.95;
+      };
+      description = ''
+        Sampler values used when a request sets none (a client's own values win). The defaults are
+        the ones in the model's generation_config.json, which TabbyAPI does not read.
       '';
     };
 
