@@ -49,6 +49,9 @@ let
       files = "Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS";
       pack = "${home}/packs/iq3_xxs";
       profile = "expert-profile.bin";
+      # 47 GB of experts do not fit in RAM, so they are read through the OS file cache.
+      experts = "--mmap-experts";
+      extra = [ ];
       # The tuned `strata launch` preset's dflash2 drafter. Strata has none for the Coder.
       draft = [
         "--draft"
@@ -75,6 +78,15 @@ let
       files = "Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M";
       pack = "${home}/packs/coder_iq1_m";
       profile = "expert-profile-coder.bin";
+      # The 25 GB of experts are held in RAM (what the Strata monitor counts as its RAM tier);
+      # the GPU expert cache (--expert-cache auto) still fills the free VRAM first.
+      experts = "--resident-experts";
+      # Leave 300 MiB per card instead of the default 700, so the GPU expert cache gets the rest
+      # (cards at about 95-97% instead of 91-94%).
+      extra = [
+        "--vram-reserve-mib"
+        "300"
+      ];
       # The Coder's MTP draft layer, fetched once by `strata launch --family coder --model iq1_m
       # --mtp on --model-path ~/models/coder-iq1m` into ~/mtp/rt. A native (IQ) pack needs --spec
       # T (T >= 2). Measured 94 tok/s at 77% acceptance, against about 65 tok/s with prompt lookup.
@@ -110,9 +122,10 @@ let
         (toString cfg.contextSize)
         "--kv"
         "int8"
-        "--mmap-experts"
+        v.experts
       ]
       ++ v.draft
+      ++ v.extra
       ++ [
         "--layer-split"
         "auto"
