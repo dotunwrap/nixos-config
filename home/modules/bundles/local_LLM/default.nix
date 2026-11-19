@@ -37,10 +37,7 @@ in
   # vision (the host's bundles.local_LLM.hyperqwen.vision must be on).
   config = lib.mkIf cfg.enable {
     programs = {
-      pi.routerProvider = {
-        baseUrl = "http://127.0.0.1:${toString routerPort}/v1";
-        inherit (cfg.router) models;
-      };
+      pi.llamaSwapUrl = "http://127.0.0.1:${toString routerPort}/v1";
       hermes = {
         baseUrl = "http://127.0.0.1:${toString routerPort}";
         defaultModel = "swift-1.5";

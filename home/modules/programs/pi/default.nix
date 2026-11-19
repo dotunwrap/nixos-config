@@ -24,28 +24,8 @@ let
   # Model Pi starts with, set only while settings.json has none so /model choices stick.
   defaultModel = "qwen3.8-27b";
 
-  # The router's models as Pi's models.json wants them. Qwen thinks, and the Qwen3.8 servers
-  # read images, so every entry says so.
-  routerProvider = lib.optionalAttrs (cfg.routerProvider != null) {
-    inherit (cfg.routerProvider) baseUrl;
-    api = "openai-completions";
-    # llama-swap ignores the key, but Pi hides a provider that has none.
-    apiKey = "local";
-    # Pi picks how to switch thinking from the URL, and a loopback or Tailscale address says nothing.
-    # These are all Qwen3.8 models, which take enable_thinking through the chat template.
-    compat.thinkingFormat = "qwen-chat-template";
-    models = lib.mapAttrsToList (id: contextWindow: {
-      inherit id contextWindow;
-      reasoning = true;
-      input = [
-        "text"
-        "image"
-      ];
-    }) cfg.routerProvider.models;
-  };
-
   # The router's address split the way pi-llama-swap's config wants it (origin, port, basePath).
-  routerParts = builtins.match "(https?://[^/:]+):([0-9]+)(/.*)?" cfg.routerProvider.baseUrl;
+  routerParts = builtins.match "(https?://[^/:]+):([0-9]+)(/.*)?" cfg.llamaSwapUrl;
   llamaSwapConfig = {
     origin = builtins.elemAt routerParts 0;
     port = lib.toInt (builtins.elemAt routerParts 1);
@@ -57,27 +37,15 @@ let
   graphifyVersion = "0.9.107";
 in
 {
-  options.programs.pi.routerProvider = lib.mkOption {
-    type = lib.types.nullOr (
-      lib.types.submodule {
-        options = {
-          baseUrl = lib.mkOption {
-            type = lib.types.str;
-            example = "http://dosei:18020/v1";
-            description = "OpenAI-compatible base URL of the llama-swap router.";
-          };
-          models = lib.mkOption {
-            type = lib.types.attrsOf lib.types.int;
-            description = "Model ids the router lists, each with its context window in tokens.";
-          };
-        };
-      }
-    );
+  options.programs.pi.llamaSwapUrl = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
     default = null;
+    example = "http://dosei:18020/v1";
     description = ''
-      A llama-swap router (one that starts and stops local backends as models are requested) as
-      a Pi provider named `local-llm`, merged into ~/.pi/agent/models.json and used as Pi's
-      default provider. Null leaves models.json alone.
+      Base URL of a llama-swap router (one that starts and stops local backends as models are
+      requested). It is written to ~/.pi/agent/pi-llama-swap.json, and pi-llama-swap registers
+      the router's models as Pi's `llama-swap` provider, used as the default. Null leaves the
+      file alone.
     '';
   };
 
@@ -87,36 +55,20 @@ in
 
     home = {
       activation = {
-        # models.json is Pi-owned, so merge only the local-llm provider into it.
-        piRouterProvider = lib.mkIf (cfg.routerProvider != null) (
-          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            models="$HOME/.pi/agent/models.json"
-            run mkdir -p "$(dirname "$models")"
-            [ -s "$models" ] || echo '{}' > "$models"
+        # The router's models used to be a local-llm provider in models.json; pi-llama-swap
+        # provides them now, so drop the stale copy.
+        piDropLocalLlm = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          models="$HOME/.pi/agent/models.json"
+          if [ -s "$models" ] && ${lib.getExe pkgs.jq} -e '.providers["local-llm"]' "$models" >/dev/null 2>&1; then
             tmp="$(mktemp)"
-            # The router advertises each model's context window and input types in /v1/models, so
-            # prefer that over the declared numbers; they remain the fallback while it is down
-            # (and for a model it lists without a window).
-            live="$(${lib.getExe pkgs.curl} -fsS --max-time 5 ${lib.escapeShellArg "${cfg.routerProvider.baseUrl}/models"} 2>/dev/null || true)"
-            echo "$live" | ${lib.getExe pkgs.jq} -e '.data | length > 0' >/dev/null 2>&1 || live='{"data":[]}'
-            ${lib.getExe pkgs.jq} \
-              --argjson provider ${lib.escapeShellArg (builtins.toJSON routerProvider)} \
-              --argjson live "$live" \
-              '($live.data | map({key: .id, value: .}) | from_entries) as $l
-               | .providers["local-llm"] = ($provider
-                 | .models |= map(
-                     ($l[.id] // {}) as $m
-                     | (($m.context_length // 0) as $c | if $c > 0 then .contextWindow = $c else . end)
-                     | (($m.architecture.input_modalities // []) as $in
-                        | if ($in | length) > 0 then .input = $in else . end)))' \
-              "$models" > "$tmp" && run install -m 644 "$tmp" "$models"
+            ${lib.getExe pkgs.jq} 'del(.providers["local-llm"])' "$models" > "$tmp" && run install -m 644 "$tmp" "$models"
             rm -f "$tmp"
-          ''
-        );
+          fi
+        '';
 
         # pi-llama-swap's own config also holds contextOverrides that /llama-swap-set-context-length
         # writes, so merge only the endpoint into it.
-        piLlamaSwap = lib.mkIf (cfg.routerProvider != null) (
+        piLlamaSwap = lib.mkIf (cfg.llamaSwapUrl != null) (
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             conf="$HOME/.pi/agent/pi-llama-swap.json"
             run mkdir -p "$(dirname "$conf")"
@@ -144,7 +96,8 @@ in
             --argjson bundled ${lib.escapeShellArg (builtins.toJSON bundledPiPackages)} \
             'def id: sub("@[^@/]*$"; "");
              (if .defaultProvider == "llama.cpp" then del(.defaultProvider, .defaultModel) else . end) |
-             .defaultProvider //= "local-llm" | .defaultModel //= $model |
+             (if .defaultProvider == "local-llm" then del(.defaultProvider, .defaultModel) else . end) |
+             .defaultProvider //= "llama-swap" | .defaultModel //= $model |
              .packages = (((.packages // []) | map(select(id as $i | (($pkgs + $bundled) | map(id) | index($i)) == null))) + $pkgs)' \
             "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
           rm -f "$tmp"

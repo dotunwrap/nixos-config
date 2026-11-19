@@ -99,17 +99,7 @@ in
       # dosei serves the models; other hosts reach it over Tailscale.
       # dosei's llama-swap router starts whichever backend a request names. Its own local_LLM
       # bundle overrides this with loopback.
-      routerProvider = lib.mkDefault {
-        baseUrl = "http://dosei:18020/v1";
-        models = {
-          "qwen3.8-27b" = 150000;
-          "swift-1.5" = 150000;
-          "swift-uncensored" = 150000;
-          "strata-flash" = 262144;
-          "strata-coder" = 262144;
-          "polystrata-ornith" = 131072;
-        };
-      };
+      llamaSwapUrl = lib.mkDefault "http://dosei:18020/v1";
     };
 
     hermes = {
