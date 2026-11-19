@@ -442,16 +442,11 @@ in
               options = [ "NOPASSWD" ];
             })
             (
-              lib.concatMap
-                (
-                  action:
-                  map (unit: "${action} ${unit}.service") unitNames
-                )
-                [
-                  "start"
-                  "stop"
-                  "restart"
-                ]
+              lib.concatMap (action: map (unit: "${action} ${unit}.service") unitNames) [
+                "start"
+                "stop"
+                "restart"
+              ]
             );
       }
     ];
