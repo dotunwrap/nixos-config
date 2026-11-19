@@ -22,38 +22,71 @@ let
   ];
 
   # Model Pi starts with, set only while settings.json has none so /model choices stick.
-  defaultModel = "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL";
+  defaultModel = "qwen3.8-27b";
+
+  # The router's models as Pi's models.json wants them. Qwen thinks, and the Qwen3.8 servers
+  # read images, so every entry says so.
+  routerProvider = lib.optionalAttrs (cfg.routerProvider != null) {
+    inherit (cfg.routerProvider) baseUrl;
+    api = "openai-completions";
+    # llama-swap ignores the key, but Pi hides a provider that has none.
+    apiKey = "local";
+    # Pi picks how to switch thinking from the URL, and a loopback or Tailscale address says nothing.
+    # These are all Qwen3.8 models, which take enable_thinking through the chat template.
+    compat.thinkingFormat = "qwen-chat-template";
+    models = lib.mapAttrsToList (id: contextWindow: {
+      inherit id contextWindow;
+      reasoning = true;
+      input = [
+        "text"
+        "image"
+      ];
+    }) cfg.routerProvider.models;
+  };
 
   # graphify (PyPI `graphifyy`) is installed with uv against Nix's Python, since uv's
   # own downloaded interpreters cannot run on NixOS. Pinned: bump only after review.
   graphifyVersion = "0.9.107";
 in
 {
-  options.programs.pi.llamaBaseUrl = lib.mkOption {
-    type = lib.types.nullOr lib.types.str;
+  options.programs.pi.routerProvider = lib.mkOption {
+    type = lib.types.nullOr (
+      lib.types.submodule {
+        options = {
+          baseUrl = lib.mkOption {
+            type = lib.types.str;
+            example = "http://dosei:18020/v1";
+            description = "OpenAI-compatible base URL of the llama-swap router.";
+          };
+          models = lib.mkOption {
+            type = lib.types.attrsOf lib.types.int;
+            description = "Model ids the router lists, each with its context window in tokens.";
+          };
+        };
+      }
+    );
     default = null;
-    example = "http://dosei:8080";
     description = ''
-      Base URL of a llama-server router (e.g. one reached over Tailscale) for Pi's
-      built-in llama.cpp provider. Null leaves the provider unconfigured.
+      A llama-swap router (one that starts and stops local backends as models are requested) as
+      a Pi provider named `local-llm`, merged into ~/.pi/agent/models.json and used as Pi's
+      default provider. Null leaves models.json alone.
     '';
   };
 
   config = lib.mkIf cfg.enable {
     home = {
       activation = {
-        # Equivalent of `/login llama.cpp`. auth.json is Pi-owned (it holds other
-        # providers' credentials too), so merge the entry instead of symlinking the file.
-        piLlamaLogin = lib.mkIf (cfg.llamaBaseUrl != null) (
+        # models.json is Pi-owned, so merge only the local-llm provider into it.
+        piRouterProvider = lib.mkIf (cfg.routerProvider != null) (
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            auth="$HOME/.pi/agent/auth.json"
-            run mkdir -p "$(dirname "$auth")"
-            [ -s "$auth" ] || echo '{}' > "$auth"
+            models="$HOME/.pi/agent/models.json"
+            run mkdir -p "$(dirname "$models")"
+            [ -s "$models" ] || echo '{}' > "$models"
             tmp="$(mktemp)"
             ${lib.getExe pkgs.jq} \
-              --arg url ${lib.escapeShellArg cfg.llamaBaseUrl} \
-              '."llama.cpp" = {type: "api_key", env: {LLAMA_BASE_URL: $url}}' \
-              "$auth" > "$tmp" && run install -m 600 "$tmp" "$auth"
+              --argjson provider ${lib.escapeShellArg (builtins.toJSON routerProvider)} \
+              '.providers["local-llm"] = $provider' \
+              "$models" > "$tmp" && run install -m 644 "$tmp" "$models"
             rm -f "$tmp"
           ''
         );
@@ -71,7 +104,8 @@ in
             --arg model ${lib.escapeShellArg defaultModel} \
             --argjson bundled ${lib.escapeShellArg (builtins.toJSON bundledPiPackages)} \
             'def id: sub("@[^@/]*$"; "");
-             .defaultProvider //= "llama.cpp" | .defaultModel //= $model |
+             (if .defaultProvider == "llama.cpp" then del(.defaultProvider, .defaultModel) else . end) |
+             .defaultProvider //= "local-llm" | .defaultModel //= $model |
              .packages = (((.packages // []) | map(select(id as $i | (($pkgs + $bundled) | map(id) | index($i)) == null))) + $pkgs)' \
             "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
           rm -f "$tmp"
@@ -96,12 +130,6 @@ in
       ];
 
       sessionPath = [ "$HOME/.local/bin" ];
-
-      # Pi's built-in llama.cpp provider discovers every model on the router and
-      # detects Qwen's thinking switch, so no models.json is needed.
-      sessionVariables = lib.mkIf (cfg.llamaBaseUrl != null) {
-        LLAMA_BASE_URL = cfg.llamaBaseUrl;
-      };
 
       # Appended to Pi's default system prompt (SYSTEM.md would replace it). No
       # Qwen-specific prompt is published, so this is general coding-agent guidance

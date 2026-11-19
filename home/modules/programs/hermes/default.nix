@@ -14,20 +14,20 @@ in
   imports = [ hermes-agent.homeManagerModules.default ];
 
   options.programs.hermes = {
-    llamaBaseUrl = lib.mkOption {
+    baseUrl = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
-      example = "http://dosei:8080";
+      example = "http://dosei:18020";
       description = ''
-        Base URL of a llama-server router (e.g. one reached over Tailscale), used as
+        Base URL of the llama-swap router (e.g. one reached over Tailscale), used as
         Hermes' custom OpenAI-compatible endpoint. Null leaves the model unconfigured.
       '';
     };
 
     defaultModel = lib.mkOption {
       type = lib.types.str;
-      # Same one Pi defaults to. The llama-server router loads it on demand.
-      default = "unsloth/Qwen3.8-27B-GGUF:Q4_K_XL";
+      # Same one Pi defaults to. The router starts its backend on demand.
+      default = "qwen3.8-27b";
       example = "qwen3.8-27b";
       description = "Model name Hermes sends. It must match what the server calls its model.";
     };
@@ -81,23 +81,23 @@ in
       extraPackages = [ pkgs.python3 ];
 
       settings =
-        lib.optionalAttrs (cfg.llamaBaseUrl != null) {
+        lib.optionalAttrs (cfg.baseUrl != null) {
           model = {
             provider = "custom";
-            base_url = "${cfg.llamaBaseUrl}/v1";
+            base_url = "${cfg.baseUrl}/v1";
             default = cfg.defaultModel;
             # Hermes can't tell a custom endpoint's model has vision, so with this on, a server
-            # that loads the mmproj (see local_LLM) skips the vision_analyze detour through an aux
+            # that loads the vision tower (see bundles.local_LLM.hyperqwen.vision) skips the vision_analyze detour through an aux
             # call with a 120s timeout, which a high-reasoning model can exceed.
             supports_vision = cfg.supportsVision;
           };
         }
-        // lib.optionalAttrs (cfg.llamaBaseUrl != null) {
+        // lib.optionalAttrs (cfg.baseUrl != null) {
           # A named provider gives /model a list to pick from; the `model` block above stays the
           # default selection and Hermes matches it to this entry by endpoint.
           providers.local = {
             name = "local";
-            api = "${cfg.llamaBaseUrl}/v1";
+            api = "${cfg.baseUrl}/v1";
             default_model = cfg.defaultModel;
             models = lib.unique ([ cfg.defaultModel ] ++ cfg.models);
           }

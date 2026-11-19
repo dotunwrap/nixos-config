@@ -96,16 +96,25 @@ in
 
     pi = {
       enable = true;
-      # dosei serves the model; other hosts reach it over Tailscale. dosei's own
-      # local_LLM bundle overrides this with loopback.
-      llamaBaseUrl = lib.mkDefault "http://dosei:8080";
+      # dosei serves the models; other hosts reach it over Tailscale.
+      # dosei's llama-swap router starts whichever backend a request names. Its own local_LLM
+      # bundle overrides this with loopback.
+      routerProvider = lib.mkDefault {
+        baseUrl = "http://dosei:18020/v1";
+        models = {
+          "qwen3.8-27b" = 150000;
+          "swift-1.5" = 150000;
+          "swift-uncensored" = 150000;
+          "strata-flash" = 65536;
+        };
+      };
     };
 
     hermes = {
       enable = true;
       # dosei serves HyperQwen (see its hyperqwen bundle); its own local_LLM bundle
-      # overrides this with loopback. Pi stays on llama-server's router API.
-      llamaBaseUrl = lib.mkDefault "http://dosei:18020";
+      # overrides this with loopback.
+      baseUrl = lib.mkDefault "http://dosei:18020";
       defaultModel = lib.mkDefault "swift-1.5";
       # The llama-swap router on dosei lists these.
       models = lib.mkDefault [
