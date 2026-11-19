@@ -71,38 +71,61 @@ let
     "0.35"
     "--layer-split"
     "auto"
-  ];
+  ]
+  ++ lib.optional cfg.vision "--vision";
+
+  # The picture reader (llama.cpp mtmd + the model's mmproj) runs on the CPU: the cards are under
+  # 24 GB, where Strata's own rule picks the CPU reader too. Its program ships in the engine
+  # component, whose folder name carries the engine version, so start.sh adds `exe` at run time.
+  mmproj = "${home}/models/ista-iq3xxs/mmproj-Qwen3.8-Flash-Next-BF16.gguf";
+  visionSection = {
+    inherit mmproj;
+    model = "${home}/models/ista-iq3xxs/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf";
+    gpu = false;
+    max_tokens = 300;
+    threads = 8;
+  };
 
   launchConfig = pkgs.writeText "strata-launch.json" (
-    builtins.toJSON {
-      exe = "component:strata-engine";
-      args = engineArgs;
-      cwd = cfg.terminalPath;
-      tokenizer = "${home}/packs/iq3_xxs/tokenizer";
-      model_name = modelName;
-      log = "${home}/.local/state/strata/launch/local-llm.engine.log";
-      lib_dirs = [ ];
-      gpu = [
-        1
-        0
-      ];
-      gpus_asked = true;
-      layer_split = "auto";
-      gpu_order = "as_given";
-      gpu_roles = {
-        "0" = "main";
-        "1" = "helper";
-      };
-      host = "127.0.0.1";
-      open_browser = false;
-    }
+    builtins.toJSON (
+      {
+        exe = "component:strata-engine";
+        args = engineArgs;
+        cwd = cfg.terminalPath;
+        tokenizer = "${home}/packs/iq3_xxs/tokenizer";
+        model_name = modelName;
+        log = "${home}/.local/state/strata/launch/local-llm.engine.log";
+        lib_dirs = [ ];
+        gpu = [
+          1
+          0
+        ];
+        gpus_asked = true;
+        layer_split = "auto";
+        gpu_order = "as_given";
+        gpu_roles = {
+          "0" = "main";
+          "1" = "helper";
+        };
+        host = "127.0.0.1";
+        open_browser = false;
+      }
+      // lib.optionalAttrs cfg.vision { vision = visionSection; }
+    )
   );
 
   start = pkgs.writeShellScript "strata-start" ''
     set -eu
     cd ${lib.escapeShellArg cfg.terminalPath}
+    config=${launchConfig}
+    ${lib.optionalString cfg.vision ''
+      # Add the picture reader's program, from the newest installed engine component.
+      reader=$(ls -d ${home}/.local/share/strata/components/engine/*/strata-vision | sort | tail -n 1)
+      config="$RUNTIME_DIRECTORY/launch.json"
+      ${lib.getExe pkgs.jq} --arg exe "$reader" '.vision.exe = $exe' ${launchConfig} > "$config"
+    ''}
     exec python/bin/python3.12 -m serve.server --engine strata \
-      --config ${launchConfig} --host ${llm.host} --port ${toString (localLLM.portFor 4)} \
+      --config "$config" --host ${llm.host} --port ${toString (localLLM.portFor 4)} \
       --ready-file "$RUNTIME_DIRECTORY/ready.json" --shutdown-timeout 30.0
   '';
 in
@@ -118,6 +141,15 @@ in
       type = lib.types.str;
       default = "/home/nia/.local/share/strata/terminal/current";
       description = "Strata Terminal install (what install.sh unpacks) that the unit runs from.";
+    };
+
+    vision = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Let the model read images: the mmproj file (mmproj-Qwen3.8-Flash-Next-BF16.gguf, 0.9 GB,
+        next to the model files) and a CPU picture reader, about 0.9 GB of RAM.
+      '';
     };
 
     contextSize = lib.mkOption {
