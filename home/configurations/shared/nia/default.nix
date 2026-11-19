@@ -107,6 +107,7 @@ in
           "swift-uncensored" = 150000;
           "strata-flash" = 262144;
           "strata-coder" = 262144;
+          "polystrata-ornith" = 131072;
         };
       };
     };

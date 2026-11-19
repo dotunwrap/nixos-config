@@ -58,8 +58,7 @@ let
       lib.nameValuePair u.routerName {
         cmd = "${runUnit unit}";
         proxy = "http://127.0.0.1:${toString (portFor u.portOffset)}";
-        checkEndpoint = "/v1/models";
-        inherit (u) useModelName;
+        inherit (u) checkEndpoint useModelName;
         # What /v1/models tells clients (Pi reads it): llama-swap can't discover this for a unit
         # that isn't running, and vLLM's window isn't relayed at all.
         capabilities = {
@@ -78,6 +77,7 @@ in
   # Backends: each registers its units in `bundles.local_LLM.units` and defines them.
   imports = [
     ./hyperqwen
+    ./polystrata
     ./strata
   ];
 
@@ -149,6 +149,11 @@ in
             vision = lib.mkOption {
               type = lib.types.bool;
               description = "Whether the unit reads images, which the router advertises to clients.";
+            };
+            checkEndpoint = lib.mkOption {
+              type = lib.types.str;
+              default = "/v1/models";
+              description = "Path the router polls to learn the server is ready to take requests.";
             };
             autostart = lib.mkOption {
               type = lib.types.bool;
