@@ -50,6 +50,9 @@ let
   routerConfig = (pkgs.formats.yaml { }).generate "local-llm-router.yaml" {
     # A cold start compiles kernels, captures CUDA graphs or loads a whole model: minutes.
     healthCheckTimeout = 1500;
+    # While a backend starts, stream status into the response's reasoning_content so clients like
+    # Pi show progress instead of waiting silently. Streaming requests only.
+    sendLoadingState = true;
     models = lib.mapAttrs' (
       unit: u:
       lib.nameValuePair u.routerName {
