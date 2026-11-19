@@ -20,6 +20,8 @@ _:
       enable = true;
       coder.enable = true;
       swift.enable = true;
+      gyroM.enable = true;
+      gyroCoder.enable = true;
     };
     # ExLlamaV3 via TabbyAPI, experts split between the cards and RAM, as `exl3-flash`.
     tabbyapi.enable = true;
