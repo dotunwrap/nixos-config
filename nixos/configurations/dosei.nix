@@ -16,8 +16,11 @@ _:
 
   bundles.local_LLM = {
     # HyperQwen is on by default; Strata joins the router as `strata-flash`, started on request.
-    strata.enable = true;
-    strata.coder.enable = true;
+    strata = {
+      enable = true;
+      coder.enable = true;
+      swift.enable = true;
+    };
     # ExLlamaV3 via TabbyAPI, experts split between the cards and RAM, as `exl3-flash`.
     tabbyapi.enable = true;
     # Hermes and Pi pick between the models through llama-swap on :18020.

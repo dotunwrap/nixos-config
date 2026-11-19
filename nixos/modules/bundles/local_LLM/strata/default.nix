@@ -11,9 +11,43 @@ let
 
   home = "/home/${llm.user}";
 
-  # Strata ships as a prebuilt Python + CUDA bundle that its own installer unpacks under
-  # ~/.local/share/strata, so it needs an FHS loader. Nix doesn't build it: install it once with
-  # upstream's install.sh.
+  # Strata ships as a prebuilt Python + CUDA bundle, so it needs an FHS loader. Nix doesn't build
+  # it: it fetches upstream's release tarballs (the same files `strata update` downloads, checked
+  # against the release's SHA256SUMS.txt) and unpacks them into the store. Bump `release`, the
+  # versions and the hashes together; the feed's engine and Control versions move separately.
+  release = "v0.2.16";
+  controlVersion = "0.1.62";
+  engineVersion = "0.1.62";
+  engineFolder = "${engineVersion}-linux-x86_64-cuda-cuda13";
+
+  fetchRelease =
+    name: sha256:
+    pkgs.fetchurl {
+      url = "https://github.com/Niko1221/Strata/releases/download/${release}/${name}";
+      inherit name sha256;
+    };
+
+  controlSrc = fetchRelease "strata-control-${controlVersion}-linux-x86_64.tar.gz" "045b6a7d7fbfbddab814794db5763d6244c887a394403b9fe0e8a4714d9bef8c";
+  engineSrc = fetchRelease "strata-engine-${engineVersion}-linux-x86_64-cuda-cuda13.tar.gz" "6723e1b6b6042bfe1d368723ebf873afb0fa65f4f1908d948dd865098f6cfb9e";
+
+  # The component folder (STRATA_COMPONENTS_DIR) as `strata update` would have left it. Control is
+  # unpacked inside it rather than linked in: Strata refuses an active.json whose folder resolves
+  # outside the control folder.
+  components = pkgs.runCommand "strata-components-${controlVersion}" { } ''
+    mkdir -p $out/control/${controlVersion} $out/engine/${engineFolder}
+    tar -xzf ${controlSrc} -C $out/control/${controlVersion}
+    tar -xzf ${engineSrc} -C $out/engine/${engineFolder}
+    echo '${
+      builtins.toJSON {
+        version = controlVersion;
+        folder = controlVersion;
+        sha256 = "045b6a7d7fbfbddab814794db5763d6244c887a394403b9fe0e8a4714d9bef8c";
+      }
+    }' > $out/control/active.json
+  '';
+  control = "${components}/control/${controlVersion}";
+  engine = "${components}/engine/${engineFolder}";
+
   fhs = pkgs.buildFHSEnv {
     name = "strata-fhs";
     targetPkgs =
@@ -47,6 +81,8 @@ let
       modelName = "qwen3.8-flash-next-iq3_xxs";
       models = "${home}/models/ista-iq3xxs";
       files = "Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS";
+      pleShard = true;
+      mmproj = "mmproj-Qwen3.8-Flash-Next-BF16.gguf";
       pack = "${home}/packs/iq3_xxs";
       profile = "expert-profile.bin";
       # 47 GB of experts do not fit in RAM, so they are read through the OS file cache.
@@ -77,6 +113,8 @@ let
       modelName = "qwen3.8-flash-next-coder-iq1_m";
       models = "${home}/models/coder-iq1m";
       files = "Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M";
+      pleShard = true;
+      mmproj = "mmproj-Qwen3.8-Flash-Next-BF16.gguf";
       pack = "${home}/packs/coder_iq1_m";
       profile = "expert-profile-coder.bin";
       # The experts the GPU cache does not hold are read through the OS page cache, which uses
@@ -111,6 +149,37 @@ let
         "0.5"
       ];
     };
+
+    strata-swift = {
+      description = "Strata server (Swift 1.5 Qwen3.8-Flash-Next IQ3_XXS)";
+      routerName = "strata-swift";
+      portOffset = 7;
+      modelName = "swift-1.5-qwen3.8-flash-next-iq3_xxs";
+      models = "${home}/models/swift-1.5-iq3xxs";
+      files = "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS";
+      # Swift's shards are a plain size split (layers 0-12 plus the PLE table in shard 1, layers
+      # 13-47 in shard 2), so there is no separate PLE file: the engine finds the table in shard 1
+      # and `--ple-gguf` is left out. Built with tools/iq_pack.py (see ~/packs/swift_iq3_xxs/build.log).
+      pleShard = false;
+      # Swift's own mmproj is not downloaded; the base model's picture reader is shared.
+      mmproj = "../ista-iq3xxs/mmproj-Qwen3.8-Flash-Next-BF16.gguf";
+      pack = "${home}/packs/swift_iq3_xxs";
+      # Swift is a fine-tune of the same model, so the base IQ3_XXS expert profile is reused.
+      profile = "expert-profile.bin";
+      kv = "int8";
+      experts = "--mmap-experts";
+      extra = [ ];
+      # What `strata launch --family swift` picks: the MTP draft layer, with the same settings as
+      # the setup-written IQ3_XXS config.
+      draft = [
+        "--mtp"
+        "/home/nia/mtp/rt"
+        "--spec"
+        "4"
+        "--spec-min-p"
+        "0.5"
+      ];
+    };
   };
 
   mkVariant =
@@ -122,8 +191,15 @@ let
         v.pack
         "--native"
         "${v.models}/${v.files}-00001-of-00002.gguf"
+      ]
+      # With --native the engine needs the real second shard beside shard 1 (it checks the shard's
+      # split.count/split.no metadata), so a standalone PLE file such as Delgon's
+      # Qwen3.8-Flash-Next-PLE-GGUF cannot stand in for it.
+      ++ lib.optionals v.pleShard [
         "--ple-gguf"
         "${v.models}/${v.files}-00002-of-00002.gguf"
+      ]
+      ++ [
         "--expert-profile"
         "${cfg.terminalPath}/data/${v.profile}"
         "--expert-cache"
@@ -149,7 +225,7 @@ let
       # engine component, whose folder name carries the engine version, so the start script adds
       # `exe` at run time.
       visionSection = {
-        mmproj = "${v.models}/mmproj-Qwen3.8-Flash-Next-BF16.gguf";
+        mmproj = "${v.models}/${v.mmproj}";
         model = "${v.models}/${v.files}-00001-of-00002.gguf";
         gpu = false;
         max_tokens = 300;
@@ -189,10 +265,9 @@ let
         cd ${lib.escapeShellArg cfg.terminalPath}
         config=${launchConfig}
         ${lib.optionalString cfg.vision ''
-          # Add the picture reader's program, from the newest installed engine component.
-          reader=$(ls -d ${home}/.local/share/strata/components/engine/*/strata-vision | sort | tail -n 1)
+          # Add the picture reader's program, from the engine component.
           config="$RUNTIME_DIRECTORY/launch.json"
-          ${lib.getExe pkgs.jq} --arg exe "$reader" '.vision.exe = $exe' ${launchConfig} > "$config"
+          ${lib.getExe pkgs.jq} --arg exe ${engine}/strata-vision '.vision.exe = $exe' ${launchConfig} > "$config"
         ''}
         exec python/bin/python3.12 -m serve.server --engine strata \
           --config "$config" --host ${llm.host} --port ${toString (localLLM.portFor v.portOffset)} \
@@ -207,7 +282,10 @@ let
       };
       service = {
         inherit (v) description;
-        environment.HOME = home;
+        environment = {
+          HOME = home;
+          STRATA_COMPONENTS_DIR = "${components}";
+        };
         serviceConfig = {
           User = llm.user;
           RuntimeDirectory = unit;
@@ -223,7 +301,13 @@ let
     };
 
   enabled = lib.filterAttrs (
-    unit: _: if unit == "strata" then cfg.enable else cfg.coder.enable
+    unit: _:
+    {
+      strata = cfg.enable;
+      strata-coder = cfg.coder.enable;
+      strata-swift = cfg.swift.enable;
+    }
+    .${unit}
   ) variants;
   built = lib.mapAttrs mkVariant enabled;
 in
@@ -231,20 +315,27 @@ in
   options.bundles.local_LLM.strata = {
     enable = lib.mkEnableOption ''
       Strata serving Qwen3.8-Flash-Next (IQ3_XXS, dflash2 drafter), with or without the other
-      backends. The router lists it as `strata-flash`. Install Strata first with upstream's
-      install.sh
+      backends. The router lists it as `strata-flash`. Strata itself comes from Nix (see
+      the release pinned at the top of this file)
     '';
 
     terminalPath = lib.mkOption {
       type = lib.types.str;
-      default = "/home/nia/.local/share/strata/terminal/current";
-      description = "Strata Terminal install (what install.sh unpacks) that the unit runs from.";
+      default = "${control}";
+      description = "Strata Control (the Terminal) that the unit runs from: the release tarball, unpacked into the store.";
     };
 
     coder.enable = lib.mkEnableOption ''
       ISTA-DASLab's Qwen3.8-Flash-Next Coder (IQ1_M: half the experts, kept for code, tools and
       images) as a second Strata model, listed by the router as `strata-coder`. It has no dflash2
       drafter. Its files and pack go in ~/models/coder-iq1m and ~/packs/coder_iq1_m
+    '';
+
+    swift.enable = lib.mkEnableOption ''
+      UkisAI's Swift 1.5 (a fine-tune of Qwen3.8-Flash-Next that thinks shorter; IQ3_XXS) as a
+      third Strata model, listed by the router as `strata-swift`. Its shards go in
+      ~/models/swift-1.5-iq3xxs and its pack, built with Strata's tools/iq_pack.py, in
+      ~/packs/swift_iq3_xxs
     '';
 
     vision = lib.mkOption {
