@@ -10,7 +10,7 @@ let
 
   # Pi packages added to ~/.pi/agent/settings.json. pi-harness-config (with its pinned
   # pi-web-access and pi-open-tui) is added by its own Home Manager module as a store path.
-  piPackages = [ ];
+  piPackages = [ "npm:pi-llama-swap" ];
 
   # Entries that module already provides; dropped from settings.json so they do not load
   # twice (a duplicate makes every extension fail with "Tool ... conflicts").
@@ -73,6 +73,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Adds pi-harness-config's store path to settings.json (see its Home Manager module).
+    programs.pi.harness.enable = true;
+
     home = {
       activation = {
         # models.json is Pi-owned, so merge only the local-llm provider into it.
@@ -102,10 +105,11 @@ in
           ''
         );
 
-        # Declare Pi packages. settings.json is Pi-owned (it also holds model and
+        # Declare Pi packages (named apart from the harness module's own piHarnessPackage).
+        # settings.json is Pi-owned (it also holds model and
         # thinking choices), so merge instead of replacing the file. An existing entry
         # for the same package at another version is dropped, so a pin bump replaces it.
-        piHarnessPackage = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        piSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           settings="$HOME/.pi/agent/settings.json"
           run mkdir -p "$(dirname "$settings")"
           [ -s "$settings" ] || echo '{}' > "$settings"
@@ -141,6 +145,11 @@ in
       ];
 
       sessionPath = [ "$HOME/.local/bin" ];
+
+      # pi-llama-swap discovers the router's models live; it wants the router's root URL.
+      sessionVariables = lib.mkIf (cfg.routerProvider != null) {
+        LLAMA_SWAP_URL = lib.removeSuffix "/v1" cfg.routerProvider.baseUrl;
+      };
 
       # Appended to Pi's default system prompt (SYSTEM.md would replace it). No
       # Qwen-specific prompt is published, so this is general coding-agent guidance
