@@ -92,6 +92,10 @@ let
         "300"
         "--kv-resident"
         "32768"
+        # Prompt chunks sized for the layer split, at the b/a ratio calibration measured best:
+        # about 18% faster prompt reading on long prompts, decode unchanged.
+        "--prefill-pipe"
+        "1536"
       ];
       # The Coder's MTP draft layer, fetched once by `strata launch --family coder --model iq1_m
       # --mtp on --model-path ~/models/coder-iq1m` into ~/mtp/rt. A native (IQ) pack needs --spec
@@ -101,8 +105,10 @@ let
         "/home/nia/mtp/rt"
         "--spec"
         "4"
+        # Calibrated (strata engine calibrate): 0.7 drafts less often but accepts 88% instead of 72%,
+        # about 7% faster decode than Strata's default 0.5.
         "--spec-min-p"
-        "0.5"
+        "0.7"
       ];
     };
   };
