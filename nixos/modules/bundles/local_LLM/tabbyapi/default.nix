@@ -27,6 +27,9 @@ let
         uv
         git
         cacert
+        # Triton builds a small CUDA helper with a C compiler the first time the engine runs.
+        gcc
+        binutils
         openssl
         zlib
         stdenv.cc.cc.lib
@@ -83,15 +86,50 @@ let
       # The n-gram table (52 GB) stays on disk and is read per token, as upstream does by default.
       ngram_ram = false;
       embed_stream_from_disk = true;
+      # Strata reads pictures on the CPU; this keeps the vision tower in RAM instead of VRAM.
+      inherit (cfg) vision;
+      vision_offload = cfg.vision;
     }
     // lib.optionalAttrs (cfg.cpuExperts > 0) {
       cpu_moe_split_experts = cfg.cpuExperts;
     }
     // lib.optionalAttrs (cfg.cpuThreads != null) {
       cpu_moe_threads = cfg.cpuThreads;
+    }
+    // lib.optionalAttrs (cfg.hugePages != null) {
+      # EXL3_MOE_ARENA_HUGE only does anything with the pinned arena.
+      cpu_moe_pinned_arena = true;
     };
-    draft_model.draft_mode = cfg.draftMode;
+    draft_model = {
+      draft_mode = cfg.draftMode;
+      # Strata's `--spec 3 --spec-min-p 0.5`: draft up to 3 tokens, stop early once the chance
+      # a drafted token is accepted falls below 0.5.
+      draft_num_tokens = cfg.draftTokens;
+      dynamic_draft = true;
+      draft_confidence = cfg.draftConfidence;
+    };
   };
+
+  # The huge-page pool for the expert arena (EXL3_MOE_ARENA_HUGE) has to exist before the model
+  # loads, and the pages are not available to anything else while it does. So the unit reserves
+  # them when it starts and gives them back when it stops, instead of holding them from boot.
+  hugeFile = "/proc/sys/vm/nr_hugepages";
+  reserveHuge = pkgs.writeShellScript "tabbyapi-reserve-huge-pages" ''
+    set -eu
+    want=${toString cfg.hugePageCount}
+    # Defragment first: 2 MiB pages need contiguous memory, and the page cache is fragmenting it.
+    echo 1 > /proc/sys/vm/compact_memory
+    echo "$want" > ${hugeFile}
+    got=$(cat ${hugeFile})
+    if [ "$got" -lt "$want" ]; then
+      echo "tabbyapi: reserved $got of $want huge pages (2 MiB each): memory is too busy or fragmented" >&2
+      echo 0 > ${hugeFile}
+      exit 1
+    fi
+  '';
+  releaseHuge = pkgs.writeShellScript "tabbyapi-release-huge-pages" ''
+    echo 0 > ${hugeFile}
+  '';
 
   start = pkgs.writeShellScript "tabbyapi-start" ''
     set -eu
@@ -117,7 +155,7 @@ in
 
     contextSize = lib.mkOption {
       type = lib.types.int;
-      default = 65536;
+      default = 98304;
       description = "Maximum context (max_seq_len).";
     };
 
@@ -147,8 +185,8 @@ in
     reserveMiB = lib.mkOption {
       type = lib.types.listOf lib.types.int;
       default = [
-        768
-        768
+        300
+        300
       ];
       description = "VRAM to leave free on each card while loading (autosplit_reserve, MiB).";
     };
@@ -164,10 +202,44 @@ in
       description = "Speculative decoding: the model's own MTP head by default.";
     };
 
+    draftTokens = lib.mkOption {
+      type = lib.types.int;
+      default = 3;
+      description = "Tokens drafted per step (draft_num_tokens).";
+    };
+
+    draftConfidence = lib.mkOption {
+      type = lib.types.float;
+      default = 0.5;
+      description = "Target acceptance chance for drafted tokens (draft_confidence), 0 to 1.";
+    };
+
+    hugePages = lib.mkOption {
+      type = lib.types.nullOr (lib.types.enum [ "2m" ]);
+      default = null;
+      description = ''
+        Back the CPU expert arena with huge pages (EXL3_MOE_ARENA_HUGE) and turn on the pinned
+        arena (cpu_moe_pinned_arena, which EXL3_MOE_ARENA_HUGE needs). The unit reserves
+        `hugePageCount` pages when it starts and releases them when it stops. The pinned arena
+        cannot be swapped or reclaimed, so this uses RAM the rest of the system can no longer
+        have while the model is loaded. Only 2 MiB pages: 1 GiB pages have to be reserved at boot.
+      '';
+    };
+
+    hugePageCount = lib.mkOption {
+      type = lib.types.ints.positive;
+      default = 12288;
+      description = ''
+        2 MiB huge pages to reserve for the arena (12288 is 24 GiB). It must cover every expert
+        kept on the CPU, or the load fails: the 2.68 bpw quant at the default `cpuExperts` needs
+        about 23 GiB, and the model's MTP head a little more.
+      '';
+    };
+
     vision = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Advertise image input to clients (the quant ships its vision tower).";
+      description = "Let the model read images: loads the quant's vision tower, kept in system RAM.";
     };
   };
 
@@ -183,10 +255,21 @@ in
 
     systemd.services.tabbyapi = {
       description = "TabbyAPI server (Qwen3.8-Flash-Next EXL3)";
-      environment.HOME = home;
+      environment = {
+        HOME = home;
+      }
+      // lib.optionalAttrs (cfg.hugePages != null) {
+        EXL3_MOE_PINNED_ARENA = "1";
+        EXL3_MOE_ARENA_HUGE = cfg.hugePages;
+      };
       serviceConfig = {
         User = llm.user;
-        ExecStartPre = "${localLLM.waitGpuFree}";
+        # A "+" prefix runs the step as root: the huge-page pool is a system setting.
+        ExecStartPre = [
+          "${localLLM.waitGpuFree}"
+        ]
+        ++ lib.optional (cfg.hugePages != null) "+${reserveHuge}";
+        ExecStopPost = lib.optional (cfg.hugePages != null) "+${releaseHuge}";
         ExecStart = "${fhs}/bin/tabbyapi-fhs ${start}";
         # The port opens only after the model has loaded, and the n-gram table is read from disk.
         TimeoutStartSec = "30min";
