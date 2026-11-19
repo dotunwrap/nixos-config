@@ -104,11 +104,9 @@ let
         "--mtp"
         "/home/nia/mtp/rt"
         "--spec"
-        "4"
-        # Calibrated (strata engine calibrate): 0.7 drafts less often but accepts 88% instead of 72%,
-        # about 7% faster decode than Strata's default 0.5.
+        "3"
         "--spec-min-p"
-        "0.7"
+        "0.5"
       ];
     };
   };
