@@ -71,6 +71,19 @@ let
     runScript = "bash";
   };
 
+  # The PLE (n-gram) table the Gyro noPLE files lack. Any of Delgon's tables fits any Gyro file.
+  pleTable = "${home}/models/qwen3.8-flash-next-ple/Qwen3.8-Flash-Next-PLE-IQ4_NL.gguf";
+
+  # Setup's Gyro config: the MTP draft head with Strata's IQ3_XXS settings.
+  gyroDraft = [
+    "--mtp"
+    "/home/nia/mtp/rt"
+    "--spec"
+    "4"
+    "--spec-min-p"
+    "0.5"
+  ];
+
   # One Strata server per model file set. Both read the same engine and share the GPUs, so the
   # router runs one at a time like every other unit.
   variants = {
@@ -180,24 +193,69 @@ let
         "0.5"
       ];
     };
+
+    # agentionai's Gyro quants (trellis experts, Hadamard-rotated) are one noPLE file each: the
+    # n-gram table is the separate PLE GGUF, passed with --ple-gguf. Strata's GYRO.md serves them as
+    # --pack plus --native <file>, with the MTP head and the IQ3_XXS expert profile.
+    strata-gyro-m = {
+      description = "Strata server (Gyro-M TQ2_0 Qwen3.8-Flash-Next)";
+      routerName = "strata-gyro-m";
+      portOffset = 8;
+      modelName = "gyro-m-qwen3.8-flash-next-tq2_0";
+      models = "${home}/models/gyro-m";
+      native = "${home}/models/gyro-m/Qwen3.8-Flash-Next-Gyro-M-TQ2_0-noPLE.gguf";
+      pleGguf = pleTable;
+      mmproj = "../ista-iq3xxs/mmproj-Qwen3.8-Flash-Next-BF16.gguf";
+      # Built once with: tools/iq_pack.py --gguf <native> --out ~/packs/gyro_m --compat-bf16
+      pack = "${home}/packs/gyro_m";
+      profile = "expert-profile.bin";
+      # 29.9 GiB of experts do not all fit next to the KV cache; --expert-cache auto streams the
+      # rest. Strata's GYRO.md serves the trellis packs without --mmap-experts.
+      kv = "int8";
+      experts = [ ];
+      extra = [ ];
+      draft = gyroDraft;
+    };
+
+    strata-gyro-coder = {
+      description = "Strata server (Gyro-Coder-L TQ3_0 Qwen3.8-Flash-Next)";
+      routerName = "strata-gyro-coder";
+      portOffset = 9;
+      modelName = "gyro-coder-l-qwen3.8-flash-next-tq3_0";
+      models = "${home}/models/gyro-coder-l";
+      native = "${home}/models/gyro-coder-l/Qwen3.8-Flash-Next-Gyro-Coder-L-TQ3_0-noPLE.gguf";
+      pleGguf = pleTable;
+      mmproj = "../ista-iq3xxs/mmproj-Qwen3.8-Flash-Next-BF16.gguf";
+      pack = "${home}/packs/gyro_coder_l";
+      profile = "expert-profile-coder.bin";
+      kv = "int8";
+      experts = [ ];
+      extra = [ ];
+      draft = gyroDraft;
+    };
   };
 
   mkVariant =
     unit: v:
     let
+      # The two-shard IQ sets name `files`; the Gyro quants give the single file as `native`.
+      native = v.native or "${v.models}/${v.files}-00001-of-00002.gguf";
+      ple = v.pleGguf or (if v.pleShard then "${v.models}/${v.files}-00002-of-00002.gguf" else null);
+
       # Engine arguments as the tuned `strata launch` preset ran them (int8 KV).
       engineArgs = [
         "--pack"
         v.pack
         "--native"
-        "${v.models}/${v.files}-00001-of-00002.gguf"
+        native
       ]
-      # With --native the engine needs the real second shard beside shard 1 (it checks the shard's
-      # split.count/split.no metadata), so a standalone PLE file such as Delgon's
-      # Qwen3.8-Flash-Next-PLE-GGUF cannot stand in for it.
-      ++ lib.optionals v.pleShard [
+      # With a two-shard --native the engine needs the real second shard beside shard 1 (it checks
+      # the shard's split.count/split.no metadata), so a standalone PLE file such as Delgon's
+      # Qwen3.8-Flash-Next-PLE-GGUF cannot stand in for it. A single noPLE file takes the table
+      # as its own file.
+      ++ lib.optionals (ple != null) [
         "--ple-gguf"
-        "${v.models}/${v.files}-00002-of-00002.gguf"
+        ple
       ]
       ++ [
         "--expert-profile"
@@ -210,8 +268,8 @@ let
         (toString cfg.contextSize)
         "--kv"
         v.kv
-        v.experts
       ]
+      ++ lib.toList v.experts
       ++ v.draft
       ++ v.extra
       ++ [
@@ -226,7 +284,7 @@ let
       # `exe` at run time.
       visionSection = {
         mmproj = "${v.models}/${v.mmproj}";
-        model = "${v.models}/${v.files}-00001-of-00002.gguf";
+        model = native;
         gpu = false;
         max_tokens = 300;
         threads = 8;
@@ -306,6 +364,8 @@ let
       strata = cfg.enable;
       strata-coder = cfg.coder.enable;
       strata-swift = cfg.swift.enable;
+      strata-gyro-m = cfg.gyroM.enable;
+      strata-gyro-coder = cfg.gyroCoder.enable;
     }
     .${unit}
   ) variants;
@@ -336,6 +396,20 @@ in
       third Strata model, listed by the router as `strata-swift`. Its shards go in
       ~/models/swift-1.5-iq3xxs and its pack, built with Strata's tools/iq_pack.py, in
       ~/packs/swift_iq3_xxs
+    '';
+
+    gyroM.enable = lib.mkEnableOption ''
+      agentionai's Gyro-M (TQ2_0, about IQ3_XXS quality with 20% less GPU memory) as a Strata
+      model, listed by the router as `strata-gyro-m`. Its noPLE file goes in ~/models/gyro-m, the
+      PLE table in ~/models/qwen3.8-flash-next-ple, and its pack (tools/iq_pack.py --compat-bf16)
+      in ~/packs/gyro_m
+    '';
+
+    gyroCoder.enable = lib.mkEnableOption ''
+      agentionai's Gyro-Coder-L (TQ3_0, tuned for code) as a Strata model, listed by the router as
+      `strata-gyro-coder`. Its noPLE file goes in ~/models/gyro-coder-l and its pack in
+      ~/packs/gyro_coder_l. agentionai's card says Coder-L needs their Strata branch, so check the
+      pack's `--load-check` (native_expert_parity) before relying on it
     '';
 
     vision = lib.mkOption {
