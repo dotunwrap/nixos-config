@@ -40,12 +40,17 @@ MODELS=${MODELS:-$HQ_REPO/models}
 UNIT=${UNIT:-hyperqwen-swift.service}
 BAN=${BAN:-han,kana,hangul,cjk_punct,cyrillic}
 
-die() { echo "vocab-prune: $*" >&2; exit 1; }
+die() {
+  echo "vocab-prune: $*" >&2
+  exit 1
+}
 usage() { awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "${BASH_SOURCE[0]}"; }
 
-resolve() {  # an existing directory: a path, or a name under $MODELS
-  if [ -d "$1" ]; then (cd "$1" && pwd -P)
-  elif [ -d "$MODELS/$1" ]; then (cd "$MODELS/$1" && pwd -P)
+resolve() { # an existing directory: a path, or a name under $MODELS
+  if [ -d "$1" ]; then
+    (cd "$1" && pwd -P)
+  elif [ -d "$MODELS/$1" ]; then
+    (cd "$MODELS/$1" && pwd -P)
   else die "no such model directory: $1"; fi
 }
 
@@ -53,9 +58,9 @@ resolve() {  # an existing directory: a path, or a name under $MODELS
 # caller's directory, and a bare name goes under $MODELS (the same rule resolve() uses for SRC).
 abs_dst() {
   case $1 in
-    /*) echo "$1" ;;
-    */*) echo "$PWD/$1" ;;
-    *) echo "$MODELS/$1" ;;
+  /*) echo "$1" ;;
+  */*) echo "$PWD/$1" ;;
+  *) echo "$MODELS/$1" ;;
   esac
 }
 
@@ -63,7 +68,7 @@ default_dst() { if [ "$BAN" = "han,kana,hangul,cjk_punct,cyrillic" ]; then echo 
 
 # The HyperQwen venv's python cannot execute directly on NixOS, so run it inside the FHS wrapper
 # the server uses (found from the live systemd unit). CUDA_VISIBLE_DEVICES is emptied: CPU only.
-fhs_exec() {  # fhs_exec CMD [ARGS...]
+fhs_exec() { # fhs_exec CMD [ARGS...]
   local fhs tmp rc=0
   fhs=$(python3 -I "$DIR/unit_env.py" "$UNIT")
   tmp=$(mktemp "${TMPDIR:-/tmp}/vocab-prune-fhs.XXXXXX")
@@ -73,7 +78,7 @@ fhs_exec() {  # fhs_exec CMD [ARGS...]
     printf 'CUDA_VISIBLE_DEVICES= HF_XET_HIGH_PERFORMANCE=1 exec'
     printf ' %q' "$@"
     echo
-  } > "$tmp"
+  } >"$tmp"
   chmod +x "$tmp"
   "$fhs" "$tmp" || rc=$?
   rm -f "$tmp"
@@ -86,13 +91,13 @@ fhs_python() { fhs_exec "$HQ_REPO/venv/bin/python" "$@"; }
 cmd_fetch() {
   local steps
   case ${1:-all} in
-    default) steps=model ;;
-    swift) steps=swift ;;
-    uncensored) steps=uncensored ;;
-    all) steps=model,swift,uncensored ;;
-    *) die "fetch: expected default, swift, uncensored or all (got $1)" ;;
+  default) steps=model ;;
+  swift) steps=swift ;;
+  uncensored) steps=uncensored ;;
+  all) steps=model,swift,uncensored ;;
+  *) die "fetch: expected default, swift, uncensored or all (got $1)" ;;
   esac
-  command -v hyperqwen-setup > /dev/null || die "hyperqwen-setup not found; is the hyperqwen bundle enabled?"
+  command -v hyperqwen-setup >/dev/null || die "hyperqwen-setup not found; is the hyperqwen bundle enabled?"
   echo ">> fetch: hyperqwen-setup, HQ_STEPS=$steps (each step skips what is already downloaded)"
   HQ_STEPS=$steps hyperqwen-setup
 }
@@ -101,10 +106,19 @@ cmd_prune() {
   local src="" dst="" extra=()
   while [ $# -gt 0 ]; do
     case $1 in
-      --ban) BAN=$2; shift 2 ;;
-      --dry-run) extra+=(--dry-run); shift ;;
-      -*) die "prune: unknown option $1" ;;
-      *) if [ -z "$src" ]; then src=$1; elif [ -z "$dst" ]; then dst=$1; else die "prune: too many arguments"; fi; shift ;;
+    --ban)
+      BAN=$2
+      shift 2
+      ;;
+    --dry-run)
+      extra+=(--dry-run)
+      shift
+      ;;
+    -*) die "prune: unknown option $1" ;;
+    *)
+      if [ -z "$src" ]; then src=$1; elif [ -z "$dst" ]; then dst=$1; else die "prune: too many arguments"; fi
+      shift
+      ;;
     esac
   done
   [ -n "$src" ] || die "prune: SRC required"
@@ -126,7 +140,9 @@ cmd_prune() {
 
 cmd_verify() {
   [ $# -eq 2 ] || die "verify: SRC DST required"
-  local src dst; src=$(resolve "$1"); dst=$(resolve "$2")
+  local src dst
+  src=$(resolve "$1")
+  dst=$(resolve "$2")
   echo ">> verify: $dst against $src"
   fhs_python "$DIR/verify_prune.py" "$src" "$dst"
 }
@@ -135,9 +151,15 @@ cmd_all() {
   local src="" dst=""
   while [ $# -gt 0 ]; do
     case $1 in
-      --ban) BAN=$2; shift 2 ;;
-      -*) die "all: unknown option $1" ;;
-      *) if [ -z "$src" ]; then src=$1; elif [ -z "$dst" ]; then dst=$1; else die "all: too many arguments"; fi; shift ;;
+    --ban)
+      BAN=$2
+      shift 2
+      ;;
+    -*) die "all: unknown option $1" ;;
+    *)
+      if [ -z "$src" ]; then src=$1; elif [ -z "$dst" ]; then dst=$1; else die "all: too many arguments"; fi
+      shift
+      ;;
     esac
   done
   [ -n "$src" ] || die "all: SRC required"
@@ -149,20 +171,30 @@ cmd_all() {
     # at that name would serve it.
     # Never mv onto an existing directory: that would move the output inside it.
     local failed="$dst.FAILED-verify" n=1
-    while [ -e "$failed" ]; do n=$((n + 1)); failed="$dst.FAILED-verify.$n"; done
+    while [ -e "$failed" ]; do
+      n=$((n + 1))
+      failed="$dst.FAILED-verify.$n"
+    done
     mv -- "$dst" "$failed"
     die "verification failed; the output was renamed to $failed so it cannot be served by mistake"
   fi
   echo ">> done: $dst"
 }
 
-[ $# -gt 0 ] || { usage; exit 1; }
-sub=$1; shift
+[ $# -gt 0 ] || {
+  usage
+  exit 1
+}
+sub=$1
+shift
 case $sub in
-  fetch) cmd_fetch "$@" ;;
-  prune) cmd_prune "$@" ;;
-  verify) cmd_verify "$@" ;;
-  latin-only|english|all) cmd_all "$@" ;;
-  -h|--help|help) usage ;;
-  *) usage; die "unknown command: $sub" ;;
+fetch) cmd_fetch "$@" ;;
+prune) cmd_prune "$@" ;;
+verify) cmd_verify "$@" ;;
+latin-only | english | all) cmd_all "$@" ;;
+-h | --help | help) usage ;;
+*)
+  usage
+  die "unknown command: $sub"
+  ;;
 esac
