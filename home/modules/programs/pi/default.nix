@@ -9,7 +9,7 @@ let
   cfg = config.programs.pi;
 
   # Pi packages added to ~/.pi/agent/settings.json. pi-harness-config (with its pinned
-  # pi-web-access, pi-open-tui and pi-llama-swap) is added by its own Home Manager module as a store path.
+  # pi-web-access, pi-open-tui and @danielmeneses/pi-llama-swap) is added by its own Home Manager module as a store path.
   piPackages = [ ];
 
   # Entries that module already provides; dropped from settings.json so they do not load
@@ -18,7 +18,7 @@ let
     "git:github.com/nyoshe/pi-harness-config"
     "npm:pi-web-access"
     "npm:pi-open-tui"
-    "npm:pi-llama-swap"
+    "npm:@danielmeneses/pi-llama-swap"
   ];
 
   # Model Pi starts with, set only while settings.json has none so /model choices stick.
@@ -42,6 +42,14 @@ let
         "image"
       ];
     }) cfg.routerProvider.models;
+  };
+
+  # The router's address split the way pi-llama-swap's config wants it (origin, port, basePath).
+  routerParts = builtins.match "(https?://[^/:]+):([0-9]+)(/.*)?" cfg.routerProvider.baseUrl;
+  llamaSwapConfig = {
+    origin = builtins.elemAt routerParts 0;
+    port = lib.toInt (builtins.elemAt routerParts 1);
+    basePath = builtins.elemAt routerParts 2;
   };
 
   # graphify (PyPI `graphifyy`) is installed with uv against Nix's Python, since uv's
@@ -106,6 +114,21 @@ in
           ''
         );
 
+        # pi-llama-swap's own config also holds contextOverrides that /llama-swap-set-context-length
+        # writes, so merge only the endpoint into it.
+        piLlamaSwap = lib.mkIf (cfg.routerProvider != null) (
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            conf="$HOME/.pi/agent/pi-llama-swap.json"
+            run mkdir -p "$(dirname "$conf")"
+            [ -s "$conf" ] || echo '{}' > "$conf"
+            tmp="$(mktemp)"
+            ${lib.getExe pkgs.jq} \
+              --argjson endpoint ${lib.escapeShellArg (builtins.toJSON llamaSwapConfig)} \
+              '. + $endpoint' "$conf" > "$tmp" && run install -m 644 "$tmp" "$conf"
+            rm -f "$tmp"
+          ''
+        );
+
         # Declare Pi packages (named apart from the harness module's own piHarnessPackage).
         # settings.json is Pi-owned (it also holds model and
         # thinking choices), so merge instead of replacing the file. An existing entry
@@ -146,11 +169,6 @@ in
       ];
 
       sessionPath = [ "$HOME/.local/bin" ];
-
-      # pi-llama-swap discovers the router's models live; it wants the router's root URL.
-      sessionVariables = lib.mkIf (cfg.routerProvider != null) {
-        LLAMA_SWAP_URL = lib.removeSuffix "/v1" cfg.routerProvider.baseUrl;
-      };
 
       # Appended to Pi's default system prompt (SYSTEM.md would replace it). No
       # Qwen-specific prompt is published, so this is general coding-agent guidance
