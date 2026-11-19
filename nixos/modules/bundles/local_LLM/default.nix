@@ -60,6 +60,14 @@ let
         proxy = "http://127.0.0.1:${toString (portFor u.portOffset)}";
         checkEndpoint = "/v1/models";
         inherit (u) useModelName;
+        # What /v1/models tells clients (Pi reads it): llama-swap can't discover this for a unit
+        # that isn't running, and vLLM's window isn't relayed at all.
+        capabilities = {
+          "in" = [ "text" ] ++ lib.optional u.vision "image";
+          out = [ "text" ];
+          tools = true;
+          context = u.contextSize;
+        };
         # Stays loaded until another model is requested.
         ttl = 0;
       }
@@ -133,6 +141,14 @@ in
             useModelName = lib.mkOption {
               type = lib.types.str;
               description = "API name the server answers to, whatever name the client asked for.";
+            };
+            contextSize = lib.mkOption {
+              type = lib.types.ints.positive;
+              description = "Context window in tokens, which the router advertises to clients.";
+            };
+            vision = lib.mkOption {
+              type = lib.types.bool;
+              description = "Whether the unit reads images, which the router advertises to clients.";
             };
             autostart = lib.mkOption {
               type = lib.types.bool;

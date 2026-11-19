@@ -83,9 +83,21 @@ in
             run mkdir -p "$(dirname "$models")"
             [ -s "$models" ] || echo '{}' > "$models"
             tmp="$(mktemp)"
+            # The router advertises each model's context window and input types in /v1/models, so
+            # prefer that over the declared numbers; they remain the fallback while it is down
+            # (and for a model it lists without a window).
+            live="$(${lib.getExe pkgs.curl} -fsS --max-time 5 ${lib.escapeShellArg "${cfg.routerProvider.baseUrl}/models"} 2>/dev/null || true)"
+            echo "$live" | ${lib.getExe pkgs.jq} -e '.data | length > 0' >/dev/null 2>&1 || live='{"data":[]}'
             ${lib.getExe pkgs.jq} \
               --argjson provider ${lib.escapeShellArg (builtins.toJSON routerProvider)} \
-              '.providers["local-llm"] = $provider' \
+              --argjson live "$live" \
+              '($live.data | map({key: .id, value: .}) | from_entries) as $l
+               | .providers["local-llm"] = ($provider
+                 | .models |= map(
+                     ($l[.id] // {}) as $m
+                     | (($m.context_length // 0) as $c | if $c > 0 then .contextWindow = $c else . end)
+                     | (($m.architecture.input_modalities // []) as $in
+                        | if ($in | length) > 0 then .input = $in else . end)))' \
               "$models" > "$tmp" && run install -m 644 "$tmp" "$models"
             rm -f "$tmp"
           ''

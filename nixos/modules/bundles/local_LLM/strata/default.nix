@@ -164,6 +164,7 @@ in
       routerName = "strata-flash";
       portOffset = 4;
       useModelName = modelName;
+      inherit (cfg) contextSize vision;
     };
 
     systemd.services.strata = {
