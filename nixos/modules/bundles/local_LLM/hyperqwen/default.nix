@@ -270,8 +270,7 @@ in
         routerName = "qwen3.8-27b";
         portOffset = 1;
         useModelName = apiName;
-        contextSize = cfg.contextSize;
-        vision = cfg.vision;
+        inherit (cfg) contextSize vision;
         autostart = true;
       };
       # Swift 1.5 beside the default model: started by hand (or through the router), replacing
@@ -280,16 +279,14 @@ in
         routerName = "swift-1.5";
         portOffset = 2;
         useModelName = apiName;
-        contextSize = cfg.contextSize;
-        vision = cfg.vision;
+        inherit (cfg) contextSize vision;
       };
       # Swift with the refusal direction ablated, behind the router as `swift-uncensored`.
       hyperqwen-swift-uncensored = {
         routerName = "swift-uncensored";
         portOffset = 3;
         useModelName = apiName;
-        contextSize = cfg.contextSize;
-        vision = cfg.vision;
+        inherit (cfg) contextSize vision;
       };
     };
 
