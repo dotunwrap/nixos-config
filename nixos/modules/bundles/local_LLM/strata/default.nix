@@ -79,10 +79,12 @@ let
       files = "Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M";
       pack = "${home}/packs/coder_iq1_m";
       profile = "expert-profile-coder.bin";
-      # The 25 GB of experts are held in RAM (what the Strata monitor counts as its RAM tier);
-      # the GPU expert cache (--expert-cache auto) still fills the free VRAM first.
+      # The experts the GPU cache does not hold are read through the OS page cache, which uses
+      # about 11 GB less RAM than --resident-experts (the Strata monitor's RAM tier stays empty).
+      # Cold prompts read slower until the cache warms: 629-1,018 tok/s against 2,200+ resident
+      # on a 5K-token first request, and about 18% slower at 16K; within 3% at 95K.
       kv = "int8";
-      experts = "--resident-experts";
+      experts = "--mmap-experts";
       # Leave 300 MiB per card instead of the default 700, so the GPU expert cache gets the rest
       # (cards at about 95-97% instead of 91-94%).
       # --kv-resident keeps 32768 cells of K/V per layer in VRAM and the rest in pinned RAM, which
