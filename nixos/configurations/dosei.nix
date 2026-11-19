@@ -18,6 +18,8 @@ _:
     # HyperQwen is on by default; Strata joins the router as `strata-flash`, started on request.
     strata.enable = true;
     strata.coder.enable = true;
+    # ExLlamaV3 via TabbyAPI, experts split between the cards and RAM, as `exl3-flash`.
+    tabbyapi.enable = true;
     # Hermes and Pi pick between the models through llama-swap on :18020.
     router.enable = true;
     # Reachable over Tailscale only: the firewall opens no public ports and trusts tailscale0.

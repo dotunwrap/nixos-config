@@ -79,6 +79,7 @@ in
   imports = [
     ./hyperqwen
     ./strata
+    ./tabbyapi
   ];
 
   options.bundles.local_LLM = {
