@@ -18,8 +18,6 @@ _:
     # HyperQwen is on by default; Strata joins the router as `strata-flash`, started on request.
     strata.enable = true;
     strata.coder.enable = true;
-    # PolyStrata's own engine, Nix-built, serving Ornith 1.5 as `polystrata-ornith`.
-    polystrata.enable = true;
     # Hermes and Pi pick between the models through llama-swap on :18020.
     router.enable = true;
     # Reachable over Tailscale only: the firewall opens no public ports and trusts tailscale0.
