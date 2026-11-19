@@ -9,8 +9,8 @@ let
   cfg = config.programs.pi;
 
   # Pi packages added to ~/.pi/agent/settings.json. pi-harness-config (with its pinned
-  # pi-web-access and pi-open-tui) is added by its own Home Manager module as a store path.
-  piPackages = [ "npm:pi-llama-swap" ];
+  # pi-web-access, pi-open-tui and pi-llama-swap) is added by its own Home Manager module as a store path.
+  piPackages = [ ];
 
   # Entries that module already provides; dropped from settings.json so they do not load
   # twice (a duplicate makes every extension fail with "Tool ... conflicts").
@@ -18,6 +18,7 @@ let
     "git:github.com/nyoshe/pi-harness-config"
     "npm:pi-web-access"
     "npm:pi-open-tui"
+    "npm:pi-llama-swap"
   ];
 
   # Model Pi starts with, set only while settings.json has none so /model choices stick.
