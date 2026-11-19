@@ -8,306 +8,202 @@ _:
 let
   cfg = config.bundles.local_LLM;
 
-  # The router drops the "UD-" prefix from Unsloth quants when naming models.
-  modelId = builtins.replaceStrings [ ":UD-" ] [ ":" ] cfg.model;
+  # With the router on, it owns the public port and each unit sits on port + its offset.
+  portFor = offset: if cfg.router.enable then cfg.port + offset else cfg.port;
 
-  # User-supplied per-model sections, keyed by router model id. A `UD-` prefix
-  # is stripped from the key so either spelling works.
-  extraSections = lib.mapAttrs' (
-    name: value: lib.nameValuePair (builtins.replaceStrings [ ":UD-" ] [ ":" ] name) value
-  ) cfg.modelSettings;
-
-  # Qwen-Sharp-Chat-Templates (froggeric v22.5 base): terse answers, thinking
-  # retention for cache hits across turns, and effort steering. Pinned by revision.
-  # Per request, `chat_template_kwargs = { terse = false; }` turns the terseness off.
-  chatTemplate = pkgs.fetchurl {
-    url = "https://huggingface.co/peculiar-ragdoll/Qwen-Sharp-Chat-Templates/resolve/6a78b888557f8c9987f51bca98d02d8f69682044/chat_template.jinja";
-    hash = "sha256-zf85+ya2DckPqikucmZVxrIfYttJeEbgLkxLurlCqEo=";
-  };
-
-  # Router-mode presets: [*] applies to every model the router serves (including
-  # ones pulled into the cache later), the model section adds MTP and sampling
-  # for the default Qwen model only, since other models may have no MTP head.
-  # Built once per profile (see `headless`); the service picks one at startup.
-  mkPresets =
-    name: profile:
-    pkgs.writeText "llama-presets-${name}.ini" (
-      lib.generators.toINIWithGlobalSection { } {
-        globalSection.version = 1;
-        sections = lib.recursiveUpdate {
-          "*" = {
-            ctx-size = profile.contextSize;
-            n-gpu-layers = 999;
-            # Tensor split runs both GPUs in parallel; the default layer split
-            # pipelines them and roughly halves decode speed on dual-GPU rigs.
-            split-mode = "tensor";
-            tensor-split = profile.tensorSplit;
-            flash-attn = "on";
-            # Prompt tokens per GPU pass (default 512). Larger speeds up prefill at
-            # the cost of compute-buffer VRAM; batch-size must be >= this (default 2048).
-            ubatch-size = cfg.ubatchSize;
-            cache-type-k = cfg.cacheType;
-            cache-type-v = cfg.cacheType;
-            parallel = 1;
-            jinja = true;
-            # Cap thinking at 16k tokens; llama.cpp then force-closes the think block.
-            reasoning-budget = 16384;
-            # Host-RAM prompt cache (default 8192MiB). A ~55k-token agent conversation is
-            # ~11GB of state; above the limit the save is skipped, so any other request
-            # evicts it and the next turn re-prefills from scratch.
-            cache-ram = 12288;
-            dedup-cache-models = true;
-          }
-          # Without vision, skip the projector and its ~1GB of VRAM. With it, the
-          # router downloads and loads the repo's mmproj file automatically.
-          // lib.optionalAttrs (!cfg.vision) { no-mmproj = true; }
-          // lib.optionalAttrs (cfg.vision && !profile.mmprojOffload) { no-mmproj-offload = true; };
-
-          ${modelId} = {
-            hf-repo = cfg.model;
-            load-on-startup = true;
-            chat-template-file = "${chatTemplate}";
-            # MTP speculative decoding using the draft head embedded in the unsloth GGUFs
-            spec-type = "draft-mtp";
-            spec-draft-n-max = 3;
-            # Pi can only toggle thinking on/off for this template (it shows "medium"),
-            # so pin the template's own effort level server-side.
-            reasoning-effort = "xhigh";
-            # Qwen recommended sampling for thinking mode (model card)
-            temp = 1.0;
-            top-p = 0.95;
-            top-k = 20;
-          };
-        } extraSections;
-      }
-    );
-
-  profiles = {
-    connected = { inherit (cfg) contextSize tensorSplit mmprojOffload; };
-    headless = { inherit (cfg.headless) contextSize tensorSplit mmprojOffload; };
-  };
-  presetFiles = lib.mapAttrs mkPresets profiles;
-
-  # A display counts as connected when any connector on an NVIDIA DRM card
-  # reports "connected". If no NVIDIA card is found (driver not loaded yet) we
-  # assume connected, the safe choice since it uses less VRAM.
-  selectPreset = pkgs.writeShellScript "llama-select-preset" ''
-    profile=connected
-    found=0
-    connected=0
-    for card in /sys/class/drm/card[0-9]*; do
-      [ -e "$card/device/driver" ] || continue
-      [ "$(basename "$(readlink -f "$card/device/driver")")" = nvidia ] || continue
-      found=1
-      for status in "$card"-*/status; do
-        [ -r "$status" ] || continue
-        if [ "$(cat "$status")" = connected ]; then
-          connected=1
-        fi
-      done
+  # vLLM profiles free VRAM once, at startup. Switching models stops one unit and starts another
+  # while the first is still releasing its memory, and a start in that window sizes a KV pool
+  # about 40% too small without any error. So each unit waits until every card is nearly empty
+  # (under 1 GB used, up to two minutes) before it starts. Checks all cards, not just the first.
+  waitGpuFree = pkgs.writeShellScript "local-llm-wait-gpu-free" ''
+    smi=${config.hardware.nvidia.package.bin}/bin/nvidia-smi
+    for _ in $(${pkgs.coreutils}/bin/seq 1 60); do
+      # An nvidia-smi failure or empty output is "unknown", not "free": keep waiting.
+      busiest=$($smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null \
+        | ${pkgs.coreutils}/bin/sort -n | ${pkgs.coreutils}/bin/tail -n 1)
+      [ -n "$busiest" ] && [ "$busiest" -lt 1000 ] && exit 0
+      ${pkgs.coreutils}/bin/sleep 2
     done
-    if [ "$found" = 1 ] && [ "$connected" = 0 ]; then
-      profile=headless
-    fi
-    echo "llama-cpp: using $profile preset"
-    cp ${presetFiles.connected} "$RUNTIME_DIRECTORY/presets-connected.ini"
-    cp ${presetFiles.headless} "$RUNTIME_DIRECTORY/presets-headless.ini"
-    ln -sf "presets-$profile.ini" "$RUNTIME_DIRECTORY/presets.ini"
+    echo "local-llm: GPU memory still in use after 120s, starting anyway" >&2
   '';
+
+  unitNames = lib.attrNames cfg.units;
+  othersOf = unit: map (u: "${u}.service") (lib.remove unit unitNames);
+
+  # llama-swap runs this as the model's process: it starts the unit, stays alive while the
+  # unit is up (so a crash looks like one to llama-swap) and stops the unit on SIGTERM.
+  # systemctl needs no sudo here: see the polkit rule below.
+  systemctl = "${config.systemd.package}/bin/systemctl";
+  runUnit =
+    unit:
+    pkgs.writeShellScript "local-llm-run-${unit}" ''
+      set -u
+      trap '${systemctl} stop ${unit}.service; exit 0' TERM INT
+      ${systemctl} start ${unit}.service || exit 1
+      while ${systemctl} is-active --quiet ${unit}.service; do
+        sleep 5 &
+        wait $!
+      done
+      exit 1
+    '';
+
+  routerConfig = (pkgs.formats.yaml { }).generate "local-llm-router.yaml" {
+    # A cold start compiles kernels, captures CUDA graphs or loads a whole model: minutes.
+    healthCheckTimeout = 1500;
+    models = lib.mapAttrs' (
+      unit: u:
+      lib.nameValuePair u.routerName {
+        cmd = "${runUnit unit}";
+        proxy = "http://127.0.0.1:${toString (portFor u.portOffset)}";
+        checkEndpoint = "/v1/models";
+        inherit (u) useModelName;
+        # Stays loaded until another model is requested.
+        ttl = 0;
+      }
+    ) cfg.units;
+  };
 in
 {
-  options = {
-    bundles.local_LLM = {
-      enable = lib.mkEnableOption "The local LLM bundle.";
+  # Backends: each registers its units in `bundles.local_LLM.units` and defines them.
+  imports = [
+    ./hyperqwen
+    ./strata
+  ];
 
-      model = lib.mkOption {
-        type = lib.types.str;
-        default = "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL";
-        description = ''
-          Default Hugging Face GGUF repo and quant (`repo:quant`), loaded on
-          startup and downloaded into `/var/cache/llama-cpp` if missing. Clients use
-          `modelId`. With 16GB + 12GB of VRAM, anything up
-          to roughly Q6_K still leaves room for the KV cache.
-        '';
-      };
+  options.bundles.local_LLM = {
+    enable = lib.mkEnableOption "The local LLM bundle: model servers that share the GPUs, one at a time.";
 
-      modelId = lib.mkOption {
-        type = lib.types.str;
-        readOnly = true;
-        default = modelId;
-        description = "Model id clients use, as named by the llama-server router.";
-      };
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "nia";
+      description = "User the servers run as. It owns their installs, model files and caches.";
+    };
 
-      modelSettings = lib.mkOption {
-        type = lib.types.attrsOf (
-          lib.types.attrsOf (
-            lib.types.oneOf [
-              lib.types.bool
-              lib.types.int
-              lib.types.float
-              lib.types.str
-            ]
-          )
-        );
-        default = { };
-        example = lib.literalExpression ''
-          {
-            "unsloth/Some-Model-GGUF:Q5_K_M" = {
-              ctx-size = 65536;
-              temp = 0.7;
+    host = lib.mkOption {
+      type = lib.types.str;
+      default = "127.0.0.1";
+      description = ''
+        Address the servers (or the router) bind to. There is no API key, so anything other than
+        loopback relies on the firewall, which here trusts only Tailscale.
+      '';
+    };
+
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 18020;
+      description = ''
+        Port clients use: the router's when `router.enable` is set, otherwise the server's. Behind
+        the router the units listen on this port plus their offset.
+      '';
+    };
+
+    autostart = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Start a server at boot: the router when it is on, otherwise the default backend's first
+        unit. The units conflict over the GPUs, so starting one stops the others.
+      '';
+    };
+
+    router.enable = lib.mkEnableOption ''
+      a llama-swap router (`local-llm-router.service`) on `port` that lists every enabled model
+      and swaps the GPUs to whichever one a request names. The units then listen on port+1 and up,
+      and the router starts at boot instead of them
+    '';
+
+    units = lib.mkOption {
+      internal = true;
+      default = { };
+      description = "Units the backends define, keyed by systemd unit name. Set by the backends.";
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            routerName = lib.mkOption {
+              type = lib.types.str;
+              description = "Model name the router lists the unit under.";
             };
-          }
-        '';
-        description = ''
-          Per-model preset sections, keyed by router model id. Keys are
-          `llama-server` flags without dashes and override the global defaults
-          for that model. Setting `hf-repo` makes the router download the model
-          if it is missing. The default model's section is merged with these.
-        '';
-      };
-
-      vision = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Load the multimodal projector (mmproj) so models can read images.
-          Costs roughly 1GB of VRAM plus an image-encoder buffer.
-        '';
-      };
-
-      mmprojOffload = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = ''
-          Keep the vision projector on the GPU. Disable to run it on the CPU, which
-          saves its VRAM (~0.9GB, all on GPU 0) at the cost of slower image encoding.
-          Only used when `vision` is enabled.
-        '';
-      };
-
-      port = lib.mkOption {
-        type = lib.types.port;
-        default = 8080;
-        description = "Port llama-server listens on.";
-      };
-
-      host = lib.mkOption {
-        type = lib.types.str;
-        default = "127.0.0.1";
-        description = ''
-          Address llama-server binds to. There is no API key, so anything other than
-          loopback relies on the firewall (only trusted interfaces such as Tailscale).
-        '';
-      };
-
-      contextSize = lib.mkOption {
-        type = lib.types.int;
-        default = 131072;
-        description = "Context window, in tokens.";
-      };
-
-      cacheType = lib.mkOption {
-        type = lib.types.enum [
-          "f16"
-          "q8_0"
-        ];
-        default = "q8_0";
-        description = ''
-          KV cache type. q8_0 is the floor: q4_0 visibly hurts long-context
-          accuracy, so it is deliberately not offered.
-        '';
-      };
-
-      ubatchSize = lib.mkOption {
-        type = lib.types.int;
-        default = 512;
-        description = ''
-          Physical batch size (`--ubatch-size`): prompt tokens processed per GPU
-          pass. 1024 was benchmarked on this rig and gave no prefill or decode gain
-          (about 1150 tok/s either way) for ~0.7GB more VRAM, so the llama.cpp default
-          stays.
-        '';
-      };
-
-      tensorSplit = lib.mkOption {
-        type = lib.types.str;
-        default = "16,12";
-        description = ''
-          Per-GPU split ratio, in CUDA device order. CUDA orders fastest-first,
-          so device 0 is the 4070 Ti SUPER (16GB) and device 1 the 4070 SUPER (12GB).
-        '';
-      };
-
-      headless = {
-        contextSize = lib.mkOption {
-          type = lib.types.int;
-          default = cfg.contextSize;
-          defaultText = lib.literalExpression "config.bundles.local_LLM.contextSize";
-          description = ''
-            Context window used when no display is connected to the NVIDIA GPUs.
-            With no desktop to feed, the freed VRAM can go to the KV cache.
-          '';
-        };
-
-        tensorSplit = lib.mkOption {
-          type = lib.types.str;
-          default = cfg.tensorSplit;
-          defaultText = lib.literalExpression "config.bundles.local_LLM.tensorSplit";
-          description = "Per-GPU split ratio used when no display is connected.";
-        };
-
-        mmprojOffload = lib.mkOption {
-          type = lib.types.bool;
-          default = cfg.mmprojOffload;
-          defaultText = lib.literalExpression "config.bundles.local_LLM.mmprojOffload";
-          description = "Keep the vision projector on the GPU when no display is connected.";
-        };
-      };
+            portOffset = lib.mkOption {
+              type = lib.types.ints.positive;
+              description = "Port offset from `port` behind the router.";
+            };
+            useModelName = lib.mkOption {
+              type = lib.types.str;
+              description = "API name the server answers to, whatever name the client asked for.";
+            };
+            autostart = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = "Whether this unit starts at boot when there is no router.";
+            };
+          };
+        }
+      );
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    # llama.cpp over vLLM/SGLang: tensor parallelism there splits evenly, which
-    # would cap this mismatched pair at 2x12GB. llama.cpp splits unevenly and
-    # runs GGUF quants that fit in 28GB. Its tensor split plus MTP speculative
-    # decoding closes much of the decode-speed gap to vLLM.
-    #
-    # Runs in router mode (no fixed model): any model in /var/cache/llama-cpp can
-    # be loaded by name on request, one at a time, without a rebuild. Pull new
-    # ones with `POST /models` and refresh with `GET /models?reload=1`.
-    services.llama-cpp = {
-      enable = true;
-      package = pkgs.llama-cpp.override { cudaSupport = true; };
-      settings = {
-        inherit (cfg) host port;
-        models-preset = "/run/llama-cpp/presets.ini";
-        models-max = 1;
+  config = lib.mkMerge [
+    # What the backends need from this layer.
+    { _module.args.localLLM = { inherit portFor waitGpuFree; }; }
+
+    (lib.mkIf cfg.enable {
+      # One unit per model: they share the GPUs (and the port without the router), so each
+      # conflicts with the others and starting one stops the rest.
+      systemd.services = lib.mapAttrs (unit: u: {
+        after = [ "network.target" ];
+        conflicts = othersOf unit;
+        wantedBy = lib.optional (cfg.autostart && !cfg.router.enable && u.autostart) "multi-user.target";
+      }) cfg.units;
+
+      # Passwordless control of just these services, so benchmarking can restart them without a
+      # terminal. Deliberately excludes nixos-rebuild.
+      security.sudo.extraRules = [
+        {
+          users = [ cfg.user ];
+          commands =
+            map
+              (cmd: {
+                command = "/run/current-system/sw/bin/systemctl ${cmd}";
+                options = [ "NOPASSWD" ];
+              })
+              (
+                lib.concatMap (action: map (unit: "${action} ${unit}.service") unitNames) [
+                  "start"
+                  "stop"
+                  "restart"
+                ]
+              );
+        }
+      ];
+    })
+
+    (lib.mkIf (cfg.enable && cfg.router.enable) {
+      systemd.services.local-llm-router = {
+        description = "llama-swap router for the local LLM servers";
+        wantedBy = lib.optional cfg.autostart "multi-user.target";
+        after = [ "network.target" ];
+        serviceConfig = {
+          User = cfg.user;
+          ExecStart = "${lib.getExe pkgs.llama-swap} --config ${routerConfig} --listen ${cfg.host}:${toString cfg.port}";
+          Restart = "on-failure";
+          RestartSec = "10s";
+        };
       };
-    };
 
-    # Passwordless control of just this service, so tuning and benchmarking can restart
-    # it without a terminal. Deliberately excludes nixos-rebuild, which would be root.
-    security.sudo.extraRules = [
-      {
-        users = [ "nia" ];
-        commands =
-          map
-            (action: {
-              command = "/run/current-system/sw/bin/systemctl ${action} llama-cpp.service";
-              options = [ "NOPASSWD" ];
-            })
-            [
-              "start"
-              "stop"
-              "restart"
-            ];
-      }
-    ];
-
-    # Pick the preset set for the current display state each time the server starts.
-    systemd.services.llama-cpp.serviceConfig = {
-      RuntimeDirectory = "llama-cpp";
-      ExecStartPre = selectPreset;
-    };
-  };
+      # The router's wrapper scripts start and stop the units as the service user, not through
+      # sudo (the service has no setuid).
+      security.polkit = {
+        enable = true;
+        extraConfig = ''
+          polkit.addRule(function(action, subject) {
+            if (action.id == "org.freedesktop.systemd1.manage-units" &&
+                subject.user == "${cfg.user}" &&
+                ${builtins.toJSON (map (u: "${u}.service") unitNames)}.indexOf(action.lookup("unit")) >= 0) {
+              return polkit.Result.YES;
+            }
+          });
+        '';
+      };
+    })
+  ];
 }
