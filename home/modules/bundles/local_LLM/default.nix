@@ -11,7 +11,7 @@ let
   routerPort = osConfig.bundles.local_LLM.port or 18020;
   # The router doesn't relay vLLM's max_model_len, so Hermes and Pi are told the window directly.
   hyperqwenContext = osConfig.bundles.local_LLM.hyperqwen.contextSize or 150000;
-  strataContext = osConfig.bundles.local_LLM.strata.contextSize or 65536;
+  strataContext = osConfig.bundles.local_LLM.strata.contextSize or 262144;
 in
 {
   options.bundles.local_LLM = {

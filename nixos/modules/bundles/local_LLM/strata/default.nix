@@ -154,7 +154,7 @@ in
 
     contextSize = lib.mkOption {
       type = lib.types.int;
-      default = 65536;
+      default = 262144;
       description = "Maximum context for the Strata engine (--max-context).";
     };
   };

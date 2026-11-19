@@ -105,7 +105,7 @@ in
           "qwen3.8-27b" = 150000;
           "swift-1.5" = 150000;
           "swift-uncensored" = 150000;
-          "strata-flash" = 65536;
+          "strata-flash" = 262144;
         };
       };
     };
