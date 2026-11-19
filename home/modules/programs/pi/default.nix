@@ -8,15 +8,14 @@ _:
 let
   cfg = config.programs.pi;
 
-  # Pi packages added to ~/.pi/agent/settings.json. pi-harness-config bundles pinned
-  # pi-web-access and pi-open-tui, so they are not listed separately.
-  piPackages = [
-    "git:github.com/nyoshe/pi-harness-config"
-  ];
+  # Pi packages added to ~/.pi/agent/settings.json. pi-harness-config (with its pinned
+  # pi-web-access and pi-open-tui) is added by its own Home Manager module as a store path.
+  piPackages = [ ];
 
-  # Entries now provided by pi-harness-config; dropped from settings.json so they
-  # do not load twice.
+  # Entries that module already provides; dropped from settings.json so they do not load
+  # twice (a duplicate makes every extension fail with "Tool ... conflicts").
   bundledPiPackages = [
+    "git:github.com/nyoshe/pi-harness-config"
     "npm:pi-web-access"
     "npm:pi-open-tui"
   ];
