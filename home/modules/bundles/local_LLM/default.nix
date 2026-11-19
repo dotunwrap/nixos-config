@@ -24,6 +24,7 @@ in
         "swift-1.5" = hyperqwenContext;
         "swift-uncensored" = hyperqwenContext;
         "strata-flash" = strataContext;
+        "strata-coder" = strataContext;
       };
       description = ''
         Models the host's llama-swap router (bundles.local_LLM.router) lists, with their context

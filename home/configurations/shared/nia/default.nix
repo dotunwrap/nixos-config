@@ -106,6 +106,7 @@ in
           "swift-1.5" = 150000;
           "swift-uncensored" = 150000;
           "strata-flash" = 262144;
+          "strata-coder" = 262144;
         };
       };
     };
