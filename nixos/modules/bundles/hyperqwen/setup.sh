@@ -140,30 +140,27 @@ if want dflash; then
   "$PY" prepare/fetch_dflash2.py
 fi
 
+# download_model <dir> <repo> <revision>: fetches a checkpoint that is already converted for
+# HyperQwen (int4 heads, MTP and draft shortlist), so prepare/ is never run on it.
+download_model() {
+  local dir=$1 repo=$2 rev=$3
+  if [ -f "$dir/model.safetensors.index.json" ] && [ -f "$dir/model_extra_tensors.safetensors" ]; then
+    echo "$dir already downloaded"
+  else
+    HF_XET_HIGH_PERFORMANCE=1 "$HQ_REPO/venv/bin/hf" download "$repo" --revision "$rev" --local-dir "$dir"
+  fi
+}
+
 if want swift; then
   say "Swift 1.5 model"
-  S=models/Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4
-  # Already converted for HyperQwen (int4 heads, MTP and draft shortlist): never run prepare/ on it.
-  if [ -f "$S/model.safetensors.index.json" ] && [ -f "$S/model_extra_tensors.safetensors" ]; then
-    echo "$S already downloaded"
-  else
-    HF_XET_HIGH_PERFORMANCE=1 "$HQ_REPO/venv/bin/hf" download \
-      daavidhauser/Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4 \
-      --revision 64515d381e36084182e4e2abfa20050b75f29889 --local-dir "$S"
-  fi
+  download_model models/Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4 \
+    daavidhauser/Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4 64515d381e36084182e4e2abfa20050b75f29889
 fi
 
 if want uncensored; then
   say "Swift uncensored model"
-  U=models/Swift-Qwen3.8-27B-Uncensored-W4A16-AutoRound
-  # Ships with int4 heads, MTP and the draft shortlist already: never run prepare/ on it.
-  if [ -f "$U/model.safetensors.index.json" ] && [ -f "$U/model_extra_tensors.safetensors" ]; then
-    echo "$U already downloaded"
-  else
-    HF_XET_HIGH_PERFORMANCE=1 "$HQ_REPO/venv/bin/hf" download \
-      ultimaterex/Swift-Qwen3.8-27B-Uncensored-W4A16-AutoRound \
-      --revision fc10fe71940f22d01169685358f1a5e82422ac2a --local-dir "$U"
-  fi
+  download_model models/Swift-Qwen3.8-27B-Uncensored-W4A16-AutoRound \
+    ultimaterex/Swift-Qwen3.8-27B-Uncensored-W4A16-AutoRound fc10fe71940f22d01169685358f1a5e82422ac2a
 fi
 
 if want kvarn; then

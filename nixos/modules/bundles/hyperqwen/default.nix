@@ -75,8 +75,6 @@ let
   modelDirs = {
     qwen = null;
     swift = "Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4";
-    # The same Swift 1.5 checkpoint with the CJK tokens removed, so it answers in English only.
-    swiftEnglish = "Swift-1.5-Qwen3.8-27B-W4A16-HyperQwen-INT4-noCJK";
     # Swift with the refusal direction ablated (ultimaterex's AutoRound W4A16, int4 heads and MTP
     # included). `HQ_STEPS=+uncensored hyperqwen-setup` downloads it (about 16GB).
     swiftUncensored = "Swift-Qwen3.8-27B-Uncensored-W4A16-AutoRound";
@@ -97,13 +95,23 @@ let
   waitGpuFree = pkgs.writeShellScript "hyperqwen-wait-gpu-free" ''
     smi=${config.hardware.nvidia.package.bin}/bin/nvidia-smi
     for _ in $(${pkgs.coreutils}/bin/seq 1 60); do
+      # An nvidia-smi failure or empty output is "unknown", not "free": keep waiting.
       busiest=$($smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null \
         | ${pkgs.coreutils}/bin/sort -n | ${pkgs.coreutils}/bin/tail -n 1)
-      [ "''${busiest:-0}" -lt 1000 ] && exit 0
+      [ -n "$busiest" ] && [ "$busiest" -lt 1000 ] && exit 0
       ${pkgs.coreutils}/bin/sleep 2
     done
     echo "hyperqwen: GPU memory still in use after 120s, starting anyway" >&2
   '';
+
+  # Every HyperQwen unit. The per-unit conflict lists, the polkit rule and the sudo rules all derive
+  # from this, so a new model's unit is added here once.
+  unitNames = [
+    "hyperqwen"
+    "hyperqwen-swift"
+    "hyperqwen-swift-uncensored"
+  ];
+  othersOf = unit: map (u: "${u}.service") (lib.remove unit unitNames);
 
   # One unit per model: they share the port and the GPUs, so each conflicts with the others
   # (and llama-cpp) and starting one stops the rest.
@@ -169,8 +177,7 @@ let
   # With the router on, it owns the public port and the units sit on the next three.
   qwenPort = cfg.port + 1;
   swiftPort = cfg.port + 2;
-  swiftEnglishPort = cfg.port + 3;
-  swiftUncensoredPort = cfg.port + 4;
+  swiftUncensoredPort = cfg.port + 3;
 
   # llama-swap runs this as the model's process: it starts the unit, stays alive while the
   # unit is up (so a crash looks like one to llama-swap) and stops the unit on SIGTERM.
@@ -205,7 +212,6 @@ let
     models = {
       "qwen3.8-27b" = routerModel "hyperqwen" qwenPort;
       "swift-1.5" = routerModel "hyperqwen-swift" swiftPort;
-      "swift-1.5-english" = routerModel "hyperqwen-swift-english" swiftEnglishPort;
       "swift-uncensored" = routerModel "hyperqwen-swift-uncensored" swiftUncensoredPort;
     };
   };
@@ -251,10 +257,10 @@ in
     };
 
     router.enable = lib.mkEnableOption ''
-      a llama-swap router on `port` that lists the models (`qwen3.8-27b`, `swift-1.5`,
-      `swift-1.5-english` and `swift-uncensored`) and swaps the GPUs to whichever one a request
-      names. The units then listen on port+1 (default model), port+2 (Swift), port+3 (Swift,
-      English only) and port+4 (Swift, uncensored), and the router starts at boot instead of them
+      a llama-swap router on `port` that lists the models (`qwen3.8-27b`, `swift-1.5` and
+      `swift-uncensored`) and swaps the GPUs to whichever one a request names. The units then
+      listen on port+1 (default model), port+2 (Swift) and port+3 (Swift, uncensored), and the
+      router starts at boot instead of them
     '';
 
     host = lib.mkOption {
@@ -280,8 +286,10 @@ in
         Model to serve, always under the API name `qwen3.8-27b`. `qwen` is the W4A16 AutoRound
         quant with the repo's int4 head and drafter. `swift` is Swift 1.5 (UkisAI's
         efficient-reasoning fine-tune of Qwen3.8-27B, under the Swift Open License) with int4
-        heads, prepared for HyperQwen by daavidhauser. Switching needs the model on disk:
-        `HQ_STEPS=+swift hyperqwen-setup` downloads swift (about 18GB).
+        heads, prepared for HyperQwen by daavidhauser. `swiftUncensored` is Swift with the refusal
+        direction ablated. Switching needs the model on disk: `HQ_STEPS=+swift hyperqwen-setup` downloads swift
+        (about 18GB) and `HQ_STEPS=+uncensored hyperqwen-setup` downloads swiftUncensored (about
+        16GB).
       '';
     };
 
@@ -368,11 +376,7 @@ in
         description = "HyperQwen vLLM server";
         autostart = cfg.autostart && !cfg.router.enable;
         port = if cfg.router.enable then qwenPort else cfg.port;
-        others = [
-          "hyperqwen-swift.service"
-          "hyperqwen-swift-english.service"
-          "hyperqwen-swift-uncensored.service"
-        ];
+        others = othersOf "hyperqwen";
       };
 
       # Swift 1.5 beside the default model: started by hand, replacing hyperqwen.service until
@@ -382,25 +386,7 @@ in
         description = "HyperQwen vLLM server (Swift 1.5)";
         autostart = false;
         port = if cfg.router.enable then swiftPort else cfg.port;
-        others = [
-          "hyperqwen.service"
-          "hyperqwen-swift-english.service"
-          "hyperqwen-swift-uncensored.service"
-        ];
-      };
-
-      # The English-only Swift 1.5 (noCJK) as its own unit and, behind the router, its own model id,
-      # `swift-1.5-english`. Same as the others: started on demand, and it replaces whichever is up.
-      hyperqwen-swift-english = mkService {
-        model = "swiftEnglish";
-        description = "HyperQwen vLLM server (Swift 1.5, English only)";
-        autostart = false;
-        port = if cfg.router.enable then swiftEnglishPort else cfg.port;
-        others = [
-          "hyperqwen.service"
-          "hyperqwen-swift.service"
-          "hyperqwen-swift-uncensored.service"
-        ];
+        others = othersOf "hyperqwen-swift";
       };
 
       # Swift with the refusal direction ablated, behind the router as `swift-uncensored`. Same
@@ -410,11 +396,7 @@ in
         description = "HyperQwen vLLM server (Swift, uncensored)";
         autostart = false;
         port = if cfg.router.enable then swiftUncensoredPort else cfg.port;
-        others = [
-          "hyperqwen.service"
-          "hyperqwen-swift.service"
-          "hyperqwen-swift-english.service"
-        ];
+        others = othersOf "hyperqwen-swift-uncensored";
       };
 
       hyperqwen-router = lib.mkIf cfg.router.enable {
@@ -441,7 +423,7 @@ in
         polkit.addRule(function(action, subject) {
           if (action.id == "org.freedesktop.systemd1.manage-units" &&
               subject.user == "${cfg.user}" &&
-              ["hyperqwen.service", "hyperqwen-swift.service", "hyperqwen-swift-english.service", "hyperqwen-swift-uncensored.service"].indexOf(action.lookup("unit")) >= 0) {
+              ${builtins.toJSON (map (u: "${u}.service") unitNames)}.indexOf(action.lookup("unit")) >= 0) {
             return polkit.Result.YES;
           }
         });
@@ -463,12 +445,7 @@ in
               lib.concatMap
                 (
                   action:
-                  map (unit: "${action} ${unit}.service") [
-                    "hyperqwen"
-                    "hyperqwen-swift"
-                    "hyperqwen-swift-english"
-                    "hyperqwen-swift-uncensored"
-                  ]
+                  map (unit: "${action} ${unit}.service") unitNames
                 )
                 [
                   "start"
