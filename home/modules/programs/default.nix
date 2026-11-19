@@ -3,7 +3,6 @@ _:
 with lib;
 {
   options.programs = {
-    hermes.enable = mkEnableOption "Enable hermes";
     pi.enable = mkEnableOption "Enable pi";
     vial.enable = mkEnableOption "Enable vial";
     freecad.enable = mkEnableOption "Enable freecad";

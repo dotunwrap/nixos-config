@@ -102,21 +102,6 @@ in
       llamaSwapUrl = lib.mkDefault "http://dosei:18020/v1";
     };
 
-    hermes = {
-      enable = true;
-      # dosei serves HyperQwen (see its hyperqwen bundle); its own local_LLM bundle
-      # overrides this with loopback.
-      baseUrl = lib.mkDefault "http://dosei:18020";
-      defaultModel = lib.mkDefault "swift-1.5";
-      # The llama-swap router on dosei lists these.
-      models = lib.mkDefault [
-        "qwen3.8-27b"
-        "swift-uncensored"
-      ];
-      contextLength = lib.mkDefault 150000;
-      supportsVision = lib.mkDefault true;
-    };
-
     zen-browser.enable = false;
     fldigi.enable = true;
     sdrpp.enable = true;
