@@ -22,7 +22,7 @@ let
   ];
 
   # Model Pi starts with, set only while settings.json has none so /model choices stick.
-  defaultModel = "qwen3.8-27b";
+  defaultModel = "strata-coder";
 
   # The router's address split the way pi-llama-swap's config wants it (origin, port, basePath).
   routerParts = builtins.match "(https?://[^/:]+):([0-9]+)(/.*)?" cfg.llamaSwapUrl;
