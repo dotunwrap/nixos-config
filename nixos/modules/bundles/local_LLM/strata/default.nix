@@ -75,7 +75,17 @@ let
       files = "Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M";
       pack = "${home}/packs/coder_iq1_m";
       profile = "expert-profile-coder.bin";
-      draft = [ ];
+      # The Coder's MTP draft layer, fetched once by `strata launch --family coder --model iq1_m
+      # --mtp on --model-path ~/models/coder-iq1m` into ~/mtp/rt. A native (IQ) pack needs --spec
+      # T (T >= 2). Measured 94 tok/s at 77% acceptance, against about 65 tok/s with prompt lookup.
+      draft = [
+        "--mtp"
+        "/home/nia/mtp/rt"
+        "--spec"
+        "4"
+        "--spec-min-p"
+        "0.5"
+      ];
     };
   };
 
