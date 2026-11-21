@@ -152,12 +152,12 @@ in
   options.bundles.local_LLM.tabbyapi = {
     enable = lib.mkEnableOption ''
       TabbyAPI serving an ExLlamaV3 (EXL3) Qwen3.8-Flash-Next quant, listed by the router as
-      `exl3-flash`. Install it first with `tabbyapi-install`
+      `FN-125b-a6b-exl3-2.68bpw`. Install it first with `tabbyapi-install`
     '';
 
     modelPath = lib.mkOption {
       type = lib.types.str;
-      default = "${home}/models/qwen3.8-flash-next-exl3-2.68bpw";
+      default = "${home}/models/qwen3.8-FN-125b-a6b-exl3-2.68bpw";
       description = "Folder of the EXL3 model (config.json and the safetensors shards).";
     };
 
@@ -268,7 +268,7 @@ in
     environment.systemPackages = [ tabbyapiInstall ];
 
     bundles.local_LLM.units.tabbyapi = {
-      routerName = "exl3-flash";
+      routerName = "FN-125b-a6b-exl3-2.68bpw";
       portOffset = 6;
       useModelName = baseNameOf cfg.modelPath;
       inherit (cfg) contextSize vision;

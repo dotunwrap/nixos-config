@@ -89,7 +89,7 @@ let
   variants = {
     strata = {
       description = "Strata server (Qwen3.8-Flash-Next IQ3_XXS)";
-      routerName = "strata-flash";
+      routerName = "FN-125b-a6b-iq3xxs";
       portOffset = 4;
       modelName = "qwen3.8-flash-next-iq3_xxs";
       models = "${home}/models/ista-iq3xxs";
@@ -121,7 +121,7 @@ let
 
     strata-coder = {
       description = "Strata server (Qwen3.8-Flash-Next Coder IQ1_M)";
-      routerName = "strata-coder";
+      routerName = "FN-125b-a6b-coder-iq1m";
       portOffset = 5;
       modelName = "qwen3.8-flash-next-coder-iq1_m";
       models = "${home}/models/coder-iq1m";
@@ -163,9 +163,42 @@ let
       ];
     };
 
+    # Abiray's Orca-Abliterated Coder (GSQ-RCO IQ1_M): the same file layout as the ISTA Coder, so it
+    # is served with the Coder's settings. Shard 2 (the PLE table) is the base model's, symlinked.
+    strata-orca-coder = {
+      description = "Strata server (Qwen3.8-Flash-Next Orca-Abliterated Coder IQ1_M)";
+      routerName = "FN-125b-a6b-orca-coder-uncensored-iq1m";
+      portOffset = 10;
+      modelName = "qwen3.8-flash-next-orca-coder-iq1_m";
+      models = "${home}/models/orca-coder-iq1m";
+      files = "Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M";
+      pleShard = true;
+      mmproj = "mmproj-Qwen3.8-Flash-Next-BF16.gguf";
+      pack = "${home}/packs/orca_coder_iq1_m";
+      profile = "expert-profile-coder.bin";
+      kv = "int8";
+      experts = "--mmap-experts";
+      extra = [
+        "--vram-reserve-mib"
+        "300"
+        "--kv-resident"
+        "32768"
+        "--prefill-pipe"
+        "1536"
+      ];
+      draft = [
+        "--mtp"
+        "/home/nia/mtp/rt"
+        "--spec"
+        "3"
+        "--spec-min-p"
+        "0.5"
+      ];
+    };
+
     strata-swift = {
       description = "Strata server (Swift 1.5 Qwen3.8-Flash-Next IQ3_XXS)";
-      routerName = "strata-swift";
+      routerName = "swift-1.5-FN-125b-a6b-iq3xxs";
       portOffset = 7;
       modelName = "swift-1.5-qwen3.8-flash-next-iq3_xxs";
       models = "${home}/models/swift-1.5-iq3xxs";
@@ -194,12 +227,39 @@ let
       ];
     };
 
+    # SC117's abliterated Swift 1.5 (GSQ-RCO IQ3_XXS): the same shard layout and quant as the plain
+    # Swift above, so it is served the same way. Pack built with tools/iq_pack.py into
+    # ~/packs/swift_uncensored_iq3_xxs.
+    strata-swift-uncensored = {
+      description = "Strata server (Swift 1.5 Abliterated Qwen3.8-Flash-Next IQ3_XXS)";
+      routerName = "swift-1.5-uncensored-FN-125b-a6b-iq3xxs";
+      portOffset = 11;
+      modelName = "swift-1.5-uncensored-qwen3.8-flash-next-iq3_xxs";
+      models = "${home}/models/swift-1.5-uncensored-iq3xxs";
+      files = "Swift-Qwen3.8-Flash-Next-GSQ-RCO-abliterated-IQ3_XXS";
+      pleShard = false;
+      mmproj = "../ista-iq3xxs/mmproj-Qwen3.8-Flash-Next-BF16.gguf";
+      pack = "${home}/packs/swift_uncensored_iq3_xxs";
+      profile = "expert-profile.bin";
+      kv = "int8";
+      experts = "--mmap-experts";
+      extra = [ ];
+      draft = [
+        "--mtp"
+        "/home/nia/mtp/rt"
+        "--spec"
+        "4"
+        "--spec-min-p"
+        "0.5"
+      ];
+    };
+
     # agentionai's Gyro quants (trellis experts, Hadamard-rotated) are one noPLE file each: the
     # n-gram table is the separate PLE GGUF, passed with --ple-gguf. Strata's GYRO.md serves them as
     # --pack plus --native <file>, with the MTP head and the IQ3_XXS expert profile.
     strata-gyro-m = {
       description = "Strata server (Gyro-M TQ2_0 Qwen3.8-Flash-Next)";
-      routerName = "strata-gyro-m";
+      routerName = "FN-125b-a6b-gyro-m-tq2";
       portOffset = 8;
       modelName = "gyro-m-qwen3.8-flash-next-tq2_0";
       models = "${home}/models/gyro-m";
@@ -219,7 +279,7 @@ let
 
     strata-gyro-coder = {
       description = "Strata server (Gyro-Coder-L TQ3_0 Qwen3.8-Flash-Next)";
-      routerName = "strata-gyro-coder";
+      routerName = "FN-125b-a6b-gyro-coder-l-tq3";
       portOffset = 9;
       modelName = "gyro-coder-l-qwen3.8-flash-next-tq3_0";
       models = "${home}/models/gyro-coder-l";
@@ -372,6 +432,8 @@ let
       strata = cfg.enable;
       strata-coder = cfg.coder.enable;
       strata-swift = cfg.swift.enable;
+      strata-swift-uncensored = cfg.swiftUncensored.enable;
+      strata-orca-coder = cfg.orcaCoder.enable;
       strata-gyro-m = cfg.gyroM.enable;
       strata-gyro-coder = cfg.gyroCoder.enable;
     }
@@ -383,7 +445,7 @@ in
   options.bundles.local_LLM.strata = {
     enable = lib.mkEnableOption ''
       Strata serving Qwen3.8-Flash-Next (IQ3_XXS, dflash2 drafter), with or without the other
-      backends. The router lists it as `strata-flash`. Strata itself comes from Nix (see
+      backends. The router lists it as `FN-125b-a6b-iq3xxs`. Strata itself comes from Nix (see
       the release pinned at the top of this file)
     '';
 
@@ -395,27 +457,39 @@ in
 
     coder.enable = lib.mkEnableOption ''
       ISTA-DASLab's Qwen3.8-Flash-Next Coder (IQ1_M: half the experts, kept for code, tools and
-      images) as a second Strata model, listed by the router as `strata-coder`. It has no dflash2
+      images) as a second Strata model, listed by the router as `FN-125b-a6b-coder-iq1m`. It has no dflash2
       drafter. Its files and pack go in ~/models/coder-iq1m and ~/packs/coder_iq1_m
+    '';
+
+    orcaCoder.enable = lib.mkEnableOption ''
+      Abiray's Qwen3.8-Flash-Next Orca-Abliterated Coder (GSQ-RCO IQ1_M) as a Strata model, listed
+      by the router as `FN-125b-a6b-orca-coder-uncensored-iq1m`. Its files go in ~/models/orca-coder-iq1m and its pack
+      in ~/packs/orca_coder_iq1_m
     '';
 
     swift.enable = lib.mkEnableOption ''
       UkisAI's Swift 1.5 (a fine-tune of Qwen3.8-Flash-Next that thinks shorter; IQ3_XXS) as a
-      third Strata model, listed by the router as `strata-swift`. Its shards go in
+      third Strata model, listed by the router as `swift-1.5-FN-125b-a6b-iq3xxs`. Its shards go in
       ~/models/swift-1.5-iq3xxs and its pack, built with Strata's tools/iq_pack.py, in
       ~/packs/swift_iq3_xxs
     '';
 
+    swiftUncensored.enable = lib.mkEnableOption ''
+      SC117's abliterated Swift 1.5 (IQ3_XXS) as a Strata model, listed by the router as
+      `swift-1.5-uncensored-FN-125b-a6b-iq3xxs`. Its shards go in ~/models/swift-1.5-uncensored-iq3xxs
+      and its pack, built with Strata's tools/iq_pack.py, in ~/packs/swift_uncensored_iq3_xxs
+    '';
+
     gyroM.enable = lib.mkEnableOption ''
       agentionai's Gyro-M (TQ2_0, about IQ3_XXS quality with 20% less GPU memory) as a Strata
-      model, listed by the router as `strata-gyro-m`. Its noPLE file goes in ~/models/gyro-m, the
+      model, listed by the router as `FN-125b-a6b-gyro-m-tq2`. Its noPLE file goes in ~/models/gyro-m, the
       PLE table in ~/models/qwen3.8-flash-next-ple, and its pack (tools/iq_pack.py --compat-bf16)
       in ~/packs/gyro_m
     '';
 
     gyroCoder.enable = lib.mkEnableOption ''
       agentionai's Gyro-Coder-L (TQ3_0, tuned for code) as a Strata model, listed by the router as
-      `strata-gyro-coder`. Its noPLE file goes in ~/models/gyro-coder-l and its pack in
+      `FN-125b-a6b-gyro-coder-l-tq3`. Its noPLE file goes in ~/models/gyro-coder-l and its pack in
       ~/packs/gyro_coder_l. agentionai's card says Coder-L needs their Strata branch, so check the
       pack's `--load-check` (native_expert_parity) before relying on it
     '';

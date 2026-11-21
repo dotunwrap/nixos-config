@@ -267,7 +267,7 @@ in
 
     bundles.local_LLM.units = {
       hyperqwen = {
-        routerName = "qwen3.8-27b";
+        routerName = "qwen3.8-27b-w4a16";
         portOffset = 1;
         useModelName = apiName;
         inherit (cfg) contextSize vision;
@@ -276,14 +276,14 @@ in
       # Swift 1.5 beside the default model: started by hand (or through the router), replacing
       # hyperqwen.service until that is started again. Both serve the API name `qwen3.8-27b`.
       hyperqwen-swift = {
-        routerName = "swift-1.5";
+        routerName = "swift-1.5-27b-w4a16";
         portOffset = 2;
         useModelName = apiName;
         inherit (cfg) contextSize vision;
       };
-      # Swift with the refusal direction ablated, behind the router as `swift-uncensored`.
+      # Swift with the refusal direction ablated, behind the router as `swift-1.5-27b-uncensored-w4a16`.
       hyperqwen-swift-uncensored = {
-        routerName = "swift-uncensored";
+        routerName = "swift-1.5-27b-uncensored-w4a16";
         portOffset = 3;
         useModelName = apiName;
         inherit (cfg) contextSize vision;

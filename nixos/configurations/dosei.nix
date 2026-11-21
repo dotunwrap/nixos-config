@@ -15,15 +15,17 @@ _:
   ];
 
   bundles.local_LLM = {
-    # HyperQwen is on by default; Strata joins the router as `strata-flash`, started on request.
+    # HyperQwen is on by default; Strata joins the router as `FN-125b-a6b-iq3xxs`, started on request.
     strata = {
       enable = true;
       coder.enable = true;
       swift.enable = true;
+      swiftUncensored.enable = true;
+      orcaCoder.enable = true;
       gyroM.enable = true;
       gyroCoder.enable = true;
     };
-    # ExLlamaV3 via TabbyAPI, experts split between the cards and RAM, as `exl3-flash`.
+    # ExLlamaV3 via TabbyAPI, experts split between the cards and RAM, as `FN-125b-a6b-exl3-2.68bpw`.
     tabbyapi.enable = true;
     # Pi picks between the models through llama-swap on :18020.
     router.enable = true;
