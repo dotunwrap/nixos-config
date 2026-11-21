@@ -232,6 +232,13 @@ let
       experts = [ ];
       extra = [ ];
       draft = gyroDraft;
+      # Server-side sampling defaults; a request's own fields still win.
+      sampling = {
+        temperature = 0.6;
+        top_p = 0.95;
+        top_k = 20;
+        min_p = 0.05;
+      };
     };
   };
 
@@ -315,6 +322,7 @@ let
             open_browser = false;
           }
           // lib.optionalAttrs cfg.vision { vision = visionSection; }
+          // lib.optionalAttrs (v ? sampling) { inherit (v) sampling; }
         )
       );
 
