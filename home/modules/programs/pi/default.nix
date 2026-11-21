@@ -1,4 +1,4 @@
-_:
+{ pi-harness-config, ... }:
 {
   config,
   lib,
@@ -8,9 +8,36 @@ _:
 let
   cfg = config.programs.pi;
 
+  # @sidshaytay/pi-llama-swap, pinned from npm. It registers the router's models as Pi's
+  # `llama-swap` provider and turns reasoning on for every one (the bundled
+  # @danielmeneses/pi-llama-swap hardcodes reasoning = false, which hides Pi's thinking selector).
+  # Reasoning is off only for ids ending in `-uncensored`/`_uncensored` or holding `no-thinking`,
+  # so keep router names from ending that way.
+  llamaSwapExtension = pkgs.fetchzip {
+    name = "pi-llama-swap-sidshaytay-0.1.2";
+    url = "https://registry.npmjs.org/@sidshaytay/pi-llama-swap/-/pi-llama-swap-0.1.2.tgz";
+    hash = "sha256-xW0rdVydKHNsMTFs243n36jWgNMo24p4EshIOjUvxic=";
+  };
+
+  # pi-harness-config without its bundled @danielmeneses/pi-llama-swap: two extensions
+  # registering the `llama-swap` provider would fight over it. Everything else is linked from the
+  # original, and only package.json's extension list changes.
+  harnessPackage =
+    let
+      orig = pi-harness-config.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    in
+    pkgs.runCommand "${orig.name}-no-llama-swap" { nativeBuildInputs = [ pkgs.jq ]; } ''
+      mkdir $out
+      for f in ${orig}/*; do
+        [ "$(basename "$f")" = package.json ] || ln -s "$f" "$out/$(basename "$f")"
+      done
+      jq '.pi.extensions -= ["./node_modules/@danielmeneses/pi-llama-swap/index.ts"]' \
+        ${orig}/package.json > $out/package.json
+    '';
+
   # Pi packages added to ~/.pi/agent/settings.json. pi-harness-config (with its pinned
-  # pi-web-access, pi-open-tui and @danielmeneses/pi-llama-swap) is added by its own Home Manager module as a store path.
-  piPackages = [ ];
+  # pi-web-access and pi-open-tui) is added by its own Home Manager module as a store path.
+  piPackages = [ "${llamaSwapExtension}" ];
 
   # Entries that module already provides; dropped from settings.json so they do not load
   # twice (a duplicate makes every extension fail with "Tool ... conflicts").
@@ -19,18 +46,34 @@ let
     "npm:pi-web-access"
     "npm:pi-open-tui"
     "npm:@danielmeneses/pi-llama-swap"
+    "npm:@sidshaytay/pi-llama-swap"
   ];
 
   # Model Pi starts with, set only while settings.json has none so /model choices stick.
-  defaultModel = "strata-coder";
+  defaultModel = "FN-125b-a6b-coder-iq1m";
 
-  # The router's address split the way pi-llama-swap's config wants it (origin, port, basePath).
-  routerParts = builtins.match "(https?://[^/:]+):([0-9]+)(/.*)?" cfg.llamaSwapUrl;
-  llamaSwapConfig = {
-    origin = builtins.elemAt routerParts 0;
-    port = lib.toInt (builtins.elemAt routerParts 1);
-    basePath = builtins.elemAt routerParts 2;
-  };
+  # The router's models, as dosei's local_LLM bundle names them. These are all Qwen3.8 models,
+  # which take enable_thinking through the chat template, and Pi cannot tell that from a loopback
+  # or Tailscale URL. Provider-level compat does not reach extension-registered models, so each
+  # model needs its own modelOverrides entry. Keep in step with the routerName values under
+  # nixos/modules/bundles/local_LLM; unknown IDs are ignored by Pi.
+  routerModels = [
+    "qwen3.8-27b-w4a16"
+    "swift-1.5-27b-w4a16"
+    "swift-1.5-27b-uncensored-w4a16"
+    "FN-125b-a6b-iq3xxs"
+    "FN-125b-a6b-coder-iq1m"
+    "FN-125b-a6b-orca-coder-uncensored-iq1m"
+    "swift-1.5-FN-125b-a6b-iq3xxs"
+    "swift-1.5-uncensored-FN-125b-a6b-iq3xxs"
+    "FN-125b-a6b-gyro-m-tq2"
+    "FN-125b-a6b-gyro-coder-l-tq3"
+    "FN-125b-a6b-exl3-2.68bpw"
+  ];
+  modelOverrides = lib.genAttrs routerModels (_: {
+    reasoning = true;
+    compat.thinkingFormat = "qwen-chat-template";
+  });
 
   # graphify (PyPI `graphifyy`) is installed with uv against Nix's Python, since uv's
   # own downloaded interpreters cannot run on NixOS. Pinned: bump only after review.
@@ -43,15 +86,18 @@ in
     example = "http://dosei:18020/v1";
     description = ''
       Base URL of a llama-swap router (one that starts and stops local backends as models are
-      requested). It is written to ~/.pi/agent/pi-llama-swap.json, and pi-llama-swap registers
-      the router's models as Pi's `llama-swap` provider, used as the default. Null leaves the
-      file alone.
+      requested). It is written to the `llama-swap` section of ~/.pi/agent/settings.json, and
+      pi-llama-swap registers the router's models as Pi's `llama-swap` provider, used as the
+      default. Null leaves the section alone.
     '';
   };
 
   config = lib.mkIf cfg.enable {
     # Adds pi-harness-config's store path to settings.json (see its Home Manager module).
-    programs.pi.harness.enable = true;
+    programs.pi.harness = {
+      enable = true;
+      package = harnessPackage;
+    };
 
     home = {
       activation = {
@@ -66,17 +112,18 @@ in
           fi
         '';
 
-        # pi-llama-swap's own config also holds contextOverrides that /llama-swap-set-context-length
-        # writes, so merge only the endpoint into it.
-        piLlamaSwap = lib.mkIf (cfg.llamaSwapUrl != null) (
+        # Tell Pi how to switch thinking for the router's models (see routerModels). Only the
+        # llama-swap provider's modelOverrides are managed; the rest of models.json is kept.
+        piLlamaSwapModels = lib.mkIf (cfg.llamaSwapUrl != null) (
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            conf="$HOME/.pi/agent/pi-llama-swap.json"
-            run mkdir -p "$(dirname "$conf")"
-            [ -s "$conf" ] || echo '{}' > "$conf"
+            models="$HOME/.pi/agent/models.json"
+            run mkdir -p "$(dirname "$models")"
+            [ -s "$models" ] || echo '{}' > "$models"
             tmp="$(mktemp)"
             ${lib.getExe pkgs.jq} \
-              --argjson endpoint ${lib.escapeShellArg (builtins.toJSON llamaSwapConfig)} \
-              '. + $endpoint' "$conf" > "$tmp" && run install -m 644 "$tmp" "$conf"
+              --argjson overrides ${lib.escapeShellArg (builtins.toJSON modelOverrides)} \
+              '.providers["llama-swap"].modelOverrides = $overrides' "$models" > "$tmp" \
+              && run install -m 644 "$tmp" "$models"
             rm -f "$tmp"
           ''
         );
@@ -93,12 +140,17 @@ in
           ${lib.getExe pkgs.jq} \
             --argjson pkgs ${lib.escapeShellArg (builtins.toJSON piPackages)} \
             --arg model ${lib.escapeShellArg defaultModel} \
+            --arg url ${lib.escapeShellArg (toString cfg.llamaSwapUrl)} \
             --argjson bundled ${lib.escapeShellArg (builtins.toJSON bundledPiPackages)} \
             'def id: sub("@[^@/]*$"; "");
              (if .defaultProvider == "llama.cpp" then del(.defaultProvider, .defaultModel) else . end) |
              (if .defaultProvider == "local-llm" then del(.defaultProvider, .defaultModel) else . end) |
              .defaultProvider //= "llama-swap" | .defaultModel //= $model |
-             .packages = (((.packages // []) | map(select(id as $i | (($pkgs + $bundled) | map(id) | index($i)) == null))) + $pkgs)' \
+             (if $url != "" then .["llama-swap"].url = $url else . end) |
+             .packages = (((.packages // []) | map(select(
+               (id as $i | (($pkgs + $bundled) | map(id) | index($i)) == null)
+               and (test("pi-llama-swap") | not)
+             ))) + $pkgs)' \
             "$settings" > "$tmp" && run install -m 644 "$tmp" "$settings"
           rm -f "$tmp"
         '';
